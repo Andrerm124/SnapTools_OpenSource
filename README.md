@@ -37,3 +37,11 @@ Responsible for efficiently generating and caching references to Hooks and HookC
 [MainActivity](https://github.com/Andrerm124/SnapTools_OpenSource/blob/master/app/src/main/java/com/ljmu/andre/snaptools/MainActivity.java)
 
 The majority of the application initialisation and EventBus subscriptions.
+
+### Custom Plugins
+
+The following are some support plugins that I created with the intent of automating or making workflow easier. If people are interested I will make separate repositories for these plugins.
+
+- [IntelliJ StringEncryptorPlugin](https://github.com/Andrerm124/SnapTools_OpenSource/blob/master/StringEncryptorPlugin.jar) - A plugin that provides an **Encrypt Strings** function in the right click menu (And can also be bound to a key). This function will automatically replace string literals with the **decryptString(...)** function (Or reverse an already encrypted string), however the encryption key has been hardcoded into the plugin as it was only intended for personal use. If this library is sought after, let me know and I'll fix it up!
+- [IntelliJ ApkVersionPlugin](https://github.com/Andrerm124/SnapTools_OpenSource/blob/master/ApkVersionPlugin.jar) - A plugin that scans for **@FrameworkVersion(versionInt)** annotations on methods and displays an error to the developer when there are no conditional checks for when the build version of the app is higher than the build version of the method being called. Again, this has hardcoded values as I never anticipated making the plugin public source. If this is something that interests you, let me know and I'll do what I can!
+- [Gradle MappingMerger](https://github.com/Andrerm124/SnapTools_OpenSource/tree/master/app/mapping_merger) - As proguard doesn't offer the ability to maintain static and incremental obfuscation, I had to create my own scripts to automatically merge the previously generated proguard file with the **pre-proguard mappings** file (The file that tells proguard what to name each function) and have the ability to re-include any lost mappings from previous builds as proguard strips out unused mappings that we may need for alternate builds. An implementation (Although crude) can be seen [HERE](https://github.com/Andrerm124/SnapTools_OpenSource/blob/cfa45c5adec117f2b57977688450e909f29211ca/app/build.gradle#L187)
