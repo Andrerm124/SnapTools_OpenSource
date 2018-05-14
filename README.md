@@ -10,13 +10,18 @@ I will be going through the project and adding additional javadocs as the projec
 [HookManager](https://github.com/Andrerm124/SnapTools_OpenSource/blob/master/app/src/main/java/com/ljmu/andre/snaptools/HookManager.java)
 The entry point for Xposed based code. 
 *Todo: Add more comments.*
+
 [FrameworkManager](https://github.com/Andrerm124/SnapTools_OpenSource/blob/master/app/src/main/java/com/ljmu/andre/snaptools/Framework/FrameworkManager.java)
 Responsible for managing the loading and injecting of ModulePacks.
+
 [ModulePack](https://github.com/Andrerm124/SnapTools_OpenSource/blob/master/app/src/main/java/com/ljmu/andre/snaptools/Framework/ModulePack.java")
 The interface between the framework and the dynamically loaded ModulePackImpl code.
+
 [ModulePackImpl](https://github.com/Andrerm124/SnapTools_OpenSource/blob/master/app/src/pack/java/com/ljmu/andre/snaptools/ModulePack/ModulePackImpl.java)
-An implementation of ModulePack with the loading and injection systems in place to manage the internal hooking code.</p>
+An implementation of ModulePack with the loading and injection systems in place to manage the internal hooking code.
+
 [HookResolver](https://github.com/Andrerm124/SnapTools_OpenSource/blob/master/app/src/pack/java/com/ljmu/andre/snaptools/ModulePack/HookResolver.java)
-Responsible for efficiently generating and caching references to Hooks and HookClasses</p>
+Responsible for efficiently generating and caching references to Hooks and HookClasses
+
 ### General
 [MainActivity](https://github.com/Andrerm124/SnapTools_OpenSource/blob/master/app/src/main/java/com/ljmu/andre/snaptools/MainActivity.java)
