@@ -6,6 +6,8 @@ I will be going through the project and adding additional javadocs as the projec
 # SnapTools Media
 [![Shtuff](https://img.youtube.com/vi/mIkM8KTjoWs/0.jpg)](https://www.youtube.com/watch?v=mIkM8KTjoWs)
 
+A user created promotional video by [John Luke](https://www.youtube.com/channel/UCVQavYHPmuzDu5eELNC3oWg)
+
 # Points of Interest
 ### Framework/ModulePack System
 [HookManager](https://github.com/Andrerm124/SnapTools_OpenSource/blob/master/app/src/main/java/com/ljmu/andre/snaptools/HookManager.java)
