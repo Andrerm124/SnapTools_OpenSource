@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_shared_image"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.ljmu.andre.snaptools.SharedImageActivity">
+
+    <com.isseiaoki.simplecropview.CropImageView
+        xmlns:custom="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/cropImageView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/crop_toolbar"
+        android:paddingBottom="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="16dp"
+        custom:scv_background_color="@color/backgroundPrimary"
+        custom:scv_crop_mode="custom"
+        custom:scv_frame_color="@color/primaryLight"
+        custom:scv_frame_stroke_weight="1dp"
+        custom:scv_guide_color="@color/primaryWashed"
+        custom:scv_guide_show_mode="show_always"
+        custom:scv_guide_stroke_weight="1dp"
+        custom:scv_handle_color="@color/primaryLight"
+        custom:scv_handle_show_mode="show_on_touch"
+        custom:scv_handle_size="10dp"
+        custom:scv_min_frame_size="0dp"
+        custom:scv_overlay_color="#BB000000"
+        custom:scv_touch_padding="8dp"/>
+
+    <View
+        android:id="@+id/splitter"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_above="@id/crop_toolbar"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@color/primaryLight"/>
+
+    <TableRow
+        android:id="@+id/crop_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+
+
+        <FrameLayout
+            android:id="@+id/btn_cross"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="false"
+            android:layout_weight="1"
+            android:background="?android:selectableItemBackground">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:scaleX="0.5"
+                android:scaleY="0.5"
+                android:tint="@color/textPrimary"
+                app:srcCompat="@drawable/delete_96"/>
+        </FrameLayout>
+
+
+        <FrameLayout
+            android:id="@+id/btn_rotate_left"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="false"
+            android:layout_weight="1"
+            android:background="?android:selectableItemBackground">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:scaleX="0.5"
+                android:scaleY="0.5"
+                android:tint="@color/textPrimary"
+                app:srcCompat="@drawable/rotate_left_96"/>
+        </FrameLayout>
+
+
+        <FrameLayout
+            android:id="@+id/btn_resize"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:adjustViewBounds="false"
+            android:background="?android:selectableItemBackground">
+
+            <ImageView
+                android:id="@+id/img_resize_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/sharing_resize_button"
+                android:scaleX="0.5"
+                android:layout_gravity="center"
+                android:scaleY="0.5"
+                android:tint="@color/textPrimary">
+            </ImageView>
+        </FrameLayout>
+
+
+        <FrameLayout
+            android:id="@+id/btn_lock_ratio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="false"
+            android:layout_weight="1"
+            android:background="?android:selectableItemBackground">
+
+            <ImageView
+                android:id="@+id/img_lock_ratio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/sharing_lock_button"
+                android:scaleX="0.5"
+                android:scaleY="0.5"
+                android:layout_gravity="center"
+                android:tint="@color/textPrimary">
+            </ImageView>
+        </FrameLayout>
+
+
+        <FrameLayout
+            android:id="@+id/btn_rotate_right"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="false"
+            android:layout_weight="1"
+            android:background="?android:selectableItemBackground">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleX="0.5"
+                android:layout_gravity="center"
+                android:scaleY="0.5"
+                android:tint="@color/textPrimary"
+                app:srcCompat="@drawable/rotate_right_96"/>
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/btn_check"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?android:selectableItemBackground">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleX="0.5"
+                android:scaleY="0.5"
+                android:layout_gravity="center"
+                android:tint="@color/textPrimary"
+                app:srcCompat="@drawable/checkmark_96"/>
+        </FrameLayout>
+    </TableRow>
+</RelativeLayout>

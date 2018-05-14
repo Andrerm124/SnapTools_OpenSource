@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/txt_logged_in"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Logged In"
+        android:textSize="@dimen/frag_login_label_text_size"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/frag_login_display_name_margin"
+        android:layout_marginTop="@dimen/frag_login_display_name_margin"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/label_display_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Logged in as: "
+            android:textColor="@color/textTertiary"
+            android:textSize="@dimen/frag_login_display_name_text_size"/>
+
+        <TextView
+            android:id="@+id/txt_display_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Andre"
+            android:textColor="@color/textTertiary"
+            android:textSize="@dimen/frag_login_display_name_text_size"/>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_logout"
+        style="@style/Base.TextAppearance.AppCompat.Widget.Button.Borderless.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/flat_button"
+        android:paddingBottom="@dimen/frag_login_button_padding_vert"
+        android:paddingTop="@dimen/frag_login_button_padding_vert"
+        android:text="Logout"
+        android:textSize="@dimen/frag_login_logout_text_size"/>
+
+    <Button
+        android:id="@+id/btn_trial"
+        style="@style/Base.TextAppearance.AppCompat.Widget.Button.Borderless.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/flat_button"
+        android:paddingBottom="@dimen/frag_login_button_padding_vert"
+        android:paddingTop="@dimen/frag_login_button_padding_vert"
+        android:text="Activate Trial"
+        android:textSize="@dimen/frag_login_trial_text_size"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/txt_trial_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:paddingBottom="@dimen/button_padding_vertical"
+        android:paddingLeft="@dimen/button_padding_horizontal"
+        android:paddingRight="@dimen/button_padding_horizontal"
+        android:paddingTop="@dimen/button_padding_vertical"
+        android:text="Trial Active"
+        android:textColor="@color/error"
+        android:textSize="@dimen/frag_login_logout_text_size"
+        android:textStyle="bold"
+        android:visibility="gone"/>
+</LinearLayout>

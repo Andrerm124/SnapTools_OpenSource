@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginBottom="5dp"
+                android:background="@color/backgroundTertiary"
+                android:orientation="vertical">
+
+    <View
+        android:id="@+id/view4"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentTop="true"
+        android:background="@color/primaryLight"/>
+
+    <FrameLayout
+        android:id="@+id/button_container"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true"
+        android:background="?android:attr/selectableItemBackground"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/back_arrow"/>
+    </FrameLayout>
+
+
+    <!--<View
+        android:id="@+id/view4"
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:layout_alignBottom="@id/txt_header"
+        android:layout_toEndOf="@id/btn_back"
+        android:background="@color/primaryWashed"/>-->
+
+
+    <TextView
+        android:id="@+id/txt_header"
+        style="@style/HeaderText"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/button_container"
+        android:layout_toStartOf="@+id/btn_search"
+        android:gravity="center"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:text="@string/placeholder"/>
+
+    <View
+        android:id="@+id/view3"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/primaryWashed"/>
+
+
+    <EditText
+        android:id="@+id/txt_search"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true"
+        android:layout_toStartOf="@+id/btn_search"
+        android:ems="10"
+        android:gravity="center_vertical"
+        android:hint="Message Search"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:visibility="gone"/>
+
+    <ImageButton
+        android:id="@+id/btn_search"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:background="?android:attr/selectableItemBackground"
+        android:padding="3dp"
+        android:scaleType="fitCenter"
+        android:tint="@color/primaryLight"
+        app:srcCompat="@drawable/search_96">
+    </ImageButton>
+
+</RelativeLayout>

@@ -1,0 +1,91 @@
+<resources>
+    <string name="com.crashlytics.RequireBuildId">false</string>-->
+
+    <string name="splash_description">SnapTools is a project aimed to provide Snapchat modifications using the Xposed Framework. We provide new functionality and features to the popular Snapchat application, in a seamless and modular way.
+        \n\nWe use a cloud based download system to allow for straightforward updates as well as support for hotswapping of supported Snapchat versions without the need of a system reboot.</string>
+    <string name="splash_authors">Andre (Dev) | Ethan (Dev) | Pedro (Team) | Gabe (Team)\nNightMean (Team)</string>
+    <string name="placeholder">PLACEHOLDER</string>
+    <string name="btn_disable">Disable</string>
+    <string name="btn_enable">Enable</string>
+    <string name="ToS">By pressing YES, you agree to our Terms of Service and our Privacy Policy, both of which can be viewed under the Legal page in the SnapTools app.</string>
+    <string name="permission_request_msg">This application requires External Storage Read/Write access. Without these permissions the application will terminate</string>
+    <string name="permission_request_title">Permissions Request</string>
+    <string name="module_inactive">Module Inactive: Activate module and reboot</string>
+    <string name="banner_apk_update">App Update Available</string>
+    <string name="banner_pack_update">Pack Update Available</string>
+    <string name="master_switch_disabled">Master Switch Is Off: All functions are disabled</string>
+    <string name="master_switch_text">Toggle all functions without reboot</string>
+    <string name="disclaimer">Disclaimer</string>
+    <string name="copyright">Terms of Service</string>
+    <string name="legal_snaptools">SnapTools is in no way affiliated with, authorized, maintained, sponsored or endorsed by Snap Inc, Snapchat, or any of its child subsidiaries. This is an independent application, which utilizes none of the copyrighted works of Snap Inc. Any use of the word \"Snap\" does not constitute a relationship between Snap Inc and SnapTools, and is simply in accordance with describing our app\'s function.</string>
+    <string name="snaptools_copyright">For the purposes of this license agreement, the word AUTHORS will refer to any authorized contributors to the SnapTools codebase hosted on Github.\n\nCopyrights of SnapTools exclusively belongs to Andre Marques\n\nSnapTools is distributed for free, no purchase or payment in any form is necessary to acquire and use SnapTools\n\nSnapTools is provided AS IS, without any kind of warranty or guarantee of function or prevention of the loss of data or incurring of damage on any device you choose to use SnapTools on\n\nYou may not redistribute, rehost, repurpose, share alone or as a part of any package or collection for commercial or noncommercial purposes, the code or files contained in this application, nor the application itself\n\nYou may not reverse-engineer, modify, or in any way change SnapTools\n\nAndre Marques reserves the right to change this license agreement at any time, with or without prior notification\n\nThe only person or persons authorized to be exempt from the clauses stated above are the AUTHORS of this application, as described above, as necessary for working on this application\n\nAndre Marques and any AUTHORS reserve the right to terminate your account at any time, for any reason whatsoever, without informing you. Access to SnapTools is provided by Andre Marques and the AUTHORS, and ownership still resides with them.\n\nAll rights not described in this license agreement, such as those belonging to libraries used in this application, belong to their respective owners\n\nCopyright © 2017 Andre Marques</string>
+    <string name="libs">Libraries</string>
+    <string name="xposed">Xposed Framework</string>
+    <string name="xposed_license">Copyright © 2014 rovo89, Tungstwenty\n\nLicensed under the Apache License, Version 2.0 (the \"License\"); you may not use this file except in compliance with the License. You may obtain a copy of the License at\n\nhttp://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software distributed under the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License</string>
+    <string name="timber">Timber</string>
+    <string name="timber_license">Copyright © 2013 Jake Wharton\n\nLicensed under the Apache License, Version 2.0 (the \"License\"); you may not use this file except in compliance with the License. You may obtain a copy of the License at\n\nhttp://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software distributed under the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.</string>
+    <string name="wang">"AVLoadingIndicatorView</string>
+    <string name="wang_license">Copyright © 2013 Jack Wang\n\nLicensed under the Apache License, Version 2.0 (the \"License\"); you may not use this file except in compliance with the License. You may obtain a copy of the License at\n\nhttp://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software distributed under the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.</string>
+    <string name="scv">SimpleCropView</string>
+    <string name="scv_license">Copyright © 2015 Issei Aoki\n\nLicensed under the MIT License (MIT).\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</string>
+    <string name="brvah">BaseRecyclerViewAdapterHandler</string>
+    <string name="brvah_license">Copyright © 2016 陈宇明\n\nLicensed under the Apache License, Version 2.0 (the \"License\"); you may not use this file except in compliance with the License. You may obtain a copy of the License at\n\nhttp://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software distributed under the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.</string>
+    <string name="bumptech">Glide</string>
+    <string name="bumptech_license">Glide utilizes multiple licenses for the project.\n\nPlease see\nhttps://github.com/bumptech/glide/blob/master/LICENSE\nfor details.</string>
+    <string name="nonsense">FilePicker</string>
+    <string name="nonsense_license">FilePicker is licensed under the Mozilla Public License 2.0.\n\nPlease see\nhttps://github.com/spacecowboy/NoNonsense-FilePicker/blob/master/LICENSE\n for details.</string>
+    <string name="butterknife">Butter Knife</string>
+    <string name="butterknife_license">Copyright © 2013 Jake Wharton\n\nLicensed under the Apache License, Version 2.0 (the \"License\"); you may not use this file except in compliance with the License. You may obtain a copy of the License at\n\nhttp://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software distributed under the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.</string>
+    <string name="reactivex">RxJava</string>
+    <string name="reactivex_license">Copyright © 2016-Present RxJava Contributors\n\nLicensed under the Apache License, Version 2.0 (the \"License\"); you may not use this file except in compliance with the License. You may obtain a copy of the License at\n\nhttp://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software distributed under the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.</string>
+    <string name="konfetti">Konfetti</string>
+    <string name="konfetti_license">Copyright © 2017 Dion Segijn\nLicensed under the ISC License.\n\nPermission to use, copy, modify, and/or distribute this software for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.\n\nTHE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</string>
+    <string name="appupdater">App Updater</string>
+    <string name="appupdater_licence">Copyright © 2016 Javier Santos\n\nLicensed under the Apache License, Version 2.0 (the \"License\"); you may not use this file except in compliance with the License. You may obtain a copy of the License at\n\nhttp://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software distributed under the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.</string>
+    <string name="silicompress">SiliCompressor</string>
+    <string name="silicompress_license">Copyright © 2016 IceTeck\n\nLicensed under the Apache License, Version 2.0 (the \"License\"); you may not use this file except in compliance with the License. You may obtain a copy of the License at\n\nhttp://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software distributed under the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.</string>
+    <string name="tos">Terms of Service</string>
+    <string name="tos_text">Your access and continued use of SnapTools is contingent upon your acceptance and compliance with these Terms. These Terms apply to all users who at any point access or use SnapTools and its provided services. By using SnapTools, you agree to these Terms. If you do not agree with these Terms, then you may not utilize the services provided.\n1. SnapTools is provided AS-IS, with no warranties or guarantees of any kind.\n2. Your access to SnapTools may be terminated at any time, with or without warning, for any reason. Any violation of these Terms will result in an immediate and permanent termination of your access to the services.\n3. You agree to not in any way redistribute, modify, decompile, reverse engineer, or as a result of any of those activities, share the work you have done without the explicit consent of Andre Marques. Additionally, you may not intentionally obstruct the normal operations of the services in any way, shape, or form.\n4. Finally, you agree to all data collection outlined in the Privacy Policy, as well as our use of this data.</string>
+
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="privacy_policy_text">By using SnapTools, you agree to have our app collect the following information:\n- Email address\n- Username\n- App version\n- Device ID\n- Device model\n- Device Android version\n- Device configuration information\n- Error logs associated with crashes from SnapTools or Snapchat (This can be disabled in Settings, but it is recommended to be enabled)\n\nSnapTools guarantees this information will not be used beyond the stated intent of providing a better in-app experience for all users.</string>
+
+    <string name="ourConcept_1">SnapTools was initially started in early 2017 as a way to provide Snapchat modifications, such as saving, with a new cloud based way of delivering fast updates. What we had in mind was a fully modular system that would allow all our code that interfaces with Snapchat to be downloaded in the form of "packs" from our server and stored and executed within SnapTools itself, allowing for multiple Snapchat versions to be supported, and for code updates to not require a new APK or a device restart.</string>
+    <string name="ourConcept_2">As our knowledge of the inner workings of Snapchat grew, so did our project. We had established an incredibly capable framework and started adding features that many users requested, such as lens collection and management, screenshot bypass, and sharing from gallery, along with many others. We made our Slack page open to the public in August as we prepared for a pre-release, to attract attention and bring users to our community that could help with testing our product before our official release.</string>
+    <string name="aboutUs">SnapTools started with Andre (andrerm124) as the sole developer, with Pedro (pedroc1999) and Gabe (quorn23) as part of the decision making team. Ethan (electronicwizard) also joined as a developer/tester and Michal (nightmean) helped while testing SnapTools and during the bug finding process. The majority of our team are currently in or recently graduated from higher level education. </string>
+    <string name="wow">\n\nWhy did you read all this.</string>
+
+    <string name="android_n_warning_title">Android N Warning</string>
+    <string name="android_n_warning_message">Although Android N will be supported via the Unofficial Xposed Framework, there may be situations where Xposed is unstable and a hang or crash could happen, this is not the fault of SnapTools and is due to the nature of the unstable Xposed Framework</string>
+
+    <string name="donation_toolbar_message">Thank you for considering to donate. Any donations you provide mean the world to our team and hopefully it suggests you\'re enjoying what we\'re providing!</string>
+
+    <string name="device_override_message">You\'ve hit the registered device cap, please log out of one or more devices</string>
+    <string name="support_discord_text">For the fastest response to your questions, please join our Discord server where there is usually 24/7 support.\nOnce joined check out the <![CDATA[<b><font color=\'#efde86\'><u>FAQ</u></font></b>]]> channel to check if your question has already been answered. Otherwise try out the <![CDATA[<b><font color=\'#efde86\'><u>@Support</u></font></b>]]> tag to notify the support team of your question.</string>
+    <string name="support_website_text">Want more information about SnapTools? View our official Website hosted by the lovely <![CDATA[<b><font color=\'#efde86\'><u>ElectronicWizard</u></font></b>]]> to get an idea of what we have to offer as well as some FAQ\'s</string>
+    <string name="support_reddit_text">We also have a Sub-Reddit that is under construction but is still completely usable if you want to post anything relating to SnapTools. Subscribing to us can help to build our community to let new users know that we\'re a trusted application.\nThe Reddit will contain announcements and an up to date FAQ list.</string>
+    <string name="support_xda_text">Our XDA page hasn\'t been created yet. We\'re currently waiting for a full public release before we create the page.</string>
+    <string-array name="list_sample">
+        <item>Test1</item>
+        <item>Test2</item>
+        <item>Test3</item>
+        <item>Test4</item>
+        <item>Test5</item>
+    </string-array>
+
+    <string-array name="accepted_currencies">
+        <item>GBP</item>
+        <item>USD</item>
+        <item>EUR</item>
+    </string-array>
+
+    <string-array name="themes">
+        <item>Default</item>
+        <item>AMOLED Black</item>
+    </string-array>
+
+    <string-array name="update_channels">
+        <item>Release</item>
+        <item>Beta</item>
+    </string-array>
+</resources>

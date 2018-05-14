@@ -1,0 +1,206 @@
+<resources>
+
+    <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash</item>
+    </style>
+
+		<style name="PickerEditText">
+		<item name="android:layout_width">match_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:layout_margin">4dp</item>
+		<item name="android:imeOptions">actionNext</item>
+		<item name="android:singleLine">true</item>
+		<item name="android:textSize">22sp</item>
+	</style>
+	
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="android:windowBackground">@color/backgroundPrimary</item>
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primaryDark</item>
+        <item name="colorAccent">@color/primaryLight</item>
+        <item name="colorControlHighlight">@color/primaryLight</item>
+        <item name="colorSwitchThumbNormal">@color/primary</item>
+        <item name="android:textColor">@color/textPrimary</item>
+        <item name="android:textColorHint">@color/textPrimaryWashed</item>
+        <item name="android:scrollbarThumbVertical">@drawable/scrollbar</item>
+        <item name="android:scrollbarSize">5dp</item>
+        <item name="android:textColorPrimary">@color/textPrimary</item>
+        <item name="android:textColorPrimaryInverse">@color/textPrimary</item>
+        <item name="android:textColorSecondary">@color/textPrimary</item>
+        <item name="android:colorBackground">@color/backgroundPrimary</item>
+        <item name="android:buttonStyle">@style/NeutralButton</item>
+        <item name="android:textAppearance">@style/DefaultText</item>
+        <item name="android:spinnerItemStyle">@style/spinnerItemStyle</item>
+        <item name="android:spinnerDropDownItemStyle">
+            @style/spinnerDropDownItemStyle
+        </item>
+    </style>
+
+    <style name="DefaultTheme" parent="AppTheme">
+        <item name="android:windowBackground">@color/backgroundPrimary</item>
+    </style>
+
+    <style name="AMOLEDBlack" parent="AppTheme">
+        <item name="android:windowBackground">@color/backgroundPrimaryAMOLED</item>
+    </style>
+
+    <style name="DefaultText" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">@color/textPrimary</item>
+        <item name="android:textColorHint">@color/textPrimaryWashed</item>
+    </style>
+
+    <style name="HeaderText" parent="@android:style/TextAppearance.Large">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/primaryLight</item>
+        <item name="android:textStyle">normal|bold</item>
+    </style>
+
+    <style name="AppToolbar">
+        <item name="android:background">@color/primary</item>
+        <item name="android:textColorPrimary">@color/textSecondary</item>
+        <item name="android:textColorSecondary">@color/textSecondary</item>
+        <item name="drawerArrowStyle">@style/Theme.Test.DrawerArrowStyle</item>
+    </style>
+
+    <style name="Theme.Test.DrawerArrowStyle" parent="@style/Widget.AppCompat.DrawerArrowToggle">
+        <item name="spinBars">true</item>
+    </style>
+
+    <style name="spinnerItemStyle" parent="DefaultText">
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="spinnerDropDownItemStyle" parent="DefaultText">
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="NavigationDrawer">
+        <item name="android:background">@color/backgroundPrimary</item>
+        <item name="android:textColorPrimary">@color/textPrimary</item>
+        <item name="android:textColorSecondary">@color/primaryLight</item>
+    </style>
+
+    <style name="ModpackListItem_Inactive">
+        <item name="android:textColor">@color/textPrimary</item>
+        <item name="android:background">@color/backgroundSecondary</item>
+    </style>
+
+    <style name="ModpackListItem_Active">
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:background">@color/primary</item>
+    </style>
+
+    <style name="ActivityDialog" parent="@style/AppTheme">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+    <style name="ErrorButton">
+        <item name="android:background">@drawable/error_button</item>
+        <item name="android:textAppearance">@style/HeaderText</item>
+        <item name="android:textColor">@color/errorLight</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingTop">@dimen/button_padding_vertical</item>
+        <item name="android:paddingBottom">@dimen/button_padding_vertical</item>
+        <item name="android:paddingLeft">@dimen/button_padding_horizontal</item>
+        <item name="android:paddingRight">@dimen/button_padding_horizontal</item>
+    </style>
+
+    <style name="NeutralButton">
+        <item name="android:background">@drawable/neutral_button</item>
+        <item name="android:textAppearance">@style/HeaderText</item>
+        <item name="android:textColor">@color/primaryLight</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingTop">@dimen/button_padding_vertical</item>
+        <item name="android:paddingBottom">@dimen/button_padding_vertical</item>
+        <item name="android:paddingLeft">@dimen/button_padding_horizontal</item>
+        <item name="android:paddingRight">@dimen/button_padding_horizontal</item>
+    </style>
+
+    <style name="FlatButton" parent="NeutralButton">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:textColor">@color/primaryLight</item>
+    </style>
+
+    <style name="ExpandableList">
+        <item name="android:groupIndicator">@android:color/transparent</item>
+        <item name="android:divider">@android:color/transparent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="DropdownButton">
+        <item name="android:src">@drawable/dropdown_arrow</item>
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:layout_width">30dp</item>
+    </style>
+
+    <style name="DialogAnimation">
+        <item name="android:windowEnterAnimation">@android:anim/slide_in_left</item>
+        <item name="android:windowExitAnimation">@android:anim/slide_out_right</item>
+    </style>
+
+    <style name="SwitchTextAppearance" parent="@android:style/TextAppearance.Holo.Small">
+        <item name="android:textColor">@color/textSecondary</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="SwitchTextAppearance.Light" parent="@android:style/TextAppearance.Holo.Small">
+        <item name="android:textColor">@color/textPrimary</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="SwitchMessageText" parent="@style/DefaultText">
+    </style>
+
+    <style name="DefaultSwitch">
+        <item name="android:textAppearance">@style/SwitchMessageText</item>
+        <item name="android:textOff">"Off"</item>
+        <item name="android:textOn">"On"</item>
+        <item name="switchTextAppearance">@style/SwitchTextAppearance</item>
+        <item name="switchMinWidth">75dp</item>
+    </style>
+
+    <style name="DarkSwitch" parent="DefaultSwitch">
+        <item name="android:textColor">@color/textPrimary</item>
+        <item name="android:textOff">"Off"</item>
+        <item name="android:textOn">"On"</item>
+        <item name="switchTextAppearance">@style/SwitchTextAppearance.Light</item>
+        <item name="switchMinWidth">75dp</item>
+        <!-- Active thumb color & Active track color(30% transparency) -->
+        <item name="colorAccent">#000000</item>
+        <item name="colorSwitchThumbNormal">@color/textSecondary</item>
+        <item name="android:colorForeground">#000000</item>
+    </style>
+
+    <!--End SnapTools theming-->
+
+    <!-- You can also inherit from NNF_BaseTheme.Light -->
+    <style name="FilePickerTheme" parent="NNF_BaseTheme">
+        <!-- Set these to match your theme -->
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primaryDark</item>
+        <item name="colorAccent">@color/primaryLight</item>
+
+        <!-- Setting a divider is entirely optional -->
+        <!--<item name="nnf_list_item_divider">?android:attr/listDivider</item>-->
+
+        <!-- Need to set this also to style create folder dialog -->
+        <item name="alertDialogTheme">@style/ActivityDialog</item>
+
+        <!-- If you want to set a specific toolbar theme, do it here -->
+        <!-- <item name="nnf_toolbarTheme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item> -->
+    </style>
+
+    <style name="FilePickerAlertDialogTheme" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primaryDark</item>
+        <item name="colorAccent">@color/primaryLight</item>
+    </style>
+
+    <style name="SpinnerHeader" parent="Base.Widget.AppCompat.Spinner">
+        <item name="android:textAppearance">@style/HeaderText</item>
+    </style>
+</resources>

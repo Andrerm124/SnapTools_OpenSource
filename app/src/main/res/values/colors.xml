@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#F1CC02</color>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="primaryLight">#EFDE86</color>
+    <color name="primaryWashed">#88EFDE86</color>
+    <color name="primaryDark">#D8B402</color>
+    <color name="textPrimary">#EEEEEE</color>
+    <color name="textPrimaryWashed">#88EEEEEE</color>
+    <color name="textSecondary">#212121</color>
+    <color name="textSecondary2">#414141</color>
+    <color name="textTertiary">#AAAAAA</color>
+    <color name="accent">#FF4081</color>
+    <color name="toolbarText">#FFFFFF</color>
+    <color name="menuSelected">#C9D2FF</color>
+    <color name="backgroundPrimary">#333333</color>
+    <color name="backgroundPrimaryFaint">#383838</color>
+    <color name="backgroundPrimaryWashed">#FA333333</color>
+    <color name="backgroundSecondary">#555555</color>
+    <color name="backgroundSecondaryWashed">#EA555555</color>
+    <color name="backgroundTertiary">#444444</color>
+    <color name="backgroundTertiaryWashed">#88444444</color>
+    <color name="backgroundToast">#BB444444</color>
+    <color name="error">#EF5353</color>
+    <color name="errorLight">#EF8686</color>
+    <color name="errorWashed">#88EF5353</color>
+    <color name="errorDark">#C44444</color>
+    <color name="success">#53EF53</color>
+    <color name="successLight">#86EF86</color>
+    <color name="successWashed">#8853EF53</color>
+    <color name="successDark">#44C444</color>
+    <color name="darkeningOverlay">#BB111111</color>
+    <color name="black">#000000</color>
+    <color name="spotlightBackground">#AA777777</color>
+    <color name="backgroundPrimaryAMOLED">#000000</color>
+
+    <!-- Material Design Colour Template -->
+    <item name="red_300" type="color">#F36C60</item>
+</resources>

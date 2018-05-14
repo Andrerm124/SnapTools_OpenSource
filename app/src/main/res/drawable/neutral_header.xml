@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--<item android:drawable="@color/primary"/>-->
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="@color/primary"/>
+            <stroke android:color="@color/textSecondary" android:width="2dp"/>
+        </shape>
+    </item>
+
+    <item>
+        <bitmap
+            android:antialias="true"
+            android:gravity="center"
+            android:src="@drawable/high_priority_96"/>
+    </item>
+</layer-list>
