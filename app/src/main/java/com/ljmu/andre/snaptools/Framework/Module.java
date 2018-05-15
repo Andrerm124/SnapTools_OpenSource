@@ -10,17 +10,16 @@ import com.ljmu.andre.snaptools.Framework.Utils.ModuleLoadState;
 import com.ljmu.andre.snaptools.R;
 import com.ljmu.andre.snaptools.UIComponents.Adapters.StatefulEListAdapter.StatefulListable;
 import com.ljmu.andre.snaptools.Utils.ContextHelper;
-import com.ljmu.andre.snaptools.Utils.PreferenceHelpers;
+import com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef;
 
-import java.util.HashSet;
 import java.util.List;
 
 import hugo.weaving.DebugLog;
 import timber.log.Timber;
 
 import static android.view.View.GONE;
-import static com.ljmu.andre.GsonPreferences.Preferences.getPref;
 import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.DISABLED_MODULES;
+import static com.ljmu.andre.snaptools.Utils.PreferenceHelpers.collectionContains;
 
 /**
  * This class was created by Andre R M (SID: 701439)
@@ -40,12 +39,25 @@ public abstract class Module implements StatefulListable<Void> {
 
 	public abstract FragmentHelper[] getUIFragments();
 
-	public ModuleLoadState getModuleLoadState() {
-		return moduleLoadState;
-	}
-
-	@DebugLog public ModuleLoadState injectHooks(ClassLoader snapClassLoader, Activity snapActivity,
-	                                             ModuleLoadState moduleLoadState) {
+	/**
+	 * ===========================================================================
+	 * Performs checks on the Module to ensure it should be loaded or if
+	 * {@link this#canBeDisabled()} and {@link FrameworkPreferencesDef#DISABLED_MODULES}
+	 * are both true.
+	 * <p>
+	 * Updates the moduleLoadState to {@link State#FAILED} if any hooks failed, or
+	 * {@link State#SUCCESS} if no hooks failed and at least one was successful.
+	 * ===========================================================================
+	 *
+	 * @param moduleLoadState - Provide the Module with a ModuleLoadState from the
+	 *                        implementation of this class. Allows us to have more
+	 *                        flexibility about the initial state of the Module.
+	 * @return The moduleLoadState argument (Unnecessary)
+	 */
+	@SuppressWarnings({"unused", "WeakerAccess"})
+	@DebugLog
+	public ModuleLoadState injectHooks(ClassLoader snapClassLoader, Activity snapActivity,
+	                                   ModuleLoadState moduleLoadState) {
 		if (hasInjected) {
 			Timber.d("Tried to reapply hook: "
 					+ name());
@@ -56,20 +68,20 @@ public abstract class Module implements StatefulListable<Void> {
 
 		this.moduleLoadState = moduleLoadState;
 
-		if (canBeDisabled()) {
-			HashSet<String> moduleSet = getPref(DISABLED_MODULES);
-
-			if (moduleSet.contains(name())) {
-				moduleLoadState.setState(State.SKIPPED);
-				return moduleLoadState;
-			}
+		if (canBeDisabled()
+				&& collectionContains(DISABLED_MODULES, name())) {
+			moduleLoadState.setState(State.SKIPPED);
+			return moduleLoadState;
 		}
 
 		loadHooks(snapClassLoader, snapActivity);
 
 		if (moduleLoadState.getFailedHooks() <= 0 &&
-				moduleLoadState.getSuccessfulHooks() > 0)
+				moduleLoadState.getSuccessfulHooks() > 0) {
 			moduleLoadState.setState(State.SUCCESS);
+		} else if (getModuleLoadState().getFailedHooks() > 0) {
+			moduleLoadState.setState(State.FAILED);
+		}
 
 		return moduleLoadState;
 	}
@@ -82,7 +94,19 @@ public abstract class Module implements StatefulListable<Void> {
 		return canBeDisabled;
 	}
 
+	/**
+	 * ===========================================================================
+	 * Signal to the implementation of this class that we wish to load our hooks
+	 * into the application. This function should generally not be called unless
+	 * we have performed checks on whether the Module is able to hook.
+	 * Instead use {@link this#injectHooks(ClassLoader, Activity, ModuleLoadState)}
+	 * ===========================================================================
+	 */
 	public abstract void loadHooks(ClassLoader snapClassLoader, Activity snapActivity);
+
+	public ModuleLoadState getModuleLoadState() {
+		return moduleLoadState;
+	}
 
 	@Override public List<Void> getChildren() {
 		return null;
@@ -96,7 +120,7 @@ public abstract class Module implements StatefulListable<Void> {
 	}
 
 	@Override public void updateHeaderStateHolder(TextView stateHolder) {
-		boolean isActive = !PreferenceHelpers.collectionContains(DISABLED_MODULES, name());
+		boolean isActive = !collectionContains(DISABLED_MODULES, name());
 
 		if (isActive) {
 			stateHolder.setText("Active");
