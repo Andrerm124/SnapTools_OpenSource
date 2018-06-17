@@ -69,7 +69,6 @@ public class SnapDiskCache {
 						FileUtils.createFile(new File(tempDir, ".nomedia"));
 					} catch (IOException e) {
 						Timber.e(e);
-						emitter.onError(e);
 					}
 				})
 				.subscribeOn(Schedulers.io())

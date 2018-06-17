@@ -1,9 +1,5 @@
 package com.ljmu.andre.snaptools.Framework.Utils;
 
-import android.app.Activity;
-
-import com.ljmu.andre.snaptools.ModulePack.HookResolver;
-
 import hugo.weaving.DebugLog;
 
 /**
@@ -83,7 +79,8 @@ public abstract class LoadState {
 		 * still be usable.
 		 * <p>
 		 * An example of this in use is during the hook resolution phase
-		 * {@link HookResolver#loadHooks(ClassLoader, Activity)}
+		 *
+		 * @link HookResolver#loadHooks(ClassLoader, Activity)
 		 * when the hook resolver can't find a hooks reference
 		 * ===========================================================================
 		 */

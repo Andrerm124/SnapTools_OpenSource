@@ -81,6 +81,7 @@ public class SharedImageActivity extends AppCompatActivity {
 	@BindView(R.id.img_resize_icon) ImageView imgResizeIcon;
 	@BindView(R.id.img_lock_ratio) ImageView imgLockRatio;
 	Unbinder unbinder;
+
 	private File sharedMediaDir;
 	private Uri sourceImageUri;
 	private File tempMediaFile;

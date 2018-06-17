@@ -14,10 +14,7 @@ import com.ljmu.andre.snaptools.Utils.DeviceIdManager;
 import hugo.weaving.DebugLog;
 import timber.log.Timber;
 
-import static com.ljmu.andre.GsonPreferences.Preferences.getPref;
 import static com.ljmu.andre.snaptools.Networking.WebRequest.assertParam;
-import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.STKN;
-import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.ST_EMAIL;
 
 /**
  * This class was created by Andre R M (SID: 701439)
@@ -35,13 +32,9 @@ public class GetPackChangelog {
 			@NonNull String packFlavour,
 			PacketResultListener<PackDataPacket> packetResultListener) {
 		Class cls = GetPackChangelog.class;
-		String token;
-		String email;
 		String deviceId;
 
 		try {
-			token = assertParam(cls, "Invalid Token", getPref(STKN));
-			email = assertParam(cls, "Invalid Email", getPref(ST_EMAIL));
 			deviceId = assertParam(cls, "Invalid Device ID", DeviceIdManager.getDeviceId(activity));
 		} catch (IllegalArgumentException e) {
 			Timber.e(e);
@@ -60,11 +53,9 @@ public class GetPackChangelog {
 				.shouldClearCache(true)
 				.setContext(activity)
 				// ===========================================================================
-				.addParam("token", token)
 				.addParam("device_id", deviceId)
 				.addParam("pack_type", packType)
 				.addParam("sc_version", snapVersion)
-				.addParam("email", email)
 				.addParam("pack_flavour", packFlavour)
 				// ===========================================================================
 				.setCallback(new WebResponseListener() {

@@ -2,7 +2,6 @@ package com.ljmu.andre.snaptools.Utils;
 
 import android.app.Activity;
 import android.app.ActivityManager;
-import android.app.ActivityManager.RunningAppProcessInfo;
 import android.app.ActivityManager.RunningServiceInfo;
 import android.content.Context;
 import android.os.Build.VERSION;
@@ -10,7 +9,6 @@ import android.os.Build.VERSION_CODES;
 import android.support.annotation.Nullable;
 import android.widget.Toast;
 
-import com.google.common.base.Preconditions;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.Hashing;
 import com.google.common.io.Files;

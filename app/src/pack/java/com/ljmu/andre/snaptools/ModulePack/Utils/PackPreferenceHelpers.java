@@ -3,8 +3,6 @@ package com.ljmu.andre.snaptools.ModulePack.Utils;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
-import com.ljmu.andre.GsonPreferences.Preferences.Preference;
-import com.ljmu.andre.snaptools.ModulePack.Fragments.KotlinViews.StealthLocationOverlay.StealthPosition;
 import com.ljmu.andre.snaptools.ModulePack.SavingUtils.SavingTriggers.SavingTrigger.SavingMode;
 import com.ljmu.andre.snaptools.ModulePack.SavingUtils.Snaps.Snap.SnapType;
 import com.ljmu.andre.snaptools.ModulePack.Utils.SavingButton.ButtonLocation;
@@ -18,7 +16,6 @@ import static com.ljmu.andre.snaptools.ModulePack.Utils.ModulePreferenceDef.SAVE
 import static com.ljmu.andre.snaptools.ModulePack.Utils.ModulePreferenceDef.SAVE_BUTTON_RELATIVE_HEIGHTS;
 import static com.ljmu.andre.snaptools.ModulePack.Utils.ModulePreferenceDef.SAVE_BUTTON_WIDTHS;
 import static com.ljmu.andre.snaptools.ModulePack.Utils.ModulePreferenceDef.SAVING_MODES;
-import static com.ljmu.andre.snaptools.ModulePack.Utils.ModulePreferenceDef.STEALTH_SNAP_BUTTON_LOCATION;
 
 /**
  * This class was created by Andre R M (SID: 701439)
@@ -114,19 +111,5 @@ public class PackPreferenceHelpers {
 		}
 
 		return ImageView.ScaleType.valueOf(FILTER_SCALING_TYPE.getDefaultVal());
-	}
-
-	public static StealthPosition getStealthLocation() {
-		String selectedPositionString = getPref(STEALTH_SNAP_BUTTON_LOCATION);
-		StealthPosition stealthPosition = StealthPosition.TOP;
-
-		if(selectedPositionString != null) {
-			try {
-				stealthPosition = StealthPosition.valueOf(selectedPositionString);
-			} catch (IllegalArgumentException ignored) {
-			}
-		}
-
-		return stealthPosition;
 	}
 }

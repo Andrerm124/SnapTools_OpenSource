@@ -1,6 +1,5 @@
 package com.ljmu.andre.ErrorLogger;
 
-import android.content.Context;
 import android.util.Log;
 
 import com.ljmu.andre.GsonPreferences.Preferences;

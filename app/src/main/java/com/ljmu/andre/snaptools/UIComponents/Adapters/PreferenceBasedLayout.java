@@ -1,9 +1,6 @@
 package com.ljmu.andre.snaptools.UIComponents.Adapters;
 
 import android.app.Activity;
-import android.content.Context;
-import android.support.annotation.Nullable;
-import android.view.View;
 
 import com.ljmu.andre.GsonPreferences.Preferences.Preference;
 import com.ljmu.andre.snaptools.UIComponents.SettingBasedLayout;

@@ -23,7 +23,6 @@ import com.ljmu.andre.snaptools.BuildConfig;
 import com.ljmu.andre.snaptools.Networking.Packets.Packet;
 import com.ljmu.andre.snaptools.Utils.Assert;
 import com.ljmu.andre.snaptools.Utils.MiscUtils;
-import com.ljmu.andre.snaptools.Utils.Security;
 
 import org.json.JSONException;
 
@@ -493,13 +492,9 @@ public class WebRequest {
 							"[Url: " + url + "] [Callback: " + callback + "] [Context: " + context + "]",
 					url, callback);
 
-			if (url.contains("snaptools.org/")) {
-				String apkFingerprint = Security.ApkCertification.getApkFingerprint(context);
-				addParam("c", apkFingerprint);
-			}
-
 			addParam("code", String.valueOf(BuildConfig.VERSION_CODE));
 			addParam("flavour", BuildConfig.FLAVOR);
+			addParam("auth_bypass", String.valueOf(true));
 
 			return new WebRequest(
 					method,

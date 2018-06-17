@@ -8,15 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.ljmu.andre.snaptools.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import timber.log.Timber;
-
-import static com.ljmu.andre.snaptools.Utils.FrameworkViewFactory.getSpannedHtml;
 
 /**
  * Created by ethan on 8/10/2017.
@@ -34,9 +30,9 @@ public class AboutUsFragment extends FragmentHelper {
 		View layoutContainer = inflater.inflate(R.layout.frag_about_us, container, false);
 		unbinder = ButterKnife.bind(this, layoutContainer);
 
-		FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.getInstance();
-		concept.setText(getSpannedHtml(remoteConfig.getString("about_us_concept")));
-		aboutUs.setText(getSpannedHtml(remoteConfig.getString("about_us_description")));
+//		FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.getInstance();
+//		concept.setText(getSpannedHtml(remoteConfig.getString("about_us_concept")));
+//		aboutUs.setText(getSpannedHtml(remoteConfig.getString("about_us_description")));
 
 		return layoutContainer;
 	}

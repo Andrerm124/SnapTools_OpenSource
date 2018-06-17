@@ -65,6 +65,7 @@ import timber.log.Timber;
 
 import static com.ljmu.andre.snaptools.Utils.ResourceUtils.getColor;
 import static com.ljmu.andre.snaptools.Utils.ResourceUtils.getLayout;
+import static com.ljmu.andre.snaptools.Utils.StringEncryptor.decryptMsg;
 
 /**
  * This class was created by Andre R M (SID: 701439)
@@ -72,8 +73,6 @@ import static com.ljmu.andre.snaptools.Utils.ResourceUtils.getLayout;
  */
 
 public class ChatMessagesFragment extends FragmentHelper {
-	private final Object MESSAGE_LOCK = new Object();
-
 	private SwipeRefreshLayout swipeRefreshLayout;
 	private ConversationObject conversationObject;
 	private CBITable<ChatObject> chatTable;
@@ -131,9 +130,7 @@ public class ChatMessagesFragment extends FragmentHelper {
 
 	@Override public void onPause() {
 		super.onPause();
-		synchronized (MESSAGE_LOCK) {
-			messages.clear();
-		}
+		messages.clear();
 	}
 
 	private void initHeader(LinearLayout layoutContainer, LayoutInflater inflater) {
@@ -217,12 +214,9 @@ public class ChatMessagesFragment extends FragmentHelper {
 		LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
 		layoutManager.setReverseLayout(true);
 		recyclerView.setLayoutManager(layoutManager);
-
-		synchronized (MESSAGE_LOCK) {
-			adapter = new MessageQuickAdapter(messages);
-			adapter.bindToRecyclerView(recyclerView);
-			adapter.setEmptyView(R.layout.layout_empty_chats);
-		}
+		adapter = new MessageQuickAdapter(messages);
+		adapter.bindToRecyclerView(recyclerView);
+		adapter.setEmptyView(R.layout.layout_empty_chats);
 
 		layoutContainer.addView(swipeRefreshLayout);
 	}
@@ -252,17 +246,15 @@ public class ChatMessagesFragment extends FragmentHelper {
 
 	@DebugLog private int getIndexForMessage(String messageRegex) {
 		int index = -1;
-		synchronized (MESSAGE_LOCK) {
-			for (MessageItem conversationItem : messages) {
-				index++;
-				if (!(conversationItem instanceof ChatMessageItem))
-					continue;
+		for (MessageItem conversationItem : messages) {
+			index++;
+			if (!(conversationItem instanceof ChatMessageItem))
+				continue;
 
-				ChatMessageItem messageItem = (ChatMessageItem) conversationItem;
+			ChatMessageItem messageItem = (ChatMessageItem) conversationItem;
 
-				if (messageItem.chatObject.text.toLowerCase().contains(messageRegex.toLowerCase()))
-					return index;
-			}
+			if (messageItem.chatObject.text.toLowerCase().contains(messageRegex.toLowerCase()))
+				return index;
 		}
 
 		return -1;
@@ -370,11 +362,9 @@ public class ChatMessagesFragment extends FragmentHelper {
 			}
 		});
 
-		synchronized (MESSAGE_LOCK) {
-			messages.clear();
-			messages.addAll(chatObjects);
-			//Collections.sort(chatMessages);
-		}
+		messages.clear();
+		messages.addAll(chatObjects);
+		//Collections.sort(chatMessages);
 
 		if (adapter != null)
 			adapter.notifyDataSetChanged();
@@ -388,8 +378,8 @@ public class ChatMessagesFragment extends FragmentHelper {
 	private void deleteMessage(ChatObject chatObject) {
 		DialogFactory.createConfirmation(
 				getActivity(),
-				"Delete Message?",
-				"Are you sure you want to delete this message?"
+				/*Delete Message?*/ decryptMsg(new byte[]{-6, 26, 55, 2, 38, -46, 70, 21, 112, -72, 31, 30, -73, 100, -15, -114}),
+				/*Are you sure you want to delete this message?*/ decryptMsg(new byte[]{124, -63, 53, -11, 86, -30, -46, 37, -98, -41, 23, -17, -27, 80, 93, -10, -83, 49, -22, -39, 44, 11, -48, 15, 71, 55, -29, -28, 84, -33, 102, 88, -104, 77, -99, -7, -86, 31, -3, 24, -14, -65, 49, -67, 123, 98, -22, 42})
 						+ "\n\n\"" + chatObject.text + "\"",
 				new ThemedClickListener() {
 					@Override public void clicked(ThemedDialog themedDialog) {

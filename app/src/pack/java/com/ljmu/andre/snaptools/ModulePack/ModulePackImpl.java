@@ -3,13 +3,11 @@ package com.ljmu.andre.snaptools.ModulePack;
 import android.app.Activity;
 import android.util.Pair;
 
-import com.ljmu.andre.ConstantDefiner.Constant;
 import com.ljmu.andre.snaptools.Exceptions.ModulePackLoadAborted;
 import com.ljmu.andre.snaptools.Fragments.FragmentHelper;
 import com.ljmu.andre.snaptools.Framework.MetaData.LocalPackMetaData;
 import com.ljmu.andre.snaptools.Framework.Module;
 import com.ljmu.andre.snaptools.Framework.ModulePack;
-import com.ljmu.andre.snaptools.Framework.Utils.LoadState;
 import com.ljmu.andre.snaptools.Framework.Utils.LoadState.State;
 import com.ljmu.andre.snaptools.Framework.Utils.ModuleLoadState;
 import com.ljmu.andre.snaptools.Framework.Utils.PackLoadState;
@@ -18,7 +16,6 @@ import com.ljmu.andre.snaptools.ModulePack.Fragments.GeneralSettingsFragment;
 import com.ljmu.andre.snaptools.ModulePack.Fragments.KnownBugsFragment;
 import com.ljmu.andre.snaptools.ModulePack.ModulesDef.Modules;
 import com.ljmu.andre.snaptools.Utils.Constants;
-import com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
@@ -33,9 +30,9 @@ import timber.log.Timber;
 import static com.ljmu.andre.GsonPreferences.Preferences.getCreateDir;
 import static com.ljmu.andre.GsonPreferences.Preferences.getPref;
 import static com.ljmu.andre.snaptools.ModulePack.Utils.ModulePreferenceDef.FILTERS_PATH;
-import static com.ljmu.andre.snaptools.Utils.AuthenticationTrigger.triggerPackAuthCheck;
 import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.DISABLED_MODULES;
 import static com.ljmu.andre.snaptools.Utils.PreferenceHelpers.collectionContains;
+import static com.ljmu.andre.snaptools.Utils.StringEncryptor.decryptMsg;
 
 /**
  * This class was created by Andre R M (SID: 701439)
@@ -53,7 +50,7 @@ public class ModulePackImpl extends ModulePack {
 	}
 
 	private void checkFrameworkVersion() throws ModulePackLoadAborted {
-		if (Constants.getApkVersionCode() < MINIMUM_FRAMEWORK_VERSION)
+		if(Constants.getApkVersionCode() < MINIMUM_FRAMEWORK_VERSION)
 			throw new ModulePackLoadAborted("Pack requires newer APK version");
 	}
 
@@ -91,21 +88,7 @@ public class ModulePackImpl extends ModulePack {
 
 	/**
 	 * ===========================================================================
-	 * Attempt to load instantiate and cache the {@link Module}'s located in
-	 * {@link ModulesDef} whilst skipping those that are marked
-	 * {@link Modules#canBeDisabled()} and are found in
-	 * {@link FrameworkPreferencesDef#DISABLED_MODULES}. If skipped, the module
-	 * will be assigned a {@link LoadState.State#SKIPPED} state and a
-	 * {@link LoadState.State#FAILED} if any error occurred during instantiation.
-	 * <p>
-	 * Successful modules are cached to {@link this#modules} and can be retrieved
-	 * using {@link this#getModules()} or {@link this#getModule(String)}
-	 * <p>
-	 * It should be noted that this function will ensure that the
-	 * {@link Modules#HOOK_RESOLVER} module is loaded FIRST by providing it with a
-	 * sorting index of 1 in the {@link Constant#Constant(int, String)} constructor.
-	 * This is to ensure that the Hooks and HookClasses are resolved before any
-	 * subsequent modules that rely upon them are loaded.
+	 * Attempt to load the contained Modules
 	 * ===========================================================================
 	 */
 	@Override public Map<String, ModuleLoadState> loadModules() {
@@ -138,7 +121,7 @@ public class ModulePackImpl extends ModulePack {
 
 				loadState.setState(State.SUCCESS);
 			} catch (Throwable e) {
-				Timber.e(e, "Failed loading module: "
+				Timber.e(e, /*Failed loading module: */ decryptMsg(new byte[]{-68, 2, -80, 8, -69, -76, -23, 16, -37, -64, -61, 107, -43, 110, 14, 103, 14, 36, 116, -62, -61, -37, -18, -88, -115, 27, 10, -30, 57, -101, 59, -5})
 						+ moduleData.getClassName());
 				loadState.setState(State.FAILED);
 			}
@@ -149,34 +132,18 @@ public class ModulePackImpl extends ModulePack {
 		return moduleLoadStates;
 	}
 
-	/**
-	 * ===========================================================================
-	 *
-	 * ===========================================================================
-	 *
-	 * @return A shallow duplication of the ModuleLoadStates of this ModulePack.
-	 */
 	@Override public List<ModuleLoadState> injectAllHooks(ClassLoader snapClassLoader, Activity snapActivity) {
 		if (!hasLoaded)
-			throw new IllegalStateException("Module Pack not loaded!");
+			throw new IllegalStateException(/*Module Pack not loaded!*/ decryptMsg(new byte[]{-78, 103, -115, -64, 116, -43, -64, 119, 126, 71, 28, -47, 49, -26, -36, -97, -72, 59, 101, 54, 98, -9, 84, 83, 94, -120, 70, 76, 122, -120, -25, -97}));
 
 		if (hasInjected) {
-			Timber.d("Tried to re-inject all hooks");
+			Timber.d(/*Tried to re-inject all hooks*/ decryptMsg(new byte[]{100, 70, 6, -58, 83, -111, -116, -75, 12, -40, -121, -116, -7, 69, 122, -114, 58, -40, 113, -55, -45, 121, 67, -43, 22, -98, -87, -117, -45, 7, -7, -52}));
 			return null;
 		}
 
-		// Asynchronously purge the temp directory ===================================
 		SnapDiskCache.getInstance().destroyTempDir();
 
-		// You were looking for this? ================================================
-		// Check that the user actually has access to the pack like they say they do =
-		triggerPackAuthCheck(snapActivity, getPackName(), getPackSCVersion(), getPackVersion());
-		// ===========================================================================
-
 		List<ModuleLoadState> hookResults = new ArrayList<>();
-
-		// Retrieve the load states of the modules so we can iterate through them and
-		// ensure that we only attempt to load SUCCESSful Modules ====================
 		Map<String, ModuleLoadState> moduleLoadStateMap = getPackLoadState().getModuleLoadStates();
 
 		for (ModuleLoadState moduleLoadState : moduleLoadStateMap.values()) {
@@ -185,30 +152,20 @@ public class ModulePackImpl extends ModulePack {
 			if (moduleLoadState.getState() != State.SUCCESS)
 				continue;
 
-			// Resolve the Module object found in the modules variable ===================
 			Module module = getModule(moduleLoadState.getName());
 			if (module == null) {
 				moduleLoadState.setState(State.FAILED);
 				continue;
 			}
 
-			try {
-				module.injectHooks(snapClassLoader, snapActivity, moduleLoadState);
-			} catch (Throwable t) {
-				Timber.e(t);
-				moduleLoadState.fail();
-			}
+			module.injectHooks(snapClassLoader, snapActivity, moduleLoadState);
 		}
-
-		// Refresh the load state of the ModulePack so that we can display to the user
-		// when there has been an error during the injection phase ===================
-		packLoadState.refreshPackLoadState();
 
 		hasInjected = true;
 		return hookResults;
 	}
 
 	@Override public String isPremiumCheck() {
-		return "A SnapTools Pack";
+		return /*A SnapTools Pack*/ decryptMsg(new byte[]{92, -36, -124, 121, 54, 7, -12, 55, 118, -100, -19, -37, 1, -117, 98, 87, 104, -50, 116, -85, 125, 59, 23, -57, 29, -117, 35, 62, -41, 17, -14, 66});
 	}
 }

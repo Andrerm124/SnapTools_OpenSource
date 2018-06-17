@@ -1,9 +1,6 @@
 package com.ljmu.andre.snaptools.Dialogs.Content
 
 import android.app.Activity
-import android.os.Build
-import android.os.Build.VERSION.SDK_INT
-import android.text.Html
 import android.text.method.LinkMovementMethod
 import android.view.Gravity
 import android.view.View

@@ -3,8 +3,6 @@ package com.ljmu.andre.snaptools.Utils;
 
 import com.ljmu.andre.ConstantDefiner.ConstantDefiner;
 import com.ljmu.andre.Translation.Translator.Translation;
-import com.ljmu.andre.snaptools.Fragments.Children.LoggedInFragment;
-import com.ljmu.andre.snaptools.Fragments.Children.LoginFragment;
 import com.ljmu.andre.snaptools.Fragments.HomeFragment;
 import com.ljmu.andre.snaptools.Fragments.SettingsFragment;
 import com.ljmu.andre.snaptools.MainActivity;
@@ -82,48 +80,6 @@ public class TranslationDef extends ConstantDefiner<Translation> {
 					"\n\nWe use a cloud based download system to allow for straightforward updates as well as support for hotswapping of supported Snapchat versions without the need of a system reboot.",
 			HomeFragment.class,
 			R.id.txt_description
-	);
-	public static final Translation LOGGED_IN_TITLE = new Translation(
-			"logged_in_title",
-			"Logged In",
-			LoggedInFragment.class,
-			R.id.txt_logged_in
-	);
-	public static final Translation LOGGED_IN_LABEL = new Translation(
-			"logged_in_label",
-			"Logged in as: ",
-			LoggedInFragment.class,
-			R.id.label_display_name
-	);
-	public static final Translation LOGOUT_BUTTON = new Translation(
-			"logout_button",
-			"Logout",
-			LoggedInFragment.class,
-			R.id.btn_logout
-	);
-	public static final Translation TRIAL_BUTTON = new Translation(
-			"trial_button",
-			"Activate Trial",
-			LoggedInFragment.class,
-			R.id.btn_trial
-	);
-	public static final Translation NOT_LOGGED_IN_TITLE = new Translation(
-			"not_logged_in_title",
-			"Not Logged In",
-			LoginFragment.class,
-			R.id.txt_not_logged_in
-	);
-	public static final Translation LOGIN_MESSAGE_REASON = new Translation(
-			"login_message_reason",
-			"Login is required to use most features",
-			LoginFragment.class,
-			R.id.login_message_reason
-	);
-	public static final Translation LOGIN_W_GOOGLE_BUTTON = new Translation(
-			"login_w_google_button",
-			"Login With Google",
-			LoginFragment.class,
-			R.id.btn_login
 	);
 	/* !!Home Fragment !! */
 

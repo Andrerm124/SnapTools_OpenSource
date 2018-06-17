@@ -41,9 +41,9 @@ class DeadlockMonitor extends Thread {
 		Handler lockHandler = new Handler(lockHandlerThread.getLooper());
 
 		while (!isInterrupted()) {
-			Timber.d("Scanning deadlock monitor");
+//			Timber.d("Scanning deadlock monitor");
 			int lastTick = tick;
-			Timber.d("LastTick: " + lastTick);
+//			Timber.d("LastTick: " + lastTick);
 			lockHandler.post(ticker);
 
 			try {

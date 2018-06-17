@@ -6,10 +6,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Process;
 
-import com.ljmu.andre.snaptools.RedactedClasses.Answers;
-import com.ljmu.andre.snaptools.RedactedClasses.CustomEvent;
-import com.github.anrwatchdog.ANRWatchDog;
-import com.google.android.gms.common.annotation.KeepName;
 import com.ljmu.andre.ErrorLogger.ErrorLogger;
 import com.ljmu.andre.GsonPreferences.Preferences;
 import com.ljmu.andre.snaptools.Databases.CacheDatabase;
@@ -17,23 +13,16 @@ import com.ljmu.andre.snaptools.Dialogs.Content.FrameworkLoadError;
 import com.ljmu.andre.snaptools.Dialogs.DialogFactory;
 import com.ljmu.andre.snaptools.Dialogs.ThemedDialog;
 import com.ljmu.andre.snaptools.Dialogs.ThemedDialog.ThemedClickListener;
-import com.ljmu.andre.snaptools.FCM.MessagingService;
 import com.ljmu.andre.snaptools.Framework.FrameworkManager;
 import com.ljmu.andre.snaptools.Framework.Utils.PackLoadState;
-import com.ljmu.andre.snaptools.Networking.Helpers.AuthManager;
-import com.ljmu.andre.snaptools.Networking.Packets.Packet;
 import com.ljmu.andre.snaptools.Networking.VolleyHandler;
-import com.ljmu.andre.snaptools.Networking.WebResponse.PacketResultListener;
-import com.ljmu.andre.snaptools.Utils.BackgroundAuthVerifier;
 import com.ljmu.andre.snaptools.Utils.ContextHelper;
 import com.ljmu.andre.snaptools.Utils.ModuleChecker;
 import com.ljmu.andre.snaptools.Utils.Security;
 import com.ljmu.andre.snaptools.Utils.TimberUtils;
-import com.ljmu.andre.snaptools.Utils.TrialUtils;
 import com.ljmu.andre.snaptools.Utils.UnhookManager;
 import com.ljmu.andre.snaptools.Utils.XposedUtils.ST_MethodHook;
 
-import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -47,13 +36,10 @@ import static com.ljmu.andre.GsonPreferences.Preferences.getPref;
 import static com.ljmu.andre.GsonPreferences.Preferences.putPref;
 import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.ACCEPTED_TOS;
 import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.CHECK_PACK_UPDATES_SC;
-import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.ENABLE_ANR_WATCHDOG;
 import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.NOTIFY_ON_LOAD;
 import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.SYSTEM_ENABLED;
-import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.WATCHDOG_HANG_TIMEOUT;
 import static com.ljmu.andre.snaptools.Utils.NotificationUtils.showLoadedNotification;
 import static com.ljmu.andre.snaptools.Utils.ResourceMapper.getResId;
-import static com.ljmu.andre.snaptools.Utils.UnhookManager.abortSystem;
 import static com.ljmu.andre.snaptools.Utils.UnhookManager.addUnhook;
 import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
 
@@ -62,7 +48,6 @@ import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
  * It and its contents are free to use by all
  */
 
-@KeepName
 public class HookManager implements IXposedHookLoadPackage {
 
 	// ===========================================================================
@@ -154,8 +139,6 @@ public class HookManager implements IXposedHookLoadPackage {
 									return;
 								}
 
-								initWatchdog();
-
 								Timber.d("PID: "
 										+ Process.myPid());
 
@@ -166,7 +149,6 @@ public class HookManager implements IXposedHookLoadPackage {
 								Context moduleContext = app.createPackageContext(
 										STApplication.PACKAGE, Context.CONTEXT_IGNORE_SECURITY);
 								ContextHelper.set(moduleContext);
-								MessagingService.launchService(app);
 
 								addUnhook("System",
 										findAndHookMethod(
@@ -187,9 +169,8 @@ public class HookManager implements IXposedHookLoadPackage {
 															 */
 															snapActivity = (Activity) param.thisObject;
 															ContextHelper.setActivity(snapActivity);
-															MessagingService.launchService(app);
 
-															initFabrics(snapActivity, moduleContext);
+//															initFabrics(snapActivity, moduleContext);
 
 															CacheDatabase.init(snapContext);
 															VolleyHandler.init(snapActivity);
@@ -199,47 +180,7 @@ public class HookManager implements IXposedHookLoadPackage {
 
 															// ===========================================================================
 
-															/**
-															 * ===========================================================================
-															 * Authenticate the logged in user to ensure they are logged in and that they
-															 * are who they say they are.
-															 * ===========================================================================
-															 */
-															AuthManager.authUser(snapActivity, new PacketResultListener() {
-																@Override public void success(String message, Packet packet) {
-																	Answers.safeLogEvent(
-																			new CustomEvent("UserAuth")
-																					.putCustomAttribute(
-																							"Success",
-																							"TRUE"
-																					)
-																	);
-																}
-
-																// ===========================================================================
-
-																@Override public void error(String message, Throwable t, int errorCode) {
-																	Answers.safeLogEvent(
-																			new CustomEvent("UserAuth")
-																					.putCustomAttribute(
-																							"Success",
-																							"FALSE"
-																					)
-																	);
-
-																	DialogFactory.createErrorDialog(
-																			snapActivity,
-																			"Authorisation Issue",
-																			message + "\n\n" +
-																					"You should go to the SnapTools application and sign in securely",
-																			errorCode
-																	).show();
-
-																	abortSystem();
-																}
-															});
-
-															TrialUtils.endTrialIfExpired(snapActivity);
+//															TrialUtils.endTrialIfExpired(snapActivity);
 
 															Timber.d("Loading FrameworkManager");
 
@@ -285,7 +226,7 @@ public class HookManager implements IXposedHookLoadPackage {
 																return;
 															}
 
-															BackgroundAuthVerifier.spoolVerifierThread();
+//															BackgroundAuthVerifier.spoolVerifierThread();
 
 															Timber.d("Framework loaded successfully");
 
@@ -318,47 +259,9 @@ public class HookManager implements IXposedHookLoadPackage {
 				));
 	}
 
-	private void initWatchdog() {
-		Timber.d("Starting watchdog");
-
-		try {
-			if (getPref(ENABLE_ANR_WATCHDOG)) {
-				int timeout = getPref(WATCHDOG_HANG_TIMEOUT);
-				ANRWatchDog watchDog = new ANRWatchDog(timeout)
-						.setANRListener(
-								error -> {
-									Timber.e(error, "Application Not Responding");
-
-									boolean hangDisplayed =
-											HangErrorActivity.start(
-													snapContext,
-													String.format(
-															"The watchdog is reporting that Snapchat has been unresponsive for over %s seconds. This could be due to general lag or Snapchat is in a deadlock",
-															timeout / 1000
-													)
-											);
-
-									if (!hangDisplayed)
-										throw error;
-								}
-						);
-
-				UncaughtExceptionHandler defaultUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
-				ANRWatchDog.setDefaultUncaughtExceptionHandler((t, e) -> {
-					defaultUncaughtExceptionHandler.uncaughtException(t, e);
-					watchDog.interrupt();
-				});
-
-				watchDog.start();
-			}
-		} catch (Throwable t) {
-			Timber.e(t, "Error initialising ANRWatchdog");
-		}
-	}
-
-	private void initFabrics(Activity snapActivity, Context moduleContext) {
-		Timber.e("FABRICS ANALYTICS WAS REDACTED FROM PUBLIC SOURCE!");
-
+//	private void initFabrics(Activity snapActivity, Context moduleContext) {
+//		Timber.e("FABRICS ANALYTICS WAS REDACTED FROM PUBLIC SOURCE!");
+//
 //		try {
 //			Fabric.with(snapActivity, moduleContext, new Crashlytics());
 //			String email = getPref(ST_EMAIL);
@@ -394,7 +297,7 @@ public class HookManager implements IXposedHookLoadPackage {
 //			} catch (Throwable ignored) {
 //			}
 //		}
-	}
+//	}
 
 	private boolean initTOS() {
 		if (!(boolean) getPref(ACCEPTED_TOS)) {

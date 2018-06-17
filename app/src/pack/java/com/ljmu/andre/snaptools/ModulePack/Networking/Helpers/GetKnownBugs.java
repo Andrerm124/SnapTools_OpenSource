@@ -26,6 +26,7 @@ import timber.log.Timber;
 import static com.ljmu.andre.GsonPreferences.Preferences.getPref;
 import static com.ljmu.andre.GsonPreferences.Preferences.putPref;
 import static com.ljmu.andre.snaptools.ModulePack.Utils.ModulePreferenceDef.LAST_CHECK_KNOWN_BUGS;
+import static com.ljmu.andre.snaptools.Utils.StringEncryptor.decryptMsg;
 
 /**
  * This class was created by Andre R M (SID: 701439)
@@ -34,7 +35,7 @@ import static com.ljmu.andre.snaptools.ModulePack.Utils.ModulePreferenceDef.LAST
 
 public class GetKnownBugs {
 	private static final long BUGS_CHECK_COOLDOWN = STApplication.DEBUG ? 0 : TimeUnit.HOURS.toMillis(12);
-	private static final String KNOWN_BUGS_URL = "https://snaptools.org/SnapTools/Scripts/get_known_bugs.php";
+	private static final String KNOWN_BUGS_URL = /*https://snaptools.org/SnapTools/Scripts/get_known_bugs.php*/ decryptMsg(new byte[]{-4, -118, -56, -116, -67, 26, -1, -39, 30, 104, 108, 5, -64, 78, 25, -2, -100, -63, 90, -124, 11, -84, 111, -37, 59, 25, -36, 92, -106, 78, -120, 10, 102, 8, -126, -10, 21, 70, -102, 61, -62, 102, -69, 4, 115, -86, -36, 74, -9, 19, 44, -6, -128, -117, -114, 34, -121, -49, -11, -16, -97, 39, -98, 7});
 	private static final String FETCH_BUGS_TAG = "fetching_bugs";
 
 	public static void getBugs(Activity activity, String scVersion, String packVersion,
@@ -102,12 +103,10 @@ public class GetKnownBugs {
 				.setContext(activity)
 				.setTag(FETCH_BUGS_TAG)
 				.useDefaultRetryPolicy()
-				// ===========================================================================
 				.addParam("sc_version", scVersion)
 				.addParam("pack_version", packVersion)
-				// ===========================================================================
 				.setCallback(new WebResponseListener() {
-					@Override public void success(WebResponse webResponse) {
+					@Override public void success(WebResponse webResponse) throws Throwable {
 						progressDialog.dismiss();
 
 						KnownBugsPacket bugsPacket = webResponse.getResult();

@@ -7,11 +7,10 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 
 import com.google.common.io.Files;
-import com.ljmu.andre.snaptools.RedactedClasses.Answers;
-import com.ljmu.andre.snaptools.RedactedClasses.Answers.CustomEvent;
 import com.ljmu.andre.snaptools.Dialogs.DialogFactory;
 import com.ljmu.andre.snaptools.Dialogs.ThemedDialog;
 import com.ljmu.andre.snaptools.Dialogs.ThemedDialog.ThemedClickListener;
+import com.ljmu.andre.snaptools.Exceptions.HookNotFoundException;
 import com.ljmu.andre.snaptools.Fragments.FragmentHelper;
 import com.ljmu.andre.snaptools.ModulePack.Fragments.SharingFragment;
 import com.ljmu.andre.snaptools.ModulePack.Notifications.SafeToastAdapter;
@@ -26,6 +25,7 @@ import timber.log.Timber;
 
 import static com.ljmu.andre.GsonPreferences.Preferences.getPref;
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookClassDef.ENUM_BATCHED_SNAP_POSITION;
+import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookClassDef.USER_PREFS;
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookDef.BATCHED_MEDIA_LIMITER;
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookDef.CAMERA_IS_VISIBLE;
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookDef.REPLACE_SHARED_IMAGE;
@@ -34,6 +34,7 @@ import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookVariableDe
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookVariableDef.BATCHED_MEDIA_LIST;
 import static com.ljmu.andre.snaptools.ModulePack.Utils.ModulePreferenceDef.BATCHED_MEDIA_CAP;
 import static com.ljmu.andre.snaptools.ModulePack.Utils.ModulePreferenceDef.SHOW_SHARING_TUTORIAL;
+import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
 
 /**
  * This class was created by Andre R M (SID: 701439)
@@ -148,11 +149,11 @@ public class Sharing extends ModuleHelper {
 										"Shared image path not found"
 								);
 
-								Answers.safeLogEvent(
-										new CustomEvent("SharedMedia")
-												.putCustomAttribute("Type", "Image")
-												.putCustomAttribute("Success", "FALSE")
-								);
+//								Answers.safeLogEvent(
+//										new CustomEvent("SharedMedia")
+//												.putCustomAttribute("Type", "Image")
+//												.putCustomAttribute("Success", "FALSE")
+//								);
 								return;
 							}
 
@@ -166,21 +167,21 @@ public class Sharing extends ModuleHelper {
 										"Failed to load shared media"
 								);
 
-								Answers.safeLogEvent(
-										new CustomEvent("SharedMedia")
-												.putCustomAttribute("Type", "Image")
-												.putCustomAttribute("Success", "FALSE")
-								);
+//								Answers.safeLogEvent(
+//										new CustomEvent("SharedMedia")
+//												.putCustomAttribute("Type", "Image")
+//												.putCustomAttribute("Success", "FALSE")
+//								);
 								return;
 							}
 
 							param.args[0] = bitmap;
 
-							Answers.safeLogEvent(
-									new CustomEvent("SharedMedia")
-											.putCustomAttribute("Type", "Image")
-											.putCustomAttribute("Success", "TRUE")
-							);
+//							Answers.safeLogEvent(
+//									new CustomEvent("SharedMedia")
+//											.putCustomAttribute("Type", "Image")
+//											.putCustomAttribute("Success", "TRUE")
+//							);
 						}
 					}
 				}
@@ -216,11 +217,11 @@ public class Sharing extends ModuleHelper {
 											"Shared video path not found"
 									);
 
-									Answers.safeLogEvent(
-											new CustomEvent("SharedMedia")
-													.putCustomAttribute("Type", "Video")
-													.putCustomAttribute("Success", "FALSE")
-									);
+//									Answers.safeLogEvent(
+//											new CustomEvent("SharedMedia")
+//													.putCustomAttribute("Type", "Video")
+//													.putCustomAttribute("Success", "FALSE")
+//									);
 									return;
 								}
 								File sourceFile = new File(videoPath);
@@ -231,11 +232,11 @@ public class Sharing extends ModuleHelper {
 											"Shared video doesn't exist"
 									);
 
-									Answers.safeLogEvent(
-											new CustomEvent("SharedMedia")
-													.putCustomAttribute("Type", "Video")
-													.putCustomAttribute("Success", "FALSE")
-									);
+//									Answers.safeLogEvent(
+//											new CustomEvent("SharedMedia")
+//													.putCustomAttribute("Type", "Video")
+//													.putCustomAttribute("Success", "FALSE")
+//									);
 									return;
 								}
 
@@ -247,11 +248,11 @@ public class Sharing extends ModuleHelper {
 											"Recorded video path not found"
 									);
 
-									Answers.safeLogEvent(
-											new CustomEvent("SharedMedia")
-													.putCustomAttribute("Type", "Video")
-													.putCustomAttribute("Success", "FALSE")
-									);
+//									Answers.safeLogEvent(
+//											new CustomEvent("SharedMedia")
+//													.putCustomAttribute("Type", "Video")
+//													.putCustomAttribute("Success", "FALSE")
+//									);
 									return;
 								}
 
@@ -259,11 +260,11 @@ public class Sharing extends ModuleHelper {
 								File snapFile = new File(snapPath.getPath());
 								Files.copy(sharedVideoFile, snapFile);
 
-								Answers.safeLogEvent(
-										new CustomEvent("SharedMedia")
-												.putCustomAttribute("Type", "Video")
-												.putCustomAttribute("Success", "TRUE")
-								);
+//								Answers.safeLogEvent(
+//										new CustomEvent("SharedMedia")
+//												.putCustomAttribute("Type", "Video")
+//												.putCustomAttribute("Success", "TRUE")
+//								);
 							}
 						} catch (Throwable t) {
 							Timber.e(t, "Error with shared video");
@@ -271,76 +272,6 @@ public class Sharing extends ModuleHelper {
 					}
 				}
 		);
-
-//		findAndHookMethod(
-//				"frj", snapClassLoader,
-//				"onVideoRecordingSuccess",
-//				new HookWrapper((HookBefore) param -> {
-//					Timber.d("Video File: " + XposedHelpers.getObjectField(param.thisObject, "k"));
-//					if (snapActivity == null || snapActivity.isDestroyed() || snapActivity.isFinishing()) {
-//						Timber.w("SnapActivity not valid for shared video");
-//						return;
-//					}
-//
-//					Intent intent = snapActivity.getIntent();
-//
-//					if (intent == null) {
-//						Timber.d("Null Intent");
-//						return;
-//					}
-//
-//					try {
-//						if (intent.getBooleanExtra("IS_SHARE", false)) {
-//							intent.removeExtra("IS_SHARE");
-//							Timber.d("It's a shared item");
-//							String videoPath = intent.getStringExtra("video_url");
-//							intent.removeExtra("video_url");
-//							Timber.d("VidPath: " + videoPath);
-//
-//							if (videoPath == null) {
-//								SafeToastAdapter.showErrorToast(
-//										snapActivity,
-//										"Shared video path not found"
-//								);
-//
-//								Answers.safeLogEvent(
-//										new CustomEvent("SharedMedia")
-//												.putCustomAttribute("Type", "Video")
-//												.putCustomAttribute("Success", "FALSE")
-//								);
-//								return;
-//							}
-//							File sourceFile = new File(videoPath);
-//
-//							if (!sourceFile.exists()) {
-//								SafeToastAdapter.showErrorToast(
-//										snapActivity,
-//										"Shared video doesn't exist"
-//								);
-//
-//								Answers.safeLogEvent(
-//										new CustomEvent("SharedMedia")
-//												.putCustomAttribute("Type", "Video")
-//												.putCustomAttribute("Success", "FALSE")
-//								);
-//								return;
-//							}
-//
-//							File sharedVideoFile = new File(videoPath);
-//							File snapFile = (File) XposedHelpers.getObjectField(param.thisObject, "k");
-//							Files.copy(sharedVideoFile, snapFile);
-//
-//							Answers.safeLogEvent(
-//									new CustomEvent("SharedMedia")
-//											.putCustomAttribute("Type", "Video")
-//											.putCustomAttribute("Success", "TRUE")
-//							);
-//						}
-//					} catch (Throwable t) {
-//						Timber.e(t, "Error with shared video");
-//					}
-//				})
-//		);
 
 		hookMethod(
 				BATCHED_MEDIA_LIMITER,
@@ -395,5 +326,17 @@ public class Sharing extends ModuleHelper {
 					}
 				}
 		);
+
+		try {
+			Class userPrefs = HookResolver.resolveHookClass(USER_PREFS);
+
+			findAndHookMethod(
+					userPrefs, "ft",
+					XC_MethodReplacement.returnConstant(true)
+			);
+		} catch (HookNotFoundException e) {
+			Timber.e(e);
+			moduleLoadState.fail();
+		}
 	}
 }

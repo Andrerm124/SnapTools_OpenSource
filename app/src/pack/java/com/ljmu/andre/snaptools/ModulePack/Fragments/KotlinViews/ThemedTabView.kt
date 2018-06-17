@@ -2,7 +2,6 @@ package com.ljmu.andre.snaptools.ModulePack.Fragments.KotlinViews
 
 import android.content.Context
 import android.support.v4.content.ContextCompat
-import android.view.View
 import com.kekstudio.dachshundtablayout.DachshundTabLayout
 import com.ljmu.andre.snaptools.Utils.ResourceUtils
 import org.jetbrains.anko.*

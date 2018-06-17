@@ -39,7 +39,6 @@ import com.ljmu.andre.snaptools.ModulePack.Databases.Tables.FilterObject;
 import com.ljmu.andre.snaptools.ModulePack.Fragments.FiltersManagerFragment;
 import com.ljmu.andre.snaptools.ModulePack.Fragments.KotlinViews.NowPlayingView;
 import com.ljmu.andre.snaptools.ModulePack.Networking.Helpers.TrackAlbumArtManager;
-import com.ljmu.andre.snaptools.ModulePack.Utils.FieldMapper;
 import com.ljmu.andre.snaptools.ModulePack.Utils.TrackMetaData;
 import com.ljmu.andre.snaptools.Networking.WebResponse.ObjectResultListener;
 import com.ljmu.andre.snaptools.Utils.AnimationUtils;
@@ -56,6 +55,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Callable;
 
+import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -65,15 +65,12 @@ import timber.log.Timber;
 import static com.ljmu.andre.GsonPreferences.Preferences.getPref;
 import static com.ljmu.andre.GsonPreferences.Preferences.putPref;
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookClassDef.FILTER_METADATA;
-import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookClassDef.SERIALIZABLE_FILTER_METADATA;
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookDef.CREATE_FILTER_METADATA;
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookDef.CREATE_GEOFILTER_VIEW;
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookDef.FILTER_LOAD_METADATA;
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookDef.GEOFILTER_SHOULD_SUBSAMPLE;
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookDef.GEOFILTER_TAPPED;
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookDef.GET_GEOFILTER_CONTENT_VIEW;
-import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookVariableDef.FILTER_METADATA_CACHE;
-import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookVariableDef.FILTER_SERIALIZABLE_METADATA;
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookVariableDef.GEOFILTER_VIEW_CREATION_ARG3;
 import static com.ljmu.andre.snaptools.ModulePack.Utils.ModulePreferenceDef.FILTERS_PATH;
 import static com.ljmu.andre.snaptools.ModulePack.Utils.ModulePreferenceDef.FILTER_NOW_PLAYING_ENABLED;
@@ -86,7 +83,6 @@ import static com.ljmu.andre.snaptools.Utils.ResourceUtils.getDSLView;
 import static com.ljmu.andre.snaptools.Utils.ResourceUtils.getDrawable;
 import static com.ljmu.andre.snaptools.Utils.ResourceUtils.getId;
 import static com.ljmu.andre.snaptools.Utils.ResourceUtils.getIdFromString;
-import static com.ljmu.andre.snaptools.Utils.XposedUtils.logStackTrace;
 import static de.robv.android.xposed.XposedHelpers.callMethod;
 import static de.robv.android.xposed.XposedHelpers.getAdditionalInstanceField;
 import static de.robv.android.xposed.XposedHelpers.newInstance;
@@ -131,8 +127,6 @@ public class CustomFilters extends ModuleHelper {
 
 		try {
 			Class filterMetadataClass = HookResolver.resolveHookClass(FILTER_METADATA);
-			Class serializableFilterMetadataClass = HookResolver.resolveHookClass(SERIALIZABLE_FILTER_METADATA);
-			FieldMapper mapper = FieldMapper.initMapper("Filter", serializableFilterMetadataClass);
 
 			hookMethod(
 					CREATE_FILTER_METADATA,
@@ -149,24 +143,14 @@ public class CustomFilters extends ModuleHelper {
 										requiredMetaDataCount++;
 
 									for (int i = 0; i < requiredMetaDataCount; i++) {
-										Object geoMetaDataCache = getObjectField(FILTER_METADATA_CACHE, param.thisObject);
-										Object serializableMetaData = getObjectField(FILTER_SERIALIZABLE_METADATA, geoMetaDataCache);
+										Object firstObj = XposedHelpers.getObjectField(param.thisObject, "a");
+										Object secondObj = XposedHelpers.getObjectField(firstObj, "a");
 
-										// Retrieve the original settings ============================================
-										String oldId = mapper.getFieldVal(serializableMetaData, "filter_id");
-										Boolean wasDynamic = mapper.getFieldVal(serializableMetaData, "is_dynamic_geofilter");
+										Object mfxObj = newInstance(filterMetadataClass, secondObj);
 
-										// Assign our custom settings ================================================
-										mapper.setField(serializableMetaData, "filter_id", "Custom_" + i);
-										mapper.setField(serializableMetaData, "is_dynamic_geofilter", true);
-
-										// Create our custom metadata ================================================
-										Object builtMetaData = newInstance(filterMetadataClass, serializableMetaData);
-										filterMetaData.add(builtMetaData);
-
-										// Reset the original settings ===============================================
-										mapper.setField(serializableMetaData, "filter_id", oldId);
-										mapper.setField(serializableMetaData, "is_dynamic_geofilter", wasDynamic);
+										XposedHelpers.setObjectField(mfxObj, "a", String.valueOf(Math.random() * 1000000) + i);
+										XposedHelpers.setObjectField(mfxObj, "f", true);
+										filterMetaData.add(mfxObj);
 									}
 								}
 							}
@@ -182,17 +166,15 @@ public class CustomFilters extends ModuleHelper {
 				GEOFILTER_SHOULD_SUBSAMPLE,
 				new ST_MethodHook() {
 					@SuppressWarnings("Guava") @Override protected void before(MethodHookParam param) throws Throwable {
-						RelativeLayout geofilterLayout = (RelativeLayout) param.thisObject;
-						Timber.d("Should SubSample? " + param.args[0]);
+						RelativeLayout geofilterLayout = (RelativeLayout) param.args[0];
 
 						if (getAdditionalInstanceField(geofilterLayout, "is_now_playing") != null) {
 							if (nowPlayingSettingsView == null)
 								return;
 
-							Timber.d("It's a now playing filter");
 
 							snapActivity.runOnUiThread(() -> {
-								if (!(boolean) param.args[0])
+								if ((boolean) param.args[1])
 									AnimationUtils.collapse(nowPlayingSettingsView, 2);
 								else
 									AnimationUtils.expand(nowPlayingSettingsView, 2);
@@ -204,7 +186,7 @@ public class CustomFilters extends ModuleHelper {
 						String filterFilePath = (String) getAdditionalInstanceField(geofilterLayout, FILTER_FILE_ID);
 
 						if (filterFilePath != null) {
-							Timber.d("Is custom filter: " + filterFilePath);
+							//Timber.d("Is custom filter: " + filterFilePath);
 							//Timber.d("Is rendered: " + param.args[1]);
 
 							ImageView filterImageView = getDSLView(geofilterLayout, FILTER_IMAGEVIEW_ID);
@@ -220,7 +202,7 @@ public class CustomFilters extends ModuleHelper {
 								return;
 							}
 
-							if (!(boolean) param.args[0]) {
+							if ((boolean) param.args[1]) {
 								Options bitmapFactoryOptions = new Options();
 								bitmapFactoryOptions.inSampleSize = BACKGROUND_FILTER_SAMPLE_SIZE;
 								Bitmap decodedBitmap = BitmapFactory.decodeFile(filterFilePath, bitmapFactoryOptions);
@@ -297,7 +279,7 @@ public class CustomFilters extends ModuleHelper {
 								try {
 									FilterObject filterObject = filterObjectIterator.next();
 									if (filterObject == null) {
-										Timber.w("Null FilterObject?");
+										Timber.w("Null FilterObject? The fuck's that about?");
 										continue;
 									}
 
@@ -364,37 +346,29 @@ public class CustomFilters extends ModuleHelper {
 
 		hookMethod(
 				GEOFILTER_TAPPED,
-				new ST_MethodHook() {
-					@Override protected void after(MethodHookParam param) throws Throwable {
-						Timber.d("Found a tap: " + param.thisObject);
-
-						logStackTrace();
-
+				new XC_MethodHook() {
+					@Override protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 						if (getAdditionalInstanceField(param.thisObject, "is_now_playing") != null) {
-							Timber.d("It's a now playing filter");
-
 							if (nowPlayingView == null || nowPlayingView.getVisibility() != View.VISIBLE) {
 								param.setResult(false);
-								Timber.d("It's not visible");
 								return;
 							}
 
 							Rect rect = new Rect();
 							if (!nowPlayingView.getGlobalVisibleRect(rect)) {
 								param.setResult(false);
-								Timber.d("Couldn't get filter bounds");
 								return;
 							}
 
 							MotionEvent motionEvent = (MotionEvent) param.args[0];
 							if (!rect.contains((int) motionEvent.getX(), (int) motionEvent.getY())) {
 								param.setResult(false);
-								Timber.d("It's not within the bounds");
 								return;
 							}
 
 							RelativeLayout geofilterView = (RelativeLayout) param.thisObject;
 							geofilterView.removeAllViews();
+
 
 							View nowPlayingMainContainer = getPlayerViewProvider(snapActivity).getPlayerView(snapActivity, true);
 

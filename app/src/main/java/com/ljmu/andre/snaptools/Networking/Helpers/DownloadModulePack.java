@@ -3,8 +3,6 @@ package com.ljmu.andre.snaptools.Networking.Helpers;
 import android.app.Activity;
 import android.support.annotation.Nullable;
 
-import com.ljmu.andre.snaptools.RedactedClasses.Answers;
-import com.ljmu.andre.snaptools.RedactedClasses.CustomEvent;
 import com.ljmu.andre.snaptools.Dialogs.Content.Progress;
 import com.ljmu.andre.snaptools.Dialogs.ThemedDialog;
 import com.ljmu.andre.snaptools.EventBus.EventBus;
@@ -13,6 +11,8 @@ import com.ljmu.andre.snaptools.EventBus.Events.PackDownloadEvent.DownloadState;
 import com.ljmu.andre.snaptools.Exceptions.NullObjectException;
 import com.ljmu.andre.snaptools.Framework.MetaData.PackMetaData;
 import com.ljmu.andre.snaptools.Networking.Helpers.DownloadFile.DownloadListener;
+import com.ljmu.andre.snaptools.RedactedClasses.Answers;
+import com.ljmu.andre.snaptools.RedactedClasses.CustomEvent;
 import com.ljmu.andre.snaptools.Utils.Assert;
 import com.ljmu.andre.snaptools.Utils.ContextHelper;
 import com.ljmu.andre.snaptools.Utils.DeviceIdManager;
@@ -28,8 +28,6 @@ import static com.ljmu.andre.GsonPreferences.Preferences.getPref;
 import static com.ljmu.andre.snaptools.Networking.WebRequest.assertParam;
 import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.KILL_SC_ON_CHANGE;
 import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.MODULES_PATH;
-import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.STKN;
-import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.ST_EMAIL;
 
 /**
  * This class was created by Andre R M (SID: 701439)
@@ -72,13 +70,9 @@ public class DownloadModulePack implements DownloadListener {
 
 	public void download() {
 		Class cls = DownloadModulePack.class;
-		String token;
-		String email;
 		String deviceId;
 
 		try {
-			token = assertParam(cls, "Invalid Token", getPref(STKN));
-			email = assertParam(cls, "Invalid Email", getPref(ST_EMAIL));
 			deviceId = assertParam(cls, "Invalid Device ID", DeviceIdManager.getDeviceId(activity));
 		} catch (IllegalArgumentException e) {
 			Timber.e(e);
@@ -114,9 +108,7 @@ public class DownloadModulePack implements DownloadListener {
 				.setFilename(packName + ".jar")
 				// ===========================================================================
 				.setParams(params)
-				.addParam("token", token)
 				.addParam("device_id", deviceId)
-				.addParam("email", email)
 				.addParam("sc_version", snapVersion)
 				.addParam("pack_type", packType)
 				.addParam("development", development ? "1" : "0")

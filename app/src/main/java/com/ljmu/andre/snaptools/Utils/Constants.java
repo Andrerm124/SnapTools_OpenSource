@@ -1,6 +1,5 @@
 package com.ljmu.andre.snaptools.Utils;
 
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.ljmu.andre.snaptools.BuildConfig;
 import com.ljmu.andre.snaptools.STApplication;
 
@@ -26,15 +25,15 @@ public class Constants {
 
 	@RequiresFramework(73)
 	public static void initConstants() {
-		FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.getInstance();
-		SHOP_CHECK_COOLDOWN = remoteConfig.getLong("shop_check_cooldown_hours");
-		APK_CHECK_COOLDOWN = remoteConfig.getLong("apk_check_cooldown_minutes");
-		PACK_CHECK_COOLDOWN = remoteConfig.getLong("pack_check_cooldown_minutes");
-		FAQ_CHECK_COOLDOWN = remoteConfig.getLong("faq_check_cooldown_hours");
-		FEATURES_CHECK_COOLDOWN = remoteConfig.getLong("features_check_cooldown_hours");
-		TRANSLATIONS_CHECK_COOLDOWN = remoteConfig.getLong("translations_check_cooldown_hours");
-		REMOTE_CONFIG_COOLDOWN = remoteConfig.getLong("remote_config_check_cooldown_hours");
-		REMIND_TUTORIAL_COOLDOWN = remoteConfig.getLong("remind_tutorial_cooldown_days");
+
+//		SHOP_CHECK_COOLDOWN = remoteConfig.getLong("shop_check_cooldown_hours");
+//		APK_CHECK_COOLDOWN = remoteConfig.getLong("apk_check_cooldown_minutes");
+//		PACK_CHECK_COOLDOWN = remoteConfig.getLong("pack_check_cooldown_minutes");
+//		FAQ_CHECK_COOLDOWN = remoteConfig.getLong("faq_check_cooldown_hours");
+//		FEATURES_CHECK_COOLDOWN = remoteConfig.getLong("features_check_cooldown_hours");
+//		TRANSLATIONS_CHECK_COOLDOWN = remoteConfig.getLong("translations_check_cooldown_hours");
+//		REMOTE_CONFIG_COOLDOWN = remoteConfig.getLong("remote_config_check_cooldown_hours");
+//		REMIND_TUTORIAL_COOLDOWN = remoteConfig.getLong("remind_tutorial_cooldown_days");
 	}
 
 	@Deprecated

@@ -4,12 +4,14 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
@@ -17,6 +19,8 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.BaseQuickAdapter.OnItemClickListener;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.ljmu.andre.CBIDatabase.CBITable;
 import com.ljmu.andre.CBIDatabase.Utils.QueryBuilder;
@@ -50,6 +54,7 @@ import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
 import static com.ljmu.andre.snaptools.Utils.ResourceUtils.getLayout;
+import static com.ljmu.andre.snaptools.Utils.StringEncryptor.decryptMsg;
 
 /**
  * This class was created by Andre R M (SID: 701439)
@@ -90,18 +95,48 @@ public class ChatConversationFragment extends FragmentHelper {
 		conversations.clear();
 	}
 
+	private void initUsernameList(LinearLayout layoutContainer, LayoutInflater inflater) {
+		swipeRefreshLayout = new SwipeRefreshLayout(getActivity());
+		swipeRefreshLayout.setLayoutParams(
+				new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+		);
+		swipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
+			@Override public void onRefresh() {
+				generateConversationData();
+			}
+		});
+
+		inflater.inflate(getLayout(getActivity(), "recyclerview"), swipeRefreshLayout, true);
+
+		recyclerView = ResourceUtils.getView(swipeRefreshLayout, "recyclerview");
+		LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+		recyclerView.setLayoutManager(layoutManager);
+		adapter = new ConversationQuickAdapter(conversations);
+		adapter.bindToRecyclerView(recyclerView);
+		adapter.setEmptyView(R.layout.layout_empty_chats);
+
+		adapter.setOnItemClickListener(new OnItemClickListener() {
+			@Override public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+				Timber.d("Clicked item: " + position);
+			}
+		});
+		layoutContainer.addView(swipeRefreshLayout);
+	}
+
 	private void generateConversationData() {
 		swipeRefreshLayout.setRefreshing(true);
-		Observable.fromCallable((Callable<Collection<ConversationObject>>) () -> {
-			Collection<ConversationObject> conversationObjects = conversationTable.getAll(
-					new QueryBuilder()
-							.addSort("last_message_timestamp", "DESC")
-			);
+		Observable.fromCallable(new Callable<Collection<ConversationObject>>() {
+			@Override public Collection<ConversationObject> call() throws Exception {
+				Collection<ConversationObject> conversationObjects = conversationTable.getAll(
+						new QueryBuilder()
+								.addSort("last_message_timestamp", "DESC")
+				);
 
-			if (conversationObjects.isEmpty())
-				return Collections.emptyList();
+				if (conversationObjects.isEmpty())
+					return Collections.emptyList();
 
-			return conversationObjects;
+				return conversationObjects;
+			}
 		}).subscribeOn(Schedulers.computation())
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(new SimpleObserver<Collection<ConversationObject>>() {
@@ -124,7 +159,7 @@ public class ChatConversationFragment extends FragmentHelper {
 				//At this point the layout is complete and the
 				//dimensions of recyclerView and any child views are known.
 
-				if (Constants.getApkVersionCode() >= 66)
+				if(Constants.getApkVersionCode() >= 66)
 					AnimationUtils.sequentGroup(recyclerView);
 
 				recyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
@@ -139,26 +174,6 @@ public class ChatConversationFragment extends FragmentHelper {
 			adapter.notifyDataSetChanged();
 	}
 
-	private void initUsernameList(LinearLayout layoutContainer, LayoutInflater inflater) {
-		swipeRefreshLayout = new SwipeRefreshLayout(getActivity());
-		swipeRefreshLayout.setLayoutParams(
-				new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-		);
-		swipeRefreshLayout.setOnRefreshListener(this::generateConversationData);
-
-		inflater.inflate(getLayout(getActivity(), "recyclerview"), swipeRefreshLayout, true);
-
-		recyclerView = ResourceUtils.getView(swipeRefreshLayout, "recyclerview");
-		LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-		recyclerView.setLayoutManager(layoutManager);
-		adapter = new ConversationQuickAdapter(conversations);
-		adapter.bindToRecyclerView(recyclerView);
-		adapter.setEmptyView(R.layout.layout_empty_chats);
-
-		adapter.setOnItemClickListener((adapter, view, position) -> Timber.d("Clicked item: " + position));
-		layoutContainer.addView(swipeRefreshLayout);
-	}
-
 	private LinearLayout createUsernameRow(ConversationObject conversationObject) {
 		LinearLayout container = new LinearLayout(getActivity());
 		container.setOrientation(LinearLayout.VERTICAL);
@@ -166,11 +181,15 @@ public class ChatConversationFragment extends FragmentHelper {
 				new LinearLayoutCompat.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
 		);
 
-		container.setOnClickListener(v -> EventBus.getInstance().post(
-				new ReqLoadChatFragmentEvent(
-						new ChatMessagesFragment().setConversationObject(conversationObject)
-				)
-		));
+		container.setOnClickListener(new OnClickListener() {
+			@Override public void onClick(View v) {
+				EventBus.getInstance().post(
+						new ReqLoadChatFragmentEvent(
+								new ChatMessagesFragment().setConversationObject(conversationObject)
+						)
+				);
+			}
+		});
 		TextView username = new TextView(getActivity());
 		username.setText(conversationObject.getConversationName());
 		username.setTextAppearance(activity, R.style.HeaderText);
@@ -208,8 +227,8 @@ public class ChatConversationFragment extends FragmentHelper {
 	private void renameConversation(ConversationObject conversationObject) {
 		DialogFactory.createBasicTextInputDialog(
 				getActivity(),
-				"Rename Conversation",
-				"Please enter a name for the conversation",
+				/*Rename Conversation*/ decryptMsg(new byte[]{68, 88, 81, -53, -53, 113, 46, 47, 83, 97, -113, -17, -34, 77, 1, -10, 48, 93, 118, -56, -16, 52, -6, 100, -68, -103, -72, 41, -82, 0, -84, 83}),
+				/*Please enter a name for the conversation*/ decryptMsg(new byte[]{-104, -114, -102, -87, 109, -85, -28, -75, 124, 42, -94, -23, 114, -22, -128, -106, -32, -121, 67, 72, 123, -92, -122, 78, 111, 36, -55, 92, -11, 40, 125, 12, 57, -121, 63, 57, -87, 124, 75, -75, 16, 11, 56, -53, 22, 53, 39, 53}),
 				null,
 				conversationObject.getConversationName(),
 				null,
@@ -273,8 +292,8 @@ public class ChatConversationFragment extends FragmentHelper {
 	private void deleteConversation(ConversationObject conversationObject) {
 		DialogFactory.createConfirmation(
 				getActivity(),
-				"Delete Confirmation?",
-				"Are you sure you want to delete this conversation ("
+				/*Delete Confirmation?*/ decryptMsg(new byte[]{-15, -56, 40, -74, -84, -70, 84, 49, 115, 109, -94, 91, -25, 122, -121, 27, 48, -80, -36, 99, -95, 69, -15, -41, -74, 16, 59, -107, 85, -58, 69, 73}),
+				/*Are you sure you want to delete this conversation (*/ decryptMsg(new byte[]{124, -63, 53, -11, 86, -30, -46, 37, -98, -41, 23, -17, -27, 80, 93, -10, -83, 49, -22, -39, 44, 11, -48, 15, 71, 55, -29, -28, 84, -33, 102, 88, 43, 30, -92, -45, -26, 88, 83, -86, 55, 8, 15, 52, 24, -97, -14, 73, -79, -113, 107, 19, -85, -54, -20, -69, 1, -21, 50, -73, 7, -64, -103, -42})
 						+ conversationObject.getConversationName() + ")?",
 				new ThemedClickListener() {
 					@Override public void clicked(ThemedDialog themedDialog) {

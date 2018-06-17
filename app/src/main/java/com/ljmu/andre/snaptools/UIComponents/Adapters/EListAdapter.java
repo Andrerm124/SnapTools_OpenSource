@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import com.ljmu.andre.snaptools.R;
 import com.ljmu.andre.snaptools.UIComponents.Adapters.EListAdapter.Listable;
-import com.ljmu.andre.snaptools.Utils.ContextHelper;
 
 import java.util.List;
 

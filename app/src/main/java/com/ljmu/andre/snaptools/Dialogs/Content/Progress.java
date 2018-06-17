@@ -38,11 +38,15 @@ public class Progress implements ThemedDialog.ThemedDialogExtension {
 	private ProgressBar progressBar;
 	@Nullable private Callable<Void> cancelCallback;
 
+	private TextView txtMessage;
+
 	@Override public void onCreate(LayoutInflater inflater, View parent, ViewGroup content, ThemedDialog themedDialog) {
 		Context moduleContext = ContextHelper.getModuleContext(parent.getContext());
 		inflater.inflate(getLayout(moduleContext, "dialog_progress"), content, true);
 
-		((TextView) getView(content, "txt_message")).setText(message);
+		txtMessage = getView(content, "txt_message");
+		txtMessage.setText(message);
+
 		progressBar = getView(content, "progress");
 
 		if (showProgress)
@@ -85,6 +89,9 @@ public class Progress implements ThemedDialog.ThemedDialogExtension {
 			this.message = new SpannableString(message);
 		}
 
+		if (txtMessage != null) {
+			txtMessage.setText(this.message);
+		}
 		return this;
 	}
 
@@ -105,7 +112,7 @@ public class Progress implements ThemedDialog.ThemedDialogExtension {
 
 	public Progress setProgress(@IntRange(from = 0, to = 100) int progress) {
 		Timber.d("Setting progress: " + progress);
-		if(progressBar != null)
+		if (progressBar != null)
 			progressBar.setProgress(progress);
 		return this;
 	}

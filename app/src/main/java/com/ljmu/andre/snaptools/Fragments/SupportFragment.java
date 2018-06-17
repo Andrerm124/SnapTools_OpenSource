@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.ljmu.andre.snaptools.Dialogs.DialogFactory;
 import com.ljmu.andre.snaptools.Dialogs.ThemedDialog;
 import com.ljmu.andre.snaptools.Dialogs.ThemedDialog.ThemedClickListener;
@@ -22,8 +21,6 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import timber.log.Timber;
 
-import static com.ljmu.andre.snaptools.Utils.FrameworkViewFactory.getSpannedHtml;
-
 /**
  * This class was created by Andre R M (SID: 701439)
  * It and its contents are free to use by all
@@ -33,7 +30,6 @@ public class SupportFragment extends FragmentHelper {
 	public static final String TAG = "Support";
 	public static final int MENU_ID = R.id.nav_support;
 	Unbinder unbinder;
-	FirebaseRemoteConfig remoteConfig;
 	@BindView(R.id.txt_discord) TextView txtDiscord;
 	@BindView(R.id.txt_server) TextView txtServer;
 	@BindView(R.id.txt_reddit) TextView txtReddit;
@@ -46,13 +42,12 @@ public class SupportFragment extends FragmentHelper {
 		EventBus.soleRegister(this);
 		Timber.d("CreateView");
 
-		remoteConfig = FirebaseRemoteConfig.getInstance();
-
-		txtDiscord.setText(getSpannedHtml(remoteConfig.getString("support_discord_text")));
-		txtServer.setText(getSpannedHtml(remoteConfig.getString("support_website_text")));
-		txtReddit.setText(getSpannedHtml(remoteConfig.getString("support_reddit_text")));
-		txtXda.setText(getSpannedHtml(remoteConfig.getString("support_xda_text")));
-		txtTwitter.setText(getSpannedHtml(remoteConfig.getString("support_twitter_text")));
+		//TODO: Write out the hardcoded values for these UI elements
+//		txtDiscord.setText(getSpannedHtml(remoteConfig.getString("support_discord_text")));
+//		txtServer.setText(getSpannedHtml(remoteConfig.getString("support_website_text")));
+//		txtReddit.setText(getSpannedHtml(remoteConfig.getString("support_reddit_text")));
+//		txtXda.setText(getSpannedHtml(remoteConfig.getString("support_xda_text")));
+//		txtTwitter.setText(getSpannedHtml(remoteConfig.getString("support_twitter_text")));
 
 		return layoutContainer;
 	}
@@ -85,24 +80,25 @@ public class SupportFragment extends FragmentHelper {
 							@Override public void clicked(ThemedDialog themedDialog) {
 								themedDialog.dismiss();
 
-								Intent linkIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(remoteConfig.getString("support_discord_link")));
+								Intent linkIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://snaptools.org/discord"));
 								startActivity(linkIntent);
 							}
 						}
 				).show();
 				return;
 			case R.id.layout_server:
-				linkIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(remoteConfig.getString("support_website_link")));
+				linkIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://snaptools.io"));
 				break;
 			case R.id.layout_reddit:
-				linkIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(remoteConfig.getString("support_reddit_link")));
+				linkIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.reddit.com/r/SnapTools/"));
 				break;
-			case R.id.layout_xda:
-				linkIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(remoteConfig.getString("support_xda_link")));
-				break;
-			case R.id.layout_twitter:
-				linkIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(remoteConfig.getString("support_twitter_link")));
-				break;
+			//TODO: Hard code the links
+//			case R.id.layout_xda:
+//				linkIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(remoteConfig.getString("support_xda_link")));
+//				break;
+//			case R.id.layout_twitter:
+//				linkIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(remoteConfig.getString("support_twitter_link")));
+//				break;
 			default:
 				throw new IllegalArgumentException("Unknown click event");
 		}

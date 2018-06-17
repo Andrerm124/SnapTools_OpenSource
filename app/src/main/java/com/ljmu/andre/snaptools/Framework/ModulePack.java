@@ -18,7 +18,6 @@ import com.ljmu.andre.snaptools.Networking.Helpers.CheckPackUpdate;
 import com.ljmu.andre.snaptools.UIComponents.Adapters.StatefulEListAdapter.StatefulListable;
 import com.ljmu.andre.snaptools.Utils.FileUtils;
 import com.ljmu.andre.snaptools.Utils.MiscUtils;
-import com.ljmu.andre.snaptools.Utils.Security;
 import com.ljmu.andre.snaptools.Utils.StringEncryptor;
 
 import java.io.File;
@@ -271,7 +270,7 @@ public abstract class ModulePack {
 
 			Manifest manifest = jarFile.getManifest();
 
-			Security.verifyJar(manifest, jarFile);
+//			Security.verifyJar(manifest, jarFile);
 			return manifest.getMainAttributes();
 		} catch (IOException e) {
 			throw new ModuleCertificateException("ModulePack Certification Failed", e);

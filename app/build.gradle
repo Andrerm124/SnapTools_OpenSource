@@ -1,16 +1,10 @@
 buildscript {
-    dependencies {
-        classpath 'io.fabric.tools:gradle:1.+'
-    }
-
     repositories {
         mavenCentral()
-        maven { url 'https://maven.fabric.io/public' }
     }
 }
 
 apply plugin: 'com.android.application'
-apply plugin: 'io.fabric'
 apply plugin: 'com.jakewharton.hugo'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
@@ -21,22 +15,9 @@ android {
     configurations.all {
         resolutionStrategy.force 'com.google.code.findbugs:jsr305:1.3.9'
     }
-    signingConfigs {
-        Master {
-            storeFile file('REDACTED')
-            keyAlias 'REDACTED'
-            keyPassword 'REDACTED'
-            storePassword 'REDACTED'
-        }
-        Debug {
-            keyAlias 'androiddebugkey'
-            keyPassword 'android'
-            storeFile file('../debug.keystore')
-            storePassword 'android'
-        }
-    }
+
     compileSdkVersion 25
-    buildToolsVersion '26.0.2'
+    buildToolsVersion '27.0.3'
     android {
         lintOptions {
             abortOnError false
@@ -48,6 +29,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 25
         versionCode 79
+        versionName "1.3.14.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         resValue "string", "app_name", "SnapTools"
@@ -70,112 +52,99 @@ android {
     }
 
     buildTypes {
-        release {
-            signingConfig signingConfigs.Master
-            minifyEnabled true
-            proguardFiles 'default-proguard.pro', 'proguard-rules.pro'
-        }
-        debug {
-            signingConfig signingConfigs.Debug
-            minifyEnabled false
-            proguardFiles 'default-proguard.pro', 'proguard-rules.pro'
-        }
+        debug{}
+        release{}
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
     productFlavors {
-        beta {
-            resValue "string", "app_name", "SnapTools Beta"
-            versionName "1.3.14.4b"
-        }
-        prod {
-            versionName "1.3.14.0"
+        staging {
         }
         pack {
-            versionName "1.3.14.0"
         }
     }
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    compile 'com.android.support:support-v4:25.4.0'
-    compile 'com.android.support:appcompat-v7:25.4.0'
-    compile 'com.android.support:design:25.4.0'
-    compile 'com.android.support:recyclerview-v7:25.4.0'
-    compile 'com.android.support:multidex:1.0.2'
-    implementation 'com.google.firebase:firebase-messaging:11.2.2'
-    compile 'com.google.firebase:firebase-config:11.2.2'
-    compile 'com.google.android.gms:play-services-auth:11.2.2'
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.android.support:support-v4:25.4.0'
+    implementation 'com.android.support:appcompat-v7:25.4.0'
+    implementation 'com.android.support:design:25.4.0'
+    implementation 'com.android.support:recyclerview-v7:25.4.0'
+    implementation 'com.android.support:multidex:1.0.2'
     // SU library
-    compile 'com.jaredrummler:android-shell:1.0.0'
-    testCompile 'junit:junit:4.12'
+    implementation 'com.jaredrummler:android-shell:1.0.0'
     // Xposed
-    provided 'de.robv.android.xposed:api:82'
-    provided 'de.robv.android.xposed:api:82:sources'
+    compileOnly 'de.robv.android.xposed:api:82'
+    compileOnly 'de.robv.android.xposed:api:82:sources'
     // Logging
-    compile 'com.jakewharton.timber:timber:4.4.0'
+    implementation 'com.jakewharton.timber:timber:4.4.0'
     // UI Components
-    compile 'com.wang.avi:library:2.1.3'
-    compile 'com.isseiaoki:simplecropview:1.1.4'
-    compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.27'
-    compile 'com.github.bumptech.glide:glide:4.0.0-RC1'
+    implementation 'com.wang.avi:library:2.1.3'
+    implementation 'com.isseiaoki:simplecropview:1.1.4'
+    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.27'
+    implementation 'com.github.bumptech.glide:glide:4.0.0-RC1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0-RC1'
-    compile 'com.github.Andy671:Dachshund-Tab-Layout:v0.2.0'
-    compile 'com.fujiyuu75:sequent:0.2.1'
+    implementation 'com.github.Andy671:Dachshund-Tab-Layout:v0.2.0'
+    implementation 'com.fujiyuu75:sequent:0.2.1'
     // View Injection
-    compile 'com.jakewharton:butterknife:8.4.0'
+    implementation 'com.jakewharton:butterknife:8.4.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
     // File Management
-    compile 'com.nononsenseapps:filepicker:4.1.0'
+    implementation 'com.nononsenseapps:filepicker:4.1.0'
     //RXJava
-    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
-    compile 'io.reactivex.rxjava2:rxjava:2.1.0'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.0'
     // APK Update Checker
-    compile 'com.github.javiersantos:AppUpdater:2.6.3'
-    // In App Purchases
-    compile('com.paypal.sdk:paypal-android-sdk:2.15.3') {
-        exclude group: 'io.card'
-    }
+    implementation 'com.github.javiersantos:AppUpdater:2.6.3'
     // ### Googles own API's ### \\
     // Network Request
-    compile 'com.android.volley:volley:1.0.0'
+    implementation 'com.android.volley:volley:1.0.0'
     // JSON Parsing
-    compile 'com.google.code.gson:gson:2.6.2'
+    implementation 'com.google.code.gson:gson:2.6.2'
     // Guava
-    compile 'com.google.guava:guava:20.0'
+    implementation 'com.google.guava:guava:20.0'
     //Tutorial lib for overview
-    compile 'com.github.faruktoptas:FancyShowCaseView:1.0.0'
+    implementation 'com.github.faruktoptas:FancyShowCaseView:1.0.0'
     //Confetti lib because this is important andre dammit
-    compile 'nl.dionsegijn:konfetti:1.0.2'
+    implementation 'nl.dionsegijn:konfetti:1.0.2'
     // Anko Layouts
-    compile 'org.jetbrains.anko:anko-sdk25:0.10.1'
+    implementation 'org.jetbrains.anko:anko-sdk25:0.10.1'
     // sdk15, sdk19, sdk21, sdk23 are also available
-    compile 'org.jetbrains.anko:anko-appcompat-v7:0.10.1'
+    implementation 'org.jetbrains.anko:anko-appcompat-v7:0.10.1'
     // Kotlin
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
-        transitive = true
-    }
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     // Video Compression
-    compile 'net.ypresto.androidtranscoder:android-transcoder:0.2.0'
+    implementation 'net.ypresto.androidtranscoder:android-transcoder:0.2.0'
     //Color picker
     //compile 'com.github.QuadFlask:colorpicker:0.0.13'
-    compile 'com.github.anrwatchdog:anrwatchdog:1.3.0'
     implementation 'com.g00fy2:versioncompare:1.2.4'
+
+    implementation 'org.bouncycastle:bcprov-jdk15on:1.58'
+    implementation 'org.bouncycastle:bcpkix-jdk15on:1.58'
+    implementation ('com.github.topjohnwu:libsu:1.1.1') {
+        exclude group: 'android.support.annotation'
+    }
 }
 
-configurations.all {
-    exclude group: 'com.crashlytics.sdk.android', module: 'crashlytics'
+task exportModulePackClasses(type: JavaExec) {
+    println "EXPORTING MODULE PACK CLASSES"
+    main = "Main"
+    classpath = files('C:/Users/Andre/Documents/GitHub/SnapTools/app/pack_exporter')
+
+    // arg0 = Source Mapping Path
+    // arg1 = Proguard Jar Path
+    // arg2 = Export Path
+    // arg3 = Delay after completing
+    args(
+            "C:/Users/Andre/Documents/GitHub/SnapTools/app/build/outputs/mapping/pack/release/mapping.txt",
+            "C:/Users/Andre/Documents/GitHub/SnapTools/app/build/intermediates/transforms/proguard/pack/release/0.jar",
+            "C:/Users/Andre/Documents/GitHub/SnapTools/app/pack_exporter/ExportedModulePackClasses",
+            0
+    )
 }
-
-apply plugin: 'com.google.gms.google-services'
-
 
 /**
  * ===========================================================================
@@ -184,7 +153,7 @@ apply plugin: 'com.google.gms.google-services'
  * You should go through the paths below and find the location of your own files.
  * ===========================================================================
  */
-task preProguardPackMappingMerge(type: JavaExec) {
+/*task preProguardPackMappingMerge(type: JavaExec) {
     println "PRE-BUILD-MERGE"
     main = "Main"
     classpath = files('C:/Users/Andre/Documents/GitHub/MappingManager/out/production/MappingManager')
@@ -221,25 +190,9 @@ task postProguardPackMappingMerge(type: JavaExec) {
     )
 }
 
-task exportModulePackClasses(type: JavaExec) {
-    println "EXPORTING MODULE PACK CLASSES"
-    main = "Main"
-    classpath = files('C:/Users/Andre/Documents/GitHub/SnapTools/app/pack_exporter')
-
-    // arg0 = Source Mapping Path
-    // arg1 = Proguard Jar Path
-    // arg2 = Export Path
-    // arg3 = Delay after completing
-    args(
-            "C:/Users/Andre/Documents/GitHub/SnapTools/app/build/outputs/mapping/pack/release/mapping.txt",
-            "C:/Users/Andre/Documents/GitHub/SnapTools/app/build/intermediates/transforms/proguard/pack/release/0.jar",
-            "C:/Users/Andre/Documents/GitHub/SnapTools/app/pack_exporter/ExportedModulePackClasses",
-            0
-    )
-}
 
 
-task preBetaMappingMerger(type: JavaExec) {
+/*task preBetaMappingMerger(type: JavaExec) {
     println "PRE-BUILD-MERGE"
     main = "Main"
     classpath = files('C:/Users/Andre/Documents/GitHub/MappingManager/out/production/MappingManager')
@@ -313,16 +266,16 @@ task postProdMappingMerger(type: JavaExec) {
             "C:/Users/Andre/Documents/Android/STools/mapping_backups",
             0
     )
-}
+}*/
 
 afterEvaluate() {
-    transformClassesAndResourcesWithProguardForPackRelease.dependsOn(preProguardPackMappingMerge)
-    transformClassesAndResourcesWithProguardForPackRelease.finalizedBy(postProguardPackMappingMerge)
+    /*transformClassesAndResourcesWithProguardForPackRelease.dependsOn(preProguardPackMappingMerge)
+    transformClassesAndResourcesWithProguardForPackRelease.finalizedBy(postProguardPackMappingMerge)*/
     assemblePackRelease.finalizedBy(exportModulePackClasses)
 
-    transformClassesAndResourcesWithProguardForBetaRelease.dependsOn(preBetaMappingMerger)
+    /*transformClassesAndResourcesWithProguardForBetaRelease.dependsOn(preBetaMappingMerger)
     transformClassesAndResourcesWithProguardForBetaRelease.finalizedBy(postBetaMappingMerger)
 
     transformClassesAndResourcesWithProguardForProdRelease.dependsOn(preProdMappingMerger)
-    transformClassesAndResourcesWithProguardForProdRelease.finalizedBy(postProdMappingMerger)
+    transformClassesAndResourcesWithProguardForProdRelease.finalizedBy(postProdMappingMerger)*/
 }

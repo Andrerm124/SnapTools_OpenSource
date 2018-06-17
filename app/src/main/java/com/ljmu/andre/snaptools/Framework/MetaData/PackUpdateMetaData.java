@@ -6,7 +6,6 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.ljmu.andre.snaptools.R;
 import com.ljmu.andre.snaptools.UIComponents.Adapters.ExpandableItemAdapter;
-import com.ljmu.andre.snaptools.Utils.ContextHelper;
 
 import java.util.ArrayList;
 import java.util.Collections;

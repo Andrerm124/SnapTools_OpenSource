@@ -14,14 +14,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.common.eventbus.Subscribe;
 import com.ljmu.andre.snaptools.BuildConfig;
 import com.ljmu.andre.snaptools.Dialogs.DialogFactory;
 import com.ljmu.andre.snaptools.EventBus.EventBus;
-import com.ljmu.andre.snaptools.EventBus.Events.GoogleAuthEvent;
-import com.ljmu.andre.snaptools.EventBus.Events.LogoutEvent;
-import com.ljmu.andre.snaptools.Fragments.Children.LoggedInFragment;
-import com.ljmu.andre.snaptools.Fragments.Children.LoginFragment;
 import com.ljmu.andre.snaptools.Fragments.Tutorials.HomeTutorial;
 import com.ljmu.andre.snaptools.R;
 import com.ljmu.andre.snaptools.Utils.TutorialDetail;
@@ -37,7 +32,6 @@ import timber.log.Timber;
 import static com.ljmu.andre.GsonPreferences.Preferences.getPref;
 import static com.ljmu.andre.GsonPreferences.Preferences.putPref;
 import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.SHOWN_ANDROID_N_WARNING;
-import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.STKN;
 import static com.ljmu.andre.snaptools.Utils.ModuleChecker.getXposedVersion;
 
 /**
@@ -67,13 +61,6 @@ public class HomeFragment extends FragmentHelper {
 		txtAppVersion.setText(BuildConfig.VERSION_NAME);
 		setTutorialDetails(TUTORIAL_DETAILS);
 
-		if (getPref(STKN) == null) {
-			LoginFragment f = new LoginFragment();
-			replaceFragmentContainer(f);
-			//doResize(f);
-		} else {
-			replaceFragmentContainer(new LoggedInFragment());
-		}
 		//resizeThis();
 
 		Integer xposedVersion = getXposedVersion();
@@ -121,15 +108,6 @@ public class HomeFragment extends FragmentHelper {
 		return true;
 	}
 
-	@Subscribe
-	public void handleGoogleAuthEvent(GoogleAuthEvent googleAuthEvent) {
-		if (googleAuthEvent.getSyncData() != null)
-			replaceFragmentContainer(new LoggedInFragment());
-
-		if (runningTutorial)
-			progressTutorial();
-	}
-
 	/*@OnClick(R.id.btn_crash) public void onViewClicked() {
 		//Timber.e("Random stuff");
 		//SlackUtils.uploadToSlack("Test", "Test");
@@ -139,10 +117,4 @@ public class HomeFragment extends FragmentHelper {
 			throw new RuntimeException(t);
 		}
 	}*/
-
-	@Subscribe
-	public void handleLogoutEvent(LogoutEvent logoutEvent) {
-		LoginFragment f = new LoginFragment();
-		replaceFragmentContainer(f);
-	}
 }

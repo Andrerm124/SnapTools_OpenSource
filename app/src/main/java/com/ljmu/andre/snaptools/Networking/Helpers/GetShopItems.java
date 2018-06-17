@@ -29,8 +29,6 @@ import static com.ljmu.andre.GsonPreferences.Preferences.getPref;
 import static com.ljmu.andre.snaptools.Networking.WebRequest.assertParam;
 import static com.ljmu.andre.snaptools.Utils.Constants.SHOP_CHECK_COOLDOWN;
 import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.LAST_CHECK_SHOP;
-import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.STKN;
-import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.ST_EMAIL;
 
 /**
  * This class was created by Andre R M (SID: 701439)
@@ -64,8 +62,6 @@ public class GetShopItems {
 		String deviceId;
 
 		try {
-			token = assertParam(cls, "Invalid Token", getPref(STKN));
-			email = assertParam(cls, "Invalid Email", getPref(ST_EMAIL));
 			deviceId = assertParam(cls, "Invalid Device ID", DeviceIdManager.getDeviceId(activity));
 		} catch (IllegalArgumentException e) {
 			Timber.e(e);
@@ -85,8 +81,6 @@ public class GetShopItems {
 				.useDefaultRetryPolicy()
 				// ===========================================================================
 				.addParam("device_id", deviceId)
-				.addParam("token", token)
-				.addParam("email", email)
 				// ===========================================================================
 				.setCallback(
 						new WebResponseListener() {

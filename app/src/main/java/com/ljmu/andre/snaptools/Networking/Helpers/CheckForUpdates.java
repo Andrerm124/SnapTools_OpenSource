@@ -21,9 +21,7 @@ import com.ljmu.andre.snaptools.Utils.PackUtils;
 import hugo.weaving.DebugLog;
 import timber.log.Timber;
 
-import static com.ljmu.andre.GsonPreferences.Preferences.getPref;
 import static com.ljmu.andre.snaptools.Utils.Constants.PACK_CHECK_COOLDOWN;
-import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.STKN;
 
 /**
  * This class was created by Andre R M (SID: 701439)
@@ -46,14 +44,6 @@ public class CheckForUpdates {
 			@NonNull String moduleVersion,
 			@NonNull PackUpdateMetaData updateMetaData) {
 
-		String stToken = getPref(STKN);
-
-		if (stToken == null) {
-			updateMetaData.setHasFailed(true);
-			updateMetaData.result();
-			return;
-		}
-
 		String device_id = DeviceIdManager.getDeviceId(activity);
 		Assert.notNull("Null DeviceId", device_id);
 
@@ -64,7 +54,6 @@ public class CheckForUpdates {
 				.shouldClearCache(true)
 				.setContext(activity)
 				// ===========================================================================
-				.addParam("token", stToken)
 				.addParam("device_id", device_id)
 				.addParam("pack_type", packType)
 				.addParam("sc_version", snapVersion)

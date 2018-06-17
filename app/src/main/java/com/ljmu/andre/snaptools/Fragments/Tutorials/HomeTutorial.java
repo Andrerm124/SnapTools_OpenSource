@@ -1,25 +1,9 @@
 package com.ljmu.andre.snaptools.Fragments.Tutorials;
 
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
-import com.ljmu.andre.snaptools.EventBus.EventBus;
-import com.ljmu.andre.snaptools.EventBus.Events.ReqGoogleAuthEvent;
-import com.ljmu.andre.snaptools.FCM.MessageTypes.Message;
-import com.ljmu.andre.snaptools.Fragments.FragmentHelper;
-import com.ljmu.andre.snaptools.R;
 import com.ljmu.andre.snaptools.Utils.TutorialDetail;
-import com.ljmu.andre.snaptools.Utils.TutorialDetail.InflationProcessor;
 import com.ljmu.andre.snaptools.Utils.TutorialDetail.MessagePosition;
-
-import me.toptas.fancyshowcase.FancyShowCaseView;
-
-import static com.ljmu.andre.GsonPreferences.Preferences.getPref;
-import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.STKN;
-import static com.ljmu.andre.snaptools.Utils.ResourceUtils.getView;
 
 /**
  * This class was created by Andre R M (SID: 701439)
@@ -69,47 +53,6 @@ public class HomeTutorial {
 									}
 								})
 				)*/
-
-				/**
-				 * ===========================================================================
-				 * Perform login checks
-				 * ===========================================================================
-				 */
-				.add(
-						new TutorialDetail()
-								.setViewId(R.id.auth_panel)
-								.setTitle("Log In")
-								.setMessagePosition(MessagePosition.MIDDLE)
-								.setMessageProcessor((activity, tutorialDetail) -> {
-									if (getPref(STKN) != null) {
-										return "You're already logged in, fantastic! :)";
-									}
-
-									return "To use SnapTools, you need to connect your Google Account.\n\nTap \"Login with Google\", and on the next screen, please sign in.";
-								})
-								.setInflationProcessor(new InflationProcessor() {
-									@Override public boolean beforeInflation(FragmentHelper fragment, TutorialDetail tutorialDetail, FancyShowCaseView showcaseView) {
-										return false;
-									}
-
-									@Override public void afterInflation(FragmentHelper fragment, TutorialDetail tutorialDetail, FancyShowCaseView showcaseView) {
-										if (getPref(STKN) == null) {
-											getView(showcaseView, R.id.showcase_button_close)
-													.setVisibility(View.GONE);
-
-											Button nextButton = getView(showcaseView, R.id.showcase_button_next);
-											nextButton.setText("Show Login");
-											nextButton.setOnClickListener(new OnClickListener() {
-												@Override public void onClick(View v) {
-													EventBus.soleRegister(this);
-													EventBus.getInstance().post(new ReqGoogleAuthEvent());
-													EventBus.soleUnregister(this);
-												}
-											});
-										}
-									}
-								})
-				)
 
 				.build();
 		// ===========================================================================

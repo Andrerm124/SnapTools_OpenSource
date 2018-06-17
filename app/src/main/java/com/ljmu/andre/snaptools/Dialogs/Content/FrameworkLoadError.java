@@ -13,7 +13,6 @@ import com.ljmu.andre.snaptools.Framework.FrameworkManager;
 import com.ljmu.andre.snaptools.Framework.Utils.LoadState.State;
 import com.ljmu.andre.snaptools.Framework.Utils.ModuleLoadState;
 import com.ljmu.andre.snaptools.Framework.Utils.PackLoadState;
-import com.ljmu.andre.snaptools.R;
 import com.ljmu.andre.snaptools.UIComponents.Adapters.ExpandableListHelper.ItemLongClickListener;
 import com.ljmu.andre.snaptools.UIComponents.Adapters.StatefulEListAdapter;
 import com.ljmu.andre.snaptools.Utils.ContextHelper;

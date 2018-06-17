@@ -21,7 +21,6 @@ import timber.log.Timber;
 import static com.ljmu.andre.GsonPreferences.Preferences.getPref;
 import static com.ljmu.andre.Translation.Translator.translate;
 import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.IGNORED_PACK_UPDATE_VERSION;
-import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.STKN;
 import static com.ljmu.andre.snaptools.Utils.TranslationDef.PACK_UPDATE_AVAILABLE_TITLE;
 
 /**
@@ -42,11 +41,6 @@ public class CheckPackUpdate {
 			@NonNull String packName,
 			@NonNull String packFlavour) {
 
-		String stToken = getPref(STKN);
-
-		if (stToken == null)
-			return;
-
 		String device_id = DeviceIdManager.getDeviceId(activity);
 		Assert.notNull("Null DeviceId", device_id);
 
@@ -57,7 +51,6 @@ public class CheckPackUpdate {
 				.shouldClearCache(true)
 				.setContext(activity)
 				// ===========================================================================
-				.addParam("token", stToken)
 				.addParam("device_id", device_id)
 				.addParam("pack_type", packType)
 				.addParam("sc_version", snapVersion)

@@ -4,16 +4,23 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.TextView;
 
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
-import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
+import com.ljmu.andre.GsonPreferences.Preferences;
+import com.ljmu.andre.snaptools.Dialogs.Content.Progress;
+import com.ljmu.andre.snaptools.Dialogs.DialogFactory;
+import com.ljmu.andre.snaptools.Dialogs.ThemedDialog;
+import com.ljmu.andre.snaptools.Dialogs.ThemedDialog.ThemedClickListener;
+import com.ljmu.andre.snaptools.Repackaging.RepackageManager;
 import com.ljmu.andre.snaptools.Utils.Constants;
-import com.ljmu.andre.snaptools.Utils.MiscUtils;
-import com.ljmu.andre.snaptools.Utils.RemoteConfigDefaults;
-import com.ljmu.andre.snaptools.Utils.ResourceUtils;
+import com.ljmu.andre.snaptools.Utils.CustomObservers.SimpleObserver;
 
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
+
+import static com.ljmu.andre.GsonPreferences.Preferences.getPref;
+import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.REPACKAGE_NAME;
 
 /**
  * This class was created by Andre R M (SID: 701439)
@@ -28,75 +35,91 @@ public class SplashActivity extends AppCompatActivity {
 
 		Timber.d("SPLASH");
 
-		if (!initRemoteConfig()) {
-			Timber.d("Awaiting remote config results first");
+		initPreferences();
 
-			setContentView(R.layout.activity_splash);
-			ResourceUtils.<TextView>getView(this, R.id.txt_message)
-					.setText("Loading...");
-
-			return;
-		}
+//		if (checkAndRepackage()) {
+//			Timber.d("Repackage required... Not opening main activity immediately");
+//			return;
+//		}
 
 		openMainActivity();
 	}
 
 	/**
 	 * ===========================================================================
-	 * Init the remote config
-	 * Returns FALSE if config is requires load completion first
+	 * Preference System Initialisation
 	 * ===========================================================================
 	 */
-	private boolean initRemoteConfig() {
-		FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.getInstance();
+	private void initPreferences() {
+		try {
+			Preferences.init(
+					Preferences.getExternalPath() + "/" + STApplication.MODULE_TAG + "/"
+			);
+		} catch (Exception e) {
+			Timber.e(e);
 
-		// Create a Remote Config Setting to enable developer mode, which you can use to increase
-		// the number of fetches available per hour during development. See Best Practices in the
-		// README for more information.
-		// [START enable_dev_mode]
-		FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
-				.setDeveloperModeEnabled(BuildConfig.DEBUG)
-				.build();
+			DialogFactory.createErrorDialog(
+					this,
+					"Error Initialising Preferences",
+					"Preference system not loaded. The reason is likely to be permission issues. The application will terminate to preserve data integrity"
+							+ "\n\n"
+							+ "Reason: " + e.getMessage(),
+					new ThemedClickListener() {
+						@Override public void clicked(ThemedDialog themedDialog) {
+							themedDialog.dismiss();
+							finish();
+						}
+					}
+			).setDismissable(false).show();
+		}
+	}
 
-		remoteConfig.setConfigSettings(configSettings);
-		// [END enable_dev_mode]
-
-		// Set default Remote Config parameter values. An app uses the in-app default values, and
-		// when you need to adjust those defaults, you set an updated value for only the values you
-		// want to change in the Firebase console. See Best Practices in the README for more
-		// information.
-		// [START set_default_values]
-		remoteConfig.setDefaults(RemoteConfigDefaults.get());
-
-		boolean shouldWaitForUpdate = false;
-
-		long lastFetch = remoteConfig.getInfo().getFetchTimeMillis();
-		Timber.d("LastFetched: [LastStatus: %s][Time: %s][Offset: %s]", remoteConfig.getInfo().getLastFetchStatus(), lastFetch, MiscUtils.calcTimeDiff(lastFetch));
-
-		if (MiscUtils.calcTimeDiff(remoteConfig.getInfo().getFetchTimeMillis()) > Constants.LAST_FETCH_FORCE_NEW_VALUES) {
-			shouldWaitForUpdate = true;
+	private boolean checkAndRepackage() {
+		if (!Preferences.getIsInitialised().get()) {
+			return false;
 		}
 
-		// [END set_default_values]
-		remoteConfig.activateFetched();
+		String storedRepackageName = getPref(REPACKAGE_NAME);
 
-		boolean finalShouldWaitForUpdate = shouldWaitForUpdate;
-		remoteConfig.fetch(Constants.REMOTE_CONFIG_COOLDOWN)
-				.addOnCompleteListener(task -> {
-					if (task.isSuccessful()) {
-						// After config data is successfully fetched, it must be activated before newly fetched
-						// values are returned.
-						remoteConfig.activateFetched();
-					} else {
-						Timber.e("Failed to fetch remote config values");
+		if (storedRepackageName != null && storedRepackageName.equals(getPackageName())) {
+			Timber.d("Application already repackaged... Allowing progress to MainActivity");
+			return false;
+		}
+
+		ThemedDialog progressDialog = DialogFactory.createProgressDialog(
+				this,
+				"Repackaging SnapTools",
+				"Repackaging is required to circumvent Snapchat malicious app discovery",
+				false
+		);
+
+		progressDialog.show();
+
+		// ===========================================================================
+		Observable.<String>create(e ->
+				RepackageManager.repackageApplication(SplashActivity.this, e))
+				// ===========================================================================
+				.subscribeOn(Schedulers.computation())
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(new SimpleObserver<String>() {
+					@Override public void onNext(String s) {
+						progressDialog.<Progress>getExtension()
+								.setMessage(s);
 					}
 
-					if (finalShouldWaitForUpdate) {
-						openMainActivity();
+					@Override public void onError(Throwable e) {
+						super.onError(e);
+						progressDialog.dismiss();
+
+						DialogFactory.createErrorDialog(
+								SplashActivity.this,
+								"Error Repackaging Application",
+								e.getMessage()
+						).show();
 					}
 				});
 
-		return !shouldWaitForUpdate;
+		return true;
 	}
 
 	private void openMainActivity() {

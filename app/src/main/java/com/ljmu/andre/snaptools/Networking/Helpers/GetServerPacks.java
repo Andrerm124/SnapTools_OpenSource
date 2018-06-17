@@ -31,13 +31,10 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
-import static com.ljmu.andre.GsonPreferences.Preferences.getPref;
 import static com.ljmu.andre.GsonPreferences.Preferences.putPref;
 import static com.ljmu.andre.snaptools.Networking.WebRequest.assertParam;
 import static com.ljmu.andre.snaptools.Utils.Constants.PACK_CHECK_COOLDOWN;
 import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.LAST_CHECK_PACKS;
-import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.STKN;
-import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.ST_EMAIL;
 
 /**
  * This class was created by Andre R M (SID: 701439)
@@ -132,8 +129,6 @@ public class GetServerPacks {
 		String deviceId;
 
 		try {
-			token = assertParam(cls, "Invalid Token", getPref(STKN));
-			email = assertParam(cls, "Invalid Email", getPref(ST_EMAIL));
 			deviceId = assertParam(cls, "Invalid Device ID", DeviceIdManager.getDeviceId(activity));
 		} catch (IllegalArgumentException e) {
 			Timber.e(e);
@@ -151,9 +146,7 @@ public class GetServerPacks {
 				.setType(RequestType.PACKET)
 				.setPacketClass(ServerPacksPacket.class)
 				// ===========================================================================
-				.addParam("token", token)
 				.addParam("device_id", deviceId)
-				.addParam("email", email)
 				.addParam("developer", String.valueOf(STApplication.DEBUG))
 				// ===========================================================================
 				.shouldClearCache(true)

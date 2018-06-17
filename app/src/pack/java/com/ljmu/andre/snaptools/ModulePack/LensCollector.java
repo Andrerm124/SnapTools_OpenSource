@@ -2,10 +2,9 @@ package com.ljmu.andre.snaptools.ModulePack;
 
 import android.app.Activity;
 
-import com.ljmu.andre.snaptools.RedactedClasses.Answers;
-import com.ljmu.andre.snaptools.RedactedClasses.CustomEvent;
 import com.ljmu.andre.CBIDatabase.CBITable;
 import com.ljmu.andre.CBIDatabase.Utils.QueryBuilder;
+import com.ljmu.andre.snaptools.Exceptions.HookNotFoundException;
 import com.ljmu.andre.snaptools.Fragments.FragmentHelper;
 import com.ljmu.andre.snaptools.ModulePack.Databases.LensDatabase;
 import com.ljmu.andre.snaptools.ModulePack.Databases.Tables.LensObject;
@@ -29,7 +28,7 @@ import timber.log.Timber;
 
 import static com.ljmu.andre.GsonPreferences.Preferences.getPref;
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookClassDef.LENS;
-import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookClassDef.LENS_CONTEXT_HOLDER;
+import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookClassDef.LENS_ASSET;
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookClassDef.LENS_SLUG;
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookClassDef.LENS_TRACK;
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookDef.CHECK_LENS_ASSET_AUTH;
@@ -40,6 +39,7 @@ import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookDef.RESOLV
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookVariableDef.LENS_CATEGORY_MAP;
 import static com.ljmu.andre.snaptools.ModulePack.HookResolver.resolveHookClass;
 import static com.ljmu.andre.snaptools.ModulePack.Utils.ModulePreferenceDef.LENS_AUTO_ENABLE;
+import static com.ljmu.andre.snaptools.Utils.StringEncryptor.decryptMsg;
 
 /**
  * This class was created by Andre R M (SID: 701439)
@@ -111,13 +111,13 @@ public class LensCollector extends ModuleHelper {
 				}
 		);
 
-		/*try {
+		try {
 			Class<?> assetClass = resolveHookClass(LENS_ASSET);
 			FieldMapper.initMapper("Asset", assetClass);
 		} catch (HookNotFoundException e) {
 			Timber.e(e);
 			moduleLoadState.fail();
-		}*/
+		}
 
 
 		/**Image Quality Improvements*/
@@ -158,7 +158,6 @@ public class LensCollector extends ModuleHelper {
 			Class<?> lensClass = resolveHookClass(LENS);
 			Class<?> slugClass = resolveHookClass(LENS_SLUG);
 			Class<?> trackClass = resolveHookClass(LENS_TRACK);
-			Class<?> contextClass = resolveHookClass(LENS_CONTEXT_HOLDER);
 			CBITable<LensObject> lensTable = LensDatabase.getTable(LensObject.class);
 
 			hookMethod(
@@ -199,16 +198,12 @@ public class LensCollector extends ModuleHelper {
 									FieldMapper.initMapper("Slug", slugClass);
 									// ===========================================================================
 									FieldMapper.initMapper("Track", trackClass);
-									// ===========================================================================
-									FieldMapper.initMapper("Context", contextClass);
 									/** ========================================================================== **/
 
 									boolean enableNewLenses = getPref(LENS_AUTO_ENABLE);
 
 									for (Object lens : lensList) {
 										try {
-											Timber.d("Working on lens: " + lens);
-
 											String idFieldName = lensMapper.get("id");
 											String lensId = (String) XposedHelpers.getObjectField(lens, idFieldName);
 
@@ -239,14 +234,13 @@ public class LensCollector extends ModuleHelper {
 									Timber.d("Inserting table into list");
 
 									List<Object> convertedLenses = convertLensObjects(
-											snapClassLoader,
 											lensMapper,
 											lensDbMap.values()
 									);
 
 									if (convertedLenses != null && convertedLenses.size() > 0) {
 										lensList.addAll(convertedLenses);
-										Timber.d("Inserted %s lenses", convertedLenses.size());
+										Timber.d(/*Inserted %s lenses*/ decryptMsg(new byte[]{61, -26, -106, 29, -103, 95, 84, 117, 2, -57, -67, -41, 90, 116, -128, 120, 120, -104, 37, 120, 89, -13, -57, 108, -56, 81, 29, 110, -97, -94, -45, 86}), convertedLenses.size());
 									}
 
 									cleanEmptyLenses(lensMapper, lensList);
@@ -266,9 +260,106 @@ public class LensCollector extends ModuleHelper {
 			Timber.e(e);
 			moduleLoadState.fail();
 		}
+
+		/*CBITable<LensAssetObject> lensAssetTable = LensDatabase.getTable(LensAssetObject.class);
+
+		hookMethod(
+				LENS_ASSET_READING,
+				new ST_MethodHook() {
+					@Override protected void after(MethodHookParam param) throws Throwable {
+						FieldMapper mapper = FieldMapper.getMapper("Asset");
+
+						Timber.d("JsonReader new asset");
+
+						if (mapper == null) {
+							Timber.w("Null asset mapper");
+							return;
+						}
+
+						Object assetItem = param.getResult();
+						LensAssetObject assetObject = new LensAssetObject();
+						assetObject.id = mapper.getFieldVal(assetItem, "id");
+						assetObject.url = mapper.getFieldVal(assetItem, "url");
+						assetObject.signature = mapper.getFieldVal(assetItem, "signature");
+
+						Timber.d("Built new assetobject: " + assetObject);
+
+						if (!lensAssetTable.contains(assetObject.id))
+							lensAssetTable.insert(assetObject);
+					}
+				}
+		);*/
+
+
+		/**
+		 * ===========================================================================
+		 * Just used as a fatal crash prevention... Likely just moves the issue
+		 * ===========================================================================
+		 */
+		XposedHelpers.findAndHookMethod(
+				"hln", snapClassLoader,
+				"a",
+				new ST_MethodHook() {
+					@Override protected void after(MethodHookParam param) throws Throwable {
+						if (param.getThrowable() != null) {
+							Timber.e(new Throwable(
+									"Error raised from lens: " +
+											XposedHelpers.getObjectField(param.thisObject, "d").toString(),
+									param.getThrowable()
+							));
+
+							param.setResult(false);
+						}
+					}
+				}
+		);
+
+		/**
+		 * ===========================================================================
+		 * Just used as a fatal crash prevention... Likely just moves the issue
+		 * ===========================================================================
+		 */
+		XposedHelpers.findAndHookMethod(
+				"hlh", snapClassLoader,
+				"c", String.class,
+				new ST_MethodHook() {
+					@Override protected void after(MethodHookParam param) throws Throwable {
+						if (param.getThrowable() != null) {
+							Timber.e(new Throwable(
+									"Error raised checking lens set content",
+									param.getThrowable()
+							));
+
+							param.setResult(false);
+						}
+					}
+				}
+		);
 	}
 
-	private List<Object> convertLensObjects(ClassLoader snapClassLoader, FieldMapper lensMapper,
+	private void cleanEmptyLenses(FieldMapper lensMapper, List<Object> convertedLensList) {
+		Iterator<Object> convertedLensIterator = convertedLensList.iterator();
+
+		int emptyLensCount = 0;
+
+		while(convertedLensIterator.hasNext()) {
+			Object convertedLens = convertedLensIterator.next();
+
+			if(convertedLens == null || !isConvertedLensCompleted(lensMapper, convertedLens)) {
+				convertedLensIterator.remove();
+				emptyLensCount++;
+			}
+		}
+
+		if(emptyLensCount > 0) {
+//			Answers.safeLogEvent(
+//					new CustomEvent("EmptyLensReport")
+//							.putCustomAttribute("Count", emptyLensCount)
+//			);
+		}
+	}
+
+	private List<Object> convertLensObjects(FieldMapper lensMapper,
 	                                        Collection<LensObject> lensObjects) {
 		try {
 			FieldMapper slugMapper = FieldMapper.getMapper("Slug");
@@ -281,7 +372,6 @@ public class LensCollector extends ModuleHelper {
 			FieldMapper trackMapper = FieldMapper.getMapper("Track");
 			Object trackInfo = XposedHelpers.newInstance(trackMapper.getLinkClass());
 			trackMapper.setField(trackInfo, "skip_track", false);
-
 
 			List<Object> convertedLenses = new ArrayList<>(lensObjects.size());
 			Map<String, String> lensMapDowncast = lensMapper;
@@ -328,35 +418,13 @@ public class LensCollector extends ModuleHelper {
 				}*/
 			}
 
-			Timber.d("Converted %s lenses", convertedLenses.size());
+			Timber.d(/*Converted %s lenses*/ decryptMsg(new byte[]{33, -71, 97, 48, 39, 103, 125, -107, -75, 72, -72, 115, 70, 95, -6, -115, -110, -110, 28, -39, 118, 24, 98, 59, 59, -124, -120, 100, 112, -14, 75, -102}), convertedLenses.size());
 			return convertedLenses;
 		} catch (Throwable t) {
 			Timber.e(t);
 		}
 
 		return Collections.emptyList();
-	}
-
-	private void cleanEmptyLenses(FieldMapper lensMapper, List<Object> convertedLensList) {
-		Iterator<Object> convertedLensIterator = convertedLensList.iterator();
-
-		int emptyLensCount = 0;
-
-		while (convertedLensIterator.hasNext()) {
-			Object convertedLens = convertedLensIterator.next();
-
-			if (convertedLens == null || !isConvertedLensCompleted(lensMapper, convertedLens)) {
-				convertedLensIterator.remove();
-				emptyLensCount++;
-			}
-		}
-
-		if (emptyLensCount > 0) {
-			Answers.safeLogEvent(
-					new CustomEvent("EmptyLensReport")
-							.putCustomAttribute("Count", emptyLensCount)
-			);
-		}
 	}
 
 	public boolean isConvertedLensCompleted(FieldMapper lensMapper, Object convertedLens) {

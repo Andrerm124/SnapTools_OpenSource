@@ -1,6 +1,5 @@
 package com.ljmu.andre.snaptools.ModulePack.Fragments;
 
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -10,7 +9,6 @@ import android.widget.Spinner;
 
 import com.ljmu.andre.snaptools.Fragments.FragmentHelper;
 import com.ljmu.andre.snaptools.ModulePack.Fragments.KotlinViews.MiscChangesViewProvider;
-import com.ljmu.andre.snaptools.ModulePack.MiscChanges;
 import com.ljmu.andre.snaptools.ModulePack.Notifications.SafeToastAdapter;
 import com.ljmu.andre.snaptools.ModulePack.Utils.Result;
 
@@ -24,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import io.reactivex.Observable;
 import timber.log.Timber;
 
 import static com.ljmu.andre.GsonPreferences.Preferences.getCreateDir;
@@ -44,22 +43,13 @@ public class MiscChangesFragment extends FragmentHelper {
 
 	// ===========================================================================
 	private ViewGroup mainContainer;
-	private ViewGroup generalContainer;
-	private ViewGroup experimentsContainer;
-
 	private Spinner fontSpinner;
 	// ===========================================================================
 
 	@Nullable @Override public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		viewProvider = new MiscChangesViewProvider(
-				getActivity(),
-				viewGroup -> generalContainer = viewGroup,
-				viewGroup -> experimentsContainer = viewGroup,
-				this::handleEvent
-		);
-
+		viewProvider = new MiscChangesViewProvider(getActivity(), this::handleEvent);
 		mainContainer = viewProvider.getMainContainer();
-		fontSpinner = getDSLView(generalContainer, "font_selector_spinner");
+		fontSpinner = getDSLView(mainContainer, "font_selector_spinner");
 
 		return mainContainer;
 	}
@@ -73,50 +63,43 @@ public class MiscChangesFragment extends FragmentHelper {
 	private void initFontSpinner() {
 		List<String> fontList = viewProvider.getFontList();
 		fontList.clear();
-		fontList.addAll(getInstalledFonts());
-
-		viewProvider.refreshFontAdapter();
-
-		String currentFont = getPref(CURRENT_FONT);
-		fontSpinner.setSelection(fontList.indexOf(currentFont), false);
-	}
-
-	public static List<String> getInstalledFonts() {
-		List<String> fontList = new ArrayList<>();
-		fontList.clear();
 		fontList.add("Default");
 
+		List<String> items = new ArrayList<>();
 		File fontFolder = getCreateDir(FONTS_PATH);
 
 		if (fontFolder != null) {
 			Timber.d("Searching for fonts in \"" + fontFolder.getPath() + "\"");
 
-			//noinspection ResultOfMethodCallIgnored
-			fontFolder.list((dir, name) -> {
-				if (name.endsWith(".ttf") && isFileTTF(new File(dir, name)))
-					fontList.add(name);
+			File[] files = fontFolder.listFiles((file, s) -> s.endsWith(".ttf"));
 
-				return false;
-			});
+			if (files != null) {
+				for (File f : files) {
+					//noinspection OctalInteger
+					byte[] compare = {00, 01, 00, 00, 00};
+					byte[] check = new byte[5];
+					try {
+						InputStream is = new FileInputStream(f);
+						is.read(check);
+						is.close();
+					} catch (IOException e) {
+						Timber.e(e);
+					}
+
+					Timber.d("Template: \"" + Arrays.toString(compare) + "\"|" + "Input: \"" + Arrays.toString(check) + "\"");
+					if (Arrays.equals(compare, check)) {
+						items.add(f.getName());
+						Timber.d("Font is valid. Adding to list.");
+					}
+				}
+			}
+			fontList.addAll(items);
 		}
 
-		return fontList;
-	}
+		viewProvider.refreshFontAdapter();
 
-	private static boolean isFileTTF(File file) {
-		//noinspection OctalInteger
-		byte[] compare = {00, 01, 00, 00, 00};
-		byte[] check = new byte[5];
-		try {
-			InputStream is = new FileInputStream(file);
-			//noinspection ResultOfMethodCallIgnored
-			is.read(check);
-			is.close();
-		} catch (IOException e) {
-			Timber.e(e);
-		}
-
-		return Arrays.equals(compare, check);
+		String currentFont = getPref(CURRENT_FONT);
+		fontSpinner.setSelection(fontList.indexOf(currentFont), false);
 	}
 
 	private void handleEvent(@NotNull Result<MiscChangesEvent, Object> eventResult) {
@@ -135,24 +118,87 @@ public class MiscChangesFragment extends FragmentHelper {
 				}
 
 				putAndKill(CURRENT_FONT, selectedFont, getActivity());
+
+				/*// ===========================================================================
+				Observable<Object> deleteFont1 = transformShellObservable(// <- Check function javadoc
+
+						// Our usual ShellCommand with a specific error message
+						ShellUtils.sendCommand("rm /data/data/com.snapchat.android/files/OnDemandResources/typeface-asset/helvetica/helvetica/HelveticaLTPro-Roman.ttf"),
+						"Warning: Initial delete of font failed\nFont was not copied"
+
+				);
+				Observable<Object> deleteFont2 = transformShellObservable(// <- Check function javadoc
+
+						// Our usual ShellCommand with a specific error message
+						ShellUtils.sendCommand("rm /data/data/com.snapchat.android/files/OnDemandResources/typeface-asset/helvetica/helvetica/HelveticaLTPro-Bold.ttf"),
+						"Warning: Initial delete of font failed\nFont was not copied"
+
+				);
+				// ===========================================================================
+				Observable<Object> copyFont1 = transformShellObservable(// <- Check function javadoc
+
+						// Our usual ShellCommand with a specific error message
+						ShellUtils.sendCommand("cp \"" + getPref(ModulePreferenceDef.FONTS_PATH) + selectedFont + "\" /data/data/com.snapchat.android/files/OnDemandResources/typeface-asset/helvetica/helvetica/HelveticaLTPro-Roman.ttf"),
+						"Error: Font failed to copy"
+
+				);
+				Observable<Object> copyFont2 = transformShellObservable(// <- Check function javadoc
+
+						// Our usual ShellCommand with a specific error message
+						ShellUtils.sendCommand("cp \"" + getPref(ModulePreferenceDef.FONTS_PATH) + selectedFont + "\" /data/data/com.snapchat.android/files/OnDemandResources/typeface-asset/helvetica/helvetica/HelveticaLTPro-Pro.ttf"),
+						"Error: Font failed to copy"
+
+				);
+				// ===========================================================================
+
+				// Concatenate our 4 observables into 1 so that they run one after another in order
+				Observable.concat(
+						deleteFont1, deleteFont2,
+						copyFont1, copyFont2
+				).observeOn(AndroidSchedulers.mainThread())
+						.subscribe(new ErrorObserver<Object>() {
+							// If an error is thrown at any point, all further execution stops and this is triggered
+							@Override public void onError(Throwable e) {
+								super.onError(e);
+
+								String message = "Error: Unknown error while changing font";
+
+								if(e instanceof Exception)
+									message = e.getMessage();
+
+								SafeToastAdapter.showErrorToast(
+										getActivity(), message
+								);
+							}
+
+							// If all observables have triggered successfully
+							@Override public void onComplete() {
+								super.onComplete();
+
+								SafeToastAdapter.showDefaultToast(getActivity(), "Successfully overwrote font file");
+							}
+						});*/
 				break;
 			default:
 				throw new IllegalStateException("Unknown MiscChanges Event: " + eventResult.toString());
 		}
 	}
 
-	public static Typeface getTypefaceSafe(String filename) {
-		if (!filename.equalsIgnoreCase("Default")) {
-			File fontsDir = getCreateDir(FONTS_PATH);
-			File fontFile = new File(fontsDir, filename);
+	/**
+	 * ===========================================================================
+	 * Takes the result of shellObservable and maps the value to an exception
+	 * - If when ran the observable returns FALSE, an exception will be thrown
+	 * and caught in the Observable.concat(..).onError() function
+	 * ===========================================================================
+	 */
+	private Observable<Object> transformShellObservable(Observable<Boolean> shellObservable, String errorMessage) {
+		// Observable.map(...) takes the return value and runs it through a function to return something else
+		return shellObservable.map(aBoolean -> {
+			if (!aBoolean)
+				throw new Exception(errorMessage);
 
-			if (fontFile.exists()) {
-				return MiscChanges.createTypefaceSafe(fontFile);
-			} else
-				Timber.d("Font file doesn't exist: " + fontFile);
-		}
-
-		return Typeface.DEFAULT;
+			return new Object();
+		});
 	}
 
 	public enum MiscChangesEvent {

@@ -12,14 +12,11 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
-import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.ljmu.andre.snaptools.RedactedClasses.Answers;
-import com.ljmu.andre.snaptools.RedactedClasses.CustomEvent;
 import com.ljmu.andre.GsonPreferences.Preferences;
 import com.ljmu.andre.Translation.Translator;
 import com.ljmu.andre.snaptools.BuildConfig;
@@ -35,6 +32,8 @@ import com.ljmu.andre.snaptools.MainActivity;
 import com.ljmu.andre.snaptools.Networking.Helpers.CheckAPKUpdate;
 import com.ljmu.andre.snaptools.Networking.WebResponse.ObjectResultListener;
 import com.ljmu.andre.snaptools.R;
+import com.ljmu.andre.snaptools.RedactedClasses.Answers;
+import com.ljmu.andre.snaptools.RedactedClasses.CustomEvent;
 import com.ljmu.andre.snaptools.UIComponents.Adapters.CenteredArrayAdapter;
 import com.ljmu.andre.snaptools.UIComponents.UITheme;
 import com.ljmu.andre.snaptools.Utils.BackupRestoreUtils;
@@ -67,14 +66,12 @@ import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.CHECK_APK_U
 import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.CHECK_PACK_UPDATES;
 import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.CHECK_PACK_UPDATES_SC;
 import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.CURRENT_THEME;
-import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.ENABLE_ANR_WATCHDOG;
 import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.KILL_SC_ON_CHANGE;
 import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.NOTIFY_ON_LOAD;
 import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.SHOW_TRANSITION_ANIMATIONS;
 import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.SYSTEM_ENABLED;
 import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.TEMP_PATH;
 import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.TRANSLATION_LOCALE;
-import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.WATCHDOG_HANG_TIMEOUT;
 import static com.ljmu.andre.snaptools.Utils.PreferenceHelpers.putAndKill;
 import static com.ljmu.andre.snaptools.Utils.StringUtils.htmlHighlight;
 
@@ -121,7 +118,6 @@ public class SettingsFragment extends FragmentHelper {
 		initAutoErrorReporting();
 		initLoadNotify();
 		initBackOpensMenu();
-		initWatchdog();
 		initTransitionAnimations();
 		initTheming();
 		initTranslations();
@@ -342,48 +338,6 @@ public class SettingsFragment extends FragmentHelper {
 					);
 				}
 		);
-	}
-
-	private void initWatchdog() {
-		boolean isEnabled = getPref(ENABLE_ANR_WATCHDOG);
-		switchAnrWatchdog.setChecked(isEnabled);
-
-		switchAnrWatchdog.setOnCheckedChangeListener(
-				(buttonView, isChecked)
-						-> {
-					putPref(ENABLE_ANR_WATCHDOG, isChecked);
-
-					Answers.safeLogEvent(
-							new CustomEvent("ANR Watchdog")
-									.putCustomAttribute("Enabled", String.valueOf(isChecked))
-					);
-				}
-		);
-
-		int timeoutMin = 5;
-
-		int prefTimeout = getPref(WATCHDOG_HANG_TIMEOUT);
-		int displayTimeout = prefTimeout / 1000;
-
-		lblWatchdogTimeout.setText("" + displayTimeout);
-
-		seekWatchdogTimeout.setMax(30 - timeoutMin);
-		seekWatchdogTimeout.setProgress(displayTimeout - timeoutMin);
-		seekWatchdogTimeout.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
-			@Override public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-				progress += timeoutMin;
-				lblWatchdogTimeout.setText("" + progress);
-			}
-
-			@Override public void onStartTrackingTouch(SeekBar seekBar) {
-			}
-
-			@Override public void onStopTrackingTouch(SeekBar seekBar) {
-				int progress = seekBar.getProgress();
-				progress += timeoutMin;
-				putPref(WATCHDOG_HANG_TIMEOUT, progress * 1000);
-			}
-		});
 	}
 
 	private void initTransitionAnimations() {

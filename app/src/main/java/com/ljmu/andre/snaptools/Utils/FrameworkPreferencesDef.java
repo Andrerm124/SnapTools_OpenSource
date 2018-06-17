@@ -9,10 +9,7 @@ import com.ljmu.andre.snaptools.BuildConfig;
 import com.ljmu.andre.snaptools.STApplication;
 import com.ljmu.andre.snaptools.UIComponents.UITheme;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.UUID;
 
 import static com.ljmu.andre.GsonPreferences.Preferences.getExternalPath;
@@ -41,10 +38,6 @@ public class FrameworkPreferencesDef extends ConstantDefiner<Preference> {
 	public static final Preference SYSTEM_ENABLED = new Preference(
 			"SYSTEM_ENABLED",
 			true, Boolean.class
-	);
-	public static final Preference ST_DEV = new Preference(
-			"ST_DEV",
-			null, Boolean.class
 	);
 	public static final Preference CHECK_APK_UPDATES = new Preference(
 			"CHECK_APK_UPDATES",
@@ -102,10 +95,6 @@ public class FrameworkPreferencesDef extends ConstantDefiner<Preference> {
 			"SHOW_VIDEO_COMPRESSION_DIALOG",
 			true, Boolean.class
 	);
-	public static final Preference ENABLE_ANR_WATCHDOG = new Preference(
-			"ENABLE_ANR_WATCHDOG",
-			true, Boolean.class
-	);
 	public static final Preference HAS_SHOWN_PAY_MODEL_REASONING = new Preference(
 			"HAS_SHOWN_PAY_MODEL_REASONING",
 			false, Boolean.class
@@ -128,53 +117,19 @@ public class FrameworkPreferencesDef extends ConstantDefiner<Preference> {
 			"SAVING_FILTER",
 			new HashSet<>(), HashSet.class
 	);
-	public static final Preference STORED_MESSAGE_METADATA_CACHE = new Preference(
-			"STORED_MESSAGE_METADATA_CACHE",
-			new ArrayList<>(), List.class
-	);
-
-	/**
-	 * ===========================================================================
-	 * Maps
-	 * ===========================================================================
-	 */
-	public static final Preference P_TKNS = new Preference(
-			"P_TKNS",
-			new HashMap<>(), HashMap.class
-	);
 
 	/**
 	 * ===========================================================================
 	 * Strings
 	 * ===========================================================================
 	 */
+	public static final Preference REPACKAGE_NAME = new Preference(
+			"REPACKAGE_NAME",
+			null, String.class
+	);
 	public static final Preference CURRENT_THEME = new Preference(
 			"CURRENT_THEME",
 			UITheme.DEFAULT.getName(), String.class
-	);
-	public static final Preference PACK_CHECKSUM = new Preference(
-			"PACK_CHECKSUM",
-			null, String.class
-	);
-	public static final Preference STKN = new Preference(
-			"STKN",
-			null, String.class
-	);
-	public static final Preference FTKN = new Preference(
-			"FTKN",
-			null, String.class
-	);
-	public static final Preference ST_DISPLAY_NAME = new Preference(
-			"ST_DISPLAY_NAME",
-			null, String.class
-	);
-	public static final Preference ST_DISPLAY_NAME_OBFUS = new Preference(
-			"ST_DISPLAY_NAME_OBFUS",
-			null, String.class
-	);
-	public static final Preference ST_EMAIL = new Preference(
-			"ST_EMAIL",
-			null, String.class
 	);
 	public static final Preference IGNORED_PACK_UPDATE_VERSION = new Preference(
 			"IGNORED_PACK_UPDATE_VERSION",

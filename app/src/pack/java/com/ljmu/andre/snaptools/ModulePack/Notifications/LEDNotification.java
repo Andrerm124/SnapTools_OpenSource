@@ -8,12 +8,9 @@ import com.ljmu.andre.snaptools.ModulePack.Utils.NotificationLEDUtil;
 import com.ljmu.andre.snaptools.ModulePack.Utils.NotificationLEDUtil.NotificationColor;
 
 /**
- * ===========================================================================
- * Source Code/Implementation created by Ethan (ElectronicWizard)
- *
- * @see <a href="https://github.com/ElectronicWizard">Ethan's Github</a>
- * ===========================================================================
+ * Created by ethan on 10/5/2017.
  */
+
 public class LEDNotification extends SaveNotification {
 	@Override protected void showNotification(Activity activity, ToastType type, int duration, @Nullable Snap snap) {
 		//TODO: passthrough duration as ms to notification

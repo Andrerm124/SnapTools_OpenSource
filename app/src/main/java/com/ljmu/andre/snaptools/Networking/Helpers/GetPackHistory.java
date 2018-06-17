@@ -16,10 +16,7 @@ import java.util.Collections;
 
 import timber.log.Timber;
 
-import static com.ljmu.andre.GsonPreferences.Preferences.getPref;
 import static com.ljmu.andre.snaptools.Networking.WebRequest.assertParam;
-import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.STKN;
-import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.ST_EMAIL;
 
 /**
  * This class was created by Andre R M (SID: 701439)
@@ -34,15 +31,9 @@ public class GetPackHistory {
 		Timber.d("Fetching Pack history from Server");
 
 		Class cls = GetPackHistory.class;
-		String token;
-		String email;
 		String deviceId;
 
 		try {
-			token = assertParam(cls, "Invalid Token",
-					getPref(STKN));
-			email = assertParam(cls, "Invalid Email",
-					getPref(ST_EMAIL));
 			deviceId = assertParam(cls, "Invalid Device ID",
 					DeviceIdManager.getDeviceId(activity));
 		} catch (IllegalArgumentException e) {
@@ -61,9 +52,7 @@ public class GetPackHistory {
 				.setType(RequestType.PACKET)
 				.setPacketClass(PackHistoryListPacket.class)
 				// ===========================================================================
-				.addParam("token", token)
 				.addParam("device_id", deviceId)
-				.addParam("email", email)
 				.addParam("developer", String.valueOf(STApplication.DEBUG))
 				.addParam("sc_version", scVersion)
 				.addParam("pack_type", packType)

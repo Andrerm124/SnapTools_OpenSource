@@ -49,4 +49,16 @@ public class ShellUtils {
 			return false;
 		}).subscribeOn(scheduler);
 	}
+
+	public static boolean sendCommandSync(String command) {
+		CommandResult cmd = Shell.SU.run(command);
+		if (cmd.isSuccessful()) {
+			Timber.d("Shell command '" + command + "' executed successfully.");
+			return true;
+		} else {
+			Timber.e(cmd.getStderr());
+		}
+
+		return false;
+	}
 }

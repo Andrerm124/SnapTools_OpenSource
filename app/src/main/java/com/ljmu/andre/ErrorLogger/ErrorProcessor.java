@@ -1,6 +1,5 @@
 package com.ljmu.andre.ErrorLogger;
 
-import android.content.Context;
 import android.os.Build.VERSION;
 import android.util.Log;
 
@@ -8,7 +7,6 @@ import com.google.common.io.CharSink;
 import com.google.common.io.FileWriteMode;
 import com.google.common.io.Files;
 import com.ljmu.andre.GsonPreferences.Preferences;
-import com.ljmu.andre.snaptools.BuildConfig;
 import com.ljmu.andre.snaptools.Framework.FrameworkManager;
 import com.ljmu.andre.snaptools.Framework.ModulePack;
 import com.ljmu.andre.snaptools.STApplication;
@@ -32,7 +30,6 @@ import timber.log.Timber;
 
 import static com.ljmu.andre.GsonPreferences.Preferences.getPref;
 import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.SELECTED_PACKS;
-import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.ST_DISPLAY_NAME_OBFUS;
 
 /**
  * This class was created by Andre R M (SID: 701439)
@@ -186,10 +183,6 @@ class ErrorProcessor implements Runnable {
 				output.append("OS Version: ").append(VERSION.SDK_INT).append("\n");
 
 				if (Preferences.getIsInitialised().get()) {
-					String username = getPref(ST_DISPLAY_NAME_OBFUS);
-					if (username != null)
-						output.append("Display Name: ").append(username).append("\n");
-
 					HashSet<String> selectedPacks = getPref(SELECTED_PACKS);
 
 					for (String packName : selectedPacks) {

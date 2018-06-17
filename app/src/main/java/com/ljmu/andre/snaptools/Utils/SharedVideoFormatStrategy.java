@@ -2,10 +2,8 @@ package com.ljmu.andre.snaptools.Utils;
 
 import android.media.MediaCodecInfo;
 import android.media.MediaFormat;
-import android.util.Log;
 
 import net.ypresto.androidtranscoder.format.MediaFormatStrategy;
-import net.ypresto.androidtranscoder.format.OutputFormatUnavailableException;
 
 /**
  * This class was created by Andre R M (SID: 701439)

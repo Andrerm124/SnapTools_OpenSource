@@ -1,7 +1,5 @@
 package com.ljmu.andre.snaptools.EventBus.Events;
 
-import android.app.Activity;
-
 import com.google.common.base.MoreObjects;
 import com.ljmu.andre.snaptools.Framework.ModulePack;
 

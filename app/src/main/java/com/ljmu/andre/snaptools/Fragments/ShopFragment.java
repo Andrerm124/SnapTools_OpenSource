@@ -14,10 +14,7 @@ import android.view.ViewTreeObserver;
 import android.view.WindowManager.LayoutParams;
 import android.widget.Toast;
 
-import com.ljmu.andre.snaptools.RedactedClasses.Answers;
-import com.ljmu.andre.snaptools.RedactedClasses.CustomEvent;
 import com.google.common.eventbus.Subscribe;
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.ljmu.andre.snaptools.Databases.Tables.ShopItem;
 import com.ljmu.andre.snaptools.Databases.Tables.ShopItem.ShopItemToolbar;
 import com.ljmu.andre.snaptools.Dialogs.DialogFactory;
@@ -31,6 +28,8 @@ import com.ljmu.andre.snaptools.Fragments.Tutorials.ShopTutorial;
 import com.ljmu.andre.snaptools.Networking.Helpers.GetShopItems;
 import com.ljmu.andre.snaptools.Networking.WebResponse.ServerListResultListener;
 import com.ljmu.andre.snaptools.R;
+import com.ljmu.andre.snaptools.RedactedClasses.Answers;
+import com.ljmu.andre.snaptools.RedactedClasses.CustomEvent;
 import com.ljmu.andre.snaptools.UIComponents.Adapters.ExpandableItemAdapter;
 import com.ljmu.andre.snaptools.UIComponents.Adapters.ExpandableItemAdapter.ExpandableItemEntity;
 import com.ljmu.andre.snaptools.UIComponents.Adapters.ExpandableItemAdapter.TextItemEntity;
@@ -128,25 +127,6 @@ import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.HAS_SHOWN_P
 
 		showPaymentModelReasoning();
 		return layoutContainer;
-	}
-
-	private void showPaymentModelReasoning() {
-		String message = FirebaseRemoteConfig.getInstance().getString("payment_model_reasoning");
-
-		if((boolean) getPref(HAS_SHOWN_PAY_MODEL_REASONING) || message.isEmpty())
-			return;
-
-		DialogFactory.createBasicMessage(
-				getActivity(),
-				"Payment Model",
-				message,
-				new ThemedClickListener() {
-					@Override public void clicked(ThemedDialog themedDialog) {
-						themedDialog.dismiss();
-						putPref(HAS_SHOWN_PAY_MODEL_REASONING, true);
-					}
-				}
-		).setDismissable(false).show();
 	}
 
 	@Override public void onResume() {
@@ -281,6 +261,31 @@ import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.HAS_SHOWN_P
 					resultListener
 			);
 		}
+	}
+
+	private void showPaymentModelReasoning() {
+		String message = "SnapTools uses a <b><font color='#EFDE86'>Pay Per Version</font></b> model instead of a <font color='#EF8686'>monthly subscription</font> based system so that you only pay when you want to use a newer Snapchat version.\n" +
+				"\n" +
+				"This aims to provide a cheaper method for our users, but still make it worth our time for maintaining the software.\n" +
+				"\n" +
+				"It should be stressed that you are <b><font color='#EFDE86'>NEVER</font></b> forced to update to any version. You are free to use any premium packs you purchased for as long as you are able to use them.\n" +
+				"\n" +
+				"SnapTools also offers a <b><font color='#EFDE86'>7 Day Guarantee</font></b> so that if a pack for a newer Snapchat is released within 7 days of you purchasing a pack, you will automatically be given access to the newer pack as well.";
+
+		if ((boolean) getPref(HAS_SHOWN_PAY_MODEL_REASONING) || message.isEmpty())
+			return;
+
+		DialogFactory.createBasicMessage(
+				getActivity(),
+				"Payment Model",
+				message,
+				new ThemedClickListener() {
+					@Override public void clicked(ThemedDialog themedDialog) {
+						themedDialog.dismiss();
+						putPref(HAS_SHOWN_PAY_MODEL_REASONING, true);
+					}
+				}
+		).setDismissable(false).show();
 	}
 
 	public void setShopItems(Collection<ShopItem> shopItems) {

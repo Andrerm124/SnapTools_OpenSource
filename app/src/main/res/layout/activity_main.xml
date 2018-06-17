@@ -31,6 +31,7 @@
 
     </android.support.v7.widget.Toolbar>
 
+
     <TextView
         android:id="@+id/txt_mod_inactive"
         android:layout_width="match_parent"

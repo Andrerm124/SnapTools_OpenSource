@@ -17,7 +17,6 @@ import android.widget.TextView;
 import com.ljmu.andre.snaptools.Dialogs.ThemedDialog;
 import com.ljmu.andre.snaptools.Dialogs.ThemedDialog.ThemedClickListener;
 import com.ljmu.andre.snaptools.Dialogs.ThemedDialog.ThemedDialogExtension;
-import com.ljmu.andre.snaptools.R;
 import com.ljmu.andre.snaptools.Utils.ContextHelper;
 
 import timber.log.Timber;

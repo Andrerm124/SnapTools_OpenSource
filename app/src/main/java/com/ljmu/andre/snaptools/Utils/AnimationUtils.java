@@ -13,7 +13,6 @@ import android.view.animation.ScaleAnimation;
 import android.view.animation.Transformation;
 import android.view.animation.TranslateAnimation;
 
-import com.fujiyuu75.sequent.Direction;
 import com.fujiyuu75.sequent.Sequent;
 import com.ljmu.andre.snaptools.R;
 

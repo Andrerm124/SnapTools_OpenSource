@@ -4,8 +4,6 @@ import android.content.Context;
 
 import java.io.File;
 
-import hugo.weaving.DebugLog;
-
 import static com.ljmu.andre.GsonPreferences.Preferences.getCreateDir;
 import static com.ljmu.andre.GsonPreferences.Preferences.getPref;
 import static com.ljmu.andre.GsonPreferences.Preferences.putPref;

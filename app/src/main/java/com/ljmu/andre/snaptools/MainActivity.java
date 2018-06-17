@@ -1,7 +1,6 @@
 package com.ljmu.andre.snaptools;
 
 import android.Manifest.permission;
-import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -9,7 +8,6 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -18,7 +16,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.InputType;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -31,57 +28,26 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions.Builder;
-import com.google.android.gms.auth.api.signin.GoogleSignInResult;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 import com.google.common.collect.ImmutableList;
 import com.google.common.eventbus.Subscribe;
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.ljmu.andre.GsonPreferences.Preferences;
 import com.ljmu.andre.Translation.Translator;
-import com.ljmu.andre.snaptools.RedactedClasses.Answers;
-import com.ljmu.andre.snaptools.RedactedClasses.CustomEvent;
-import com.ljmu.andre.snaptools.RedactedClasses.LoginEvent;
 import com.ljmu.andre.snaptools.Databases.CacheDatabase;
-import com.ljmu.andre.snaptools.Dialogs.Content.DeviceOverrideSelector;
 import com.ljmu.andre.snaptools.Dialogs.Content.FrameworkLoadError;
-import com.ljmu.andre.snaptools.Dialogs.Content.ModularButtonPrimary;
-import com.ljmu.andre.snaptools.Dialogs.Content.ModularButtonsContainer;
-import com.ljmu.andre.snaptools.Dialogs.Content.ModularHeader;
-import com.ljmu.andre.snaptools.Dialogs.Content.ModularTextView;
-import com.ljmu.andre.snaptools.Dialogs.Content.TextInputBasic;
 import com.ljmu.andre.snaptools.Dialogs.DialogFactory;
-import com.ljmu.andre.snaptools.Dialogs.ModularDialog;
 import com.ljmu.andre.snaptools.Dialogs.ThemedDialog;
 import com.ljmu.andre.snaptools.Dialogs.ThemedDialog.ThemedClickListener;
 import com.ljmu.andre.snaptools.EventBus.EventBus;
 import com.ljmu.andre.snaptools.EventBus.Events.BannerUpdateEvent;
-import com.ljmu.andre.snaptools.EventBus.Events.FirebaseTokenRefreshEvent;
-import com.ljmu.andre.snaptools.EventBus.Events.GoogleAuthEvent;
 import com.ljmu.andre.snaptools.EventBus.Events.LoadPackSettingsEvent;
-import com.ljmu.andre.snaptools.EventBus.Events.LogoutEvent;
 import com.ljmu.andre.snaptools.EventBus.Events.MasterSwitchEvent;
 import com.ljmu.andre.snaptools.EventBus.Events.ModuleEventRequest;
 import com.ljmu.andre.snaptools.EventBus.Events.PackLoadEvent;
 import com.ljmu.andre.snaptools.EventBus.Events.PackUnloadEvent;
 import com.ljmu.andre.snaptools.EventBus.Events.ReqCheckApkUpdateEvent;
-import com.ljmu.andre.snaptools.EventBus.Events.ReqGoogleAuthEvent;
-import com.ljmu.andre.snaptools.EventBus.Events.ReqGoogleDisconnectEvent;
 import com.ljmu.andre.snaptools.EventBus.Events.ReqLoadFragmentEvent;
-import com.ljmu.andre.snaptools.EventBus.Events.ReqLogoutEvent;
-import com.ljmu.andre.snaptools.EventBus.Events.ServerMessageEvent;
 import com.ljmu.andre.snaptools.EventBus.Events.ShopPurchaseEvent;
 import com.ljmu.andre.snaptools.EventBus.Events.TutorialFinishedEvent;
-import com.ljmu.andre.snaptools.FCM.InstanceIDService;
-import com.ljmu.andre.snaptools.FCM.MessageTypes.Message;
-import com.ljmu.andre.snaptools.FCM.MessagingService;
 import com.ljmu.andre.snaptools.Fragments.FragmentHelper;
 import com.ljmu.andre.snaptools.Fragments.HomeFragment;
 import com.ljmu.andre.snaptools.Framework.FrameworkManager;
@@ -89,15 +55,9 @@ import com.ljmu.andre.snaptools.Framework.MetaData.LocalPackMetaData;
 import com.ljmu.andre.snaptools.Framework.Module;
 import com.ljmu.andre.snaptools.Framework.ModulePack;
 import com.ljmu.andre.snaptools.Framework.Utils.PackLoadState;
-import com.ljmu.andre.snaptools.Networking.Helpers.AuthManager;
 import com.ljmu.andre.snaptools.Networking.Helpers.CheckAPKUpdate;
-import com.ljmu.andre.snaptools.Networking.Helpers.FirebaseTokenRefresh;
-import com.ljmu.andre.snaptools.Networking.Helpers.LoginSync;
-import com.ljmu.andre.snaptools.Networking.Helpers.Logout;
-import com.ljmu.andre.snaptools.Networking.Packets.LoginPacket;
-import com.ljmu.andre.snaptools.Networking.Packets.LogoutPacket;
-import com.ljmu.andre.snaptools.Networking.Packets.Packet;
-import com.ljmu.andre.snaptools.Networking.WebResponse.PacketResultListener;
+import com.ljmu.andre.snaptools.RedactedClasses.Answers;
+import com.ljmu.andre.snaptools.RedactedClasses.CustomEvent;
 import com.ljmu.andre.snaptools.UIComponents.CustomNavigation;
 import com.ljmu.andre.snaptools.UIComponents.CustomNavigation.NavigationFragmentListener;
 import com.ljmu.andre.snaptools.UIComponents.UITheme;
@@ -108,15 +68,12 @@ import com.ljmu.andre.snaptools.Utils.DeviceIdManager;
 import com.ljmu.andre.snaptools.Utils.MiscUtils;
 import com.ljmu.andre.snaptools.Utils.ModuleChecker;
 import com.ljmu.andre.snaptools.Utils.SafeToast;
-import com.ljmu.andre.snaptools.Utils.Security;
 import com.ljmu.andre.snaptools.Utils.ShowcaseFactory;
 import com.ljmu.andre.snaptools.Utils.ThemeUtils;
 import com.ljmu.andre.snaptools.Utils.TranslationDef;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -134,36 +91,26 @@ import timber.log.Timber;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
+import static com.ljmu.andre.GsonPreferences.Preferences.getExternalPath;
 import static com.ljmu.andre.GsonPreferences.Preferences.getPref;
 import static com.ljmu.andre.GsonPreferences.Preferences.putPref;
-import static com.ljmu.andre.GsonPreferences.Preferences.removePref;
 import static com.ljmu.andre.Translation.Translator.translate;
 import static com.ljmu.andre.snaptools.Utils.Constants.APK_CHECK_COOLDOWN;
 import static com.ljmu.andre.snaptools.Utils.Constants.REMIND_TUTORIAL_COOLDOWN;
 import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.BACK_OPENS_MENU;
 import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.CHECK_APK_UPDATES;
 import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.CURRENT_THEME;
-import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.FTKN;
 import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.LAST_APK_UPDATE_CHECK;
-import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.LAST_BUILD_FLAVOUR;
 import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.LAST_CHECK_SHOP;
 import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.LAST_OPEN_APP;
 import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.LATEST_APK_VERSION_CODE;
 import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.SHOW_TUTORIAL;
-import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.STKN;
-import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.STORED_MESSAGE_METADATA_CACHE;
-import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.ST_DEV;
-import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.ST_DISPLAY_NAME;
-import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.ST_DISPLAY_NAME_OBFUS;
-import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.ST_EMAIL;
 import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.SYSTEM_ENABLED;
 import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.TRANSLATION_LOCALE;
-import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.TRIAL_MODE;
 import static com.ljmu.andre.snaptools.Utils.FrameworkViewFactory.addRelativeParamRule;
 import static com.ljmu.andre.snaptools.Utils.ResourceUtils.getIdFromString;
 import static com.ljmu.andre.snaptools.Utils.ResourceUtils.getView;
 import static com.ljmu.andre.snaptools.Utils.StringUtils.htmlHighlight;
-import static com.ljmu.andre.snaptools.Utils.StringUtils.obfus;
 import static com.ljmu.andre.snaptools.Utils.TranslationDef.AUTOMATIC_INITIALISATION_SUCCESS;
 import static com.ljmu.andre.snaptools.Utils.TranslationDef.DEFAULT_TRANSLATION_FOUND_MESSAGE;
 import static com.ljmu.andre.snaptools.Utils.TranslationDef.DEFAULT_TRANSLATION_FOUND_TITLE;
@@ -173,11 +120,10 @@ import static com.ljmu.andre.snaptools.Utils.TranslationDef.PACK_LOAD_FATAL_ERRO
 
 public class MainActivity
 		extends AppCompatActivity
-		implements NavigationFragmentListener, OnConnectionFailedListener {
+		implements NavigationFragmentListener {
 
 	// ===========================================================================
 
-	public static final int GOOGLE_AUTH_RESPONSE = 100;
 	private static final String[] PERMISSION_REQUESTS = {
 			permission.READ_EXTERNAL_STORAGE,
 			permission.WRITE_EXTERNAL_STORAGE,
@@ -210,8 +156,6 @@ public class MainActivity
 	// ===========================================================================
 
 	private Unbinder unbinder;
-	private GoogleApiClient mGoogleApiClient;
-	private FirebaseRemoteConfig remoteConfig;
 	private boolean isInitialised;
 	private UITheme currentTheme;
 
@@ -239,7 +183,6 @@ public class MainActivity
 		ThemeUtils.onActivityCreateSetTheme(this);
 		setContentView(R.layout.activity_main);
 		unbinder = ButterKnife.bind(this);
-		remoteConfig = FirebaseRemoteConfig.getInstance();
 
 		ContextHelper.set(getApplicationContext());
 		ContextHelper.setActivity(this);
@@ -313,7 +256,7 @@ public class MainActivity
 		 */
 		try {
 			Preferences.init(
-					Preferences.getExternalPath() + "/" + STApplication.MODULE_TAG + "/"
+					getExternalPath() + "/" + STApplication.MODULE_TAG + "/"
 			);
 		} catch (Exception e) {
 			Timber.e(e);
@@ -332,6 +275,7 @@ public class MainActivity
 					}
 			).setDismissable(false).show();
 
+
 			return;
 		}
 
@@ -340,82 +284,79 @@ public class MainActivity
 		 * Translation System Initialisation
 		 * ===========================================================================
 		 */
-		if (remoteConfig.getBoolean("enable_translation_api_"
-				+ BuildConfig.FLAVOR)) {
-			try {
-				String savedLocaleString = getPref(TRANSLATION_LOCALE);
-				boolean hasSavedLocale = savedLocaleString != null;
+		try {
+			String savedLocaleString = getPref(TRANSLATION_LOCALE);
+			boolean hasSavedLocale = savedLocaleString != null;
 
-				Timber.d("Saved language locale: "
+			Timber.d("Saved language locale: "
+					+ savedLocaleString);
+
+			if (!hasSavedLocale) {
+				savedLocaleString = Locale.getDefault().getDisplayLanguage();
+				Timber.d("Saved language not found... Defaulting to "
 						+ savedLocaleString);
+			}
 
-				if (!hasSavedLocale) {
-					savedLocaleString = Locale.getDefault().getDisplayLanguage();
-					Timber.d("Saved language not found... Defaulting to "
-							+ savedLocaleString);
-				}
-
-				/**
-				 * ===========================================================================
-				 * If saved translation mode is not english, load the translations
-				 * ===========================================================================
-				 */
-				if (!savedLocaleString.equals("English")) {
-					Translator.initTranslationDefinitions(this, new TranslationDef(), true);
-					String finalSavedLocaleString = savedLocaleString;
-					Translator.init(
-							this,
-							savedLocaleString + ".xml",
-							success -> {
-								if (!success) {
-									SafeToast.show(
-											this,
-											"Failed to fetch translations",
-											true
-									);
-
-									if (!hasSavedLocale) {
-										putPref(TRANSLATION_LOCALE, Locale.ENGLISH.getDisplayLanguage());
-									}
-
-									return;
-								}
+			/**
+			 * ===========================================================================
+			 * If saved translation mode is not english, load the translations
+			 * ===========================================================================
+			 */
+			if (!savedLocaleString.equals("English")) {
+				Translator.initTranslationDefinitions(this, new TranslationDef(), true);
+				String finalSavedLocaleString = savedLocaleString;
+				Translator.init(
+						this,
+						savedLocaleString + ".xml",
+						success -> {
+							if (!success) {
+								SafeToast.show(
+										this,
+										"Failed to fetch translations",
+										true
+								);
 
 								if (!hasSavedLocale) {
-									DialogFactory.createConfirmation(
-											this,
-											translate(DEFAULT_TRANSLATION_FOUND_TITLE),
-											String.format(translate(DEFAULT_TRANSLATION_FOUND_MESSAGE),
-													finalSavedLocaleString)
-													+ "\n\n"
-													+ String.format(DEFAULT_TRANSLATION_FOUND_MESSAGE.getText(),
-													finalSavedLocaleString),
-											new ThemedClickListener() {
-												@Override public void clicked(ThemedDialog themedDialog) {
-													themedDialog.dismiss();
-													putPref(TRANSLATION_LOCALE, finalSavedLocaleString);
-												}
-											},
-											new ThemedClickListener() {
-												@Override public void clicked(ThemedDialog themedDialog) {
-													themedDialog.dismiss();
-													putPref(TRANSLATION_LOCALE, Locale.ENGLISH.getDisplayLanguage());
-												}
-											}
-									).show();
+									putPref(TRANSLATION_LOCALE, Locale.ENGLISH.getDisplayLanguage());
 								}
-							}
-					);
-				}
-			} catch (Throwable t) {
-				Timber.e(t, "Couldn't load translation system");
 
-				DialogFactory.createErrorDialog(
-						this,
-						"Error Loading Translations",
-						"An unknown error occurred while loading the translation system"
-				).show();
+								return;
+							}
+
+							if (!hasSavedLocale) {
+								DialogFactory.createConfirmation(
+										this,
+										translate(DEFAULT_TRANSLATION_FOUND_TITLE),
+										String.format(translate(DEFAULT_TRANSLATION_FOUND_MESSAGE),
+												finalSavedLocaleString)
+												+ "\n\n"
+												+ String.format(DEFAULT_TRANSLATION_FOUND_MESSAGE.getText(),
+												finalSavedLocaleString),
+										new ThemedClickListener() {
+											@Override public void clicked(ThemedDialog themedDialog) {
+												themedDialog.dismiss();
+												putPref(TRANSLATION_LOCALE, finalSavedLocaleString);
+											}
+										},
+										new ThemedClickListener() {
+											@Override public void clicked(ThemedDialog themedDialog) {
+												themedDialog.dismiss();
+												putPref(TRANSLATION_LOCALE, Locale.ENGLISH.getDisplayLanguage());
+											}
+										}
+								).show();
+							}
+						}
+				);
 			}
+		} catch (Throwable t) {
+			Timber.e(t, "Couldn't load translation system");
+
+			DialogFactory.createErrorDialog(
+					this,
+					"Error Loading Translations",
+					"An unknown error occurred while loading the translation system"
+			).show();
 		}
 
 		// ===========================================================================
@@ -508,7 +449,7 @@ public class MainActivity
 		 * ===========================================================================
 		 */
 		try {
-			Security.init(getResources());
+//			Security.init(getResources());
 
 			// ===========================================================================
 			List<PackLoadState> packLoadStates = FrameworkManager.loadAllModulePacks(this);
@@ -539,104 +480,6 @@ public class MainActivity
 
 		FrameworkManager.checkPacksForUpdate(this);
 
-		/**
-		 * ===========================================================================
-		 * Google Sign In Config
-		 * ===========================================================================
-		 */
-		GoogleSignInOptions gso = new Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-				.requestIdToken("REDACTED")
-				.requestEmail()
-				.build();
-
-		mGoogleApiClient = new GoogleApiClient.Builder(this)
-				.enableAutoManage(this, this)
-				.addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-				.build();
-
-		/**
-		 * ===========================================================================
-		 * User Authentication Checking
-		 * ===========================================================================
-		 */
-		// If login token missing, ask to log in =====================================
-		if (getPref(STKN) == null) {
-
-			// If tutorial hasn't been shown, show it and login user =====================
-			if (getPref(SHOW_TUTORIAL)) {
-				DialogFactory.createConfirmation(
-						this,
-						"Tutorial",
-						"Would you like to view a full application tutorial?",
-						new ThemedClickListener() {
-							@Override public void clicked(ThemedDialog themedDialog) {
-								themedDialog.dismiss();
-								FragmentHelper activeFragment = navigationView.getActiveFragment();
-
-								if (activeFragment == null) {
-									Timber.w("Null active fragment!");
-									return;
-								}
-
-								activeFragment.triggerTutorial(true);
-							}
-						},
-						new ThemedClickListener() {
-							@Override public void clicked(ThemedDialog themedDialog) {
-								displayLoginRequest();
-								themedDialog.dismiss();
-								putPref(SHOW_TUTORIAL, false);
-							}
-						}
-				).show();
-			} else { // Otherwise show login request ==============================================
-				FragmentHelper activeFragment = navigationView.getActiveFragment();
-				activeFragment.triggerOnVisible((fragmentHelper, v) -> displayLoginRequest());
-			}
-		} else {
-
-			// Otherwise authenticate logged in user =====================================
-			AuthManager.authUser(this, new PacketResultListener() {
-
-				@Override public void success(String message, Packet packet) {
-					Answers.safeLogEvent(
-							new CustomEvent("UserAuth")
-									.putCustomAttribute(
-											"Success",
-											"TRUE"
-									)
-					);
-				}
-
-				// ===========================================================================
-
-				@Override public void error(String message, Throwable t, int errorCode) {
-					Answers.safeLogEvent(
-							new CustomEvent("UserAuth")
-									.putCustomAttribute(
-											"Success",
-											"FALSE"
-									)
-					);
-
-					DialogFactory.createErrorDialog(
-							MainActivity.this,
-							"System Issue",
-							message,
-							new ThemedClickListener() {
-								@Override
-								public void clicked(ThemedDialog themedDialog) {
-									handleReqGoogleAuthEvent(new ReqGoogleAuthEvent());
-									themedDialog.dismiss();
-								}
-							},
-							errorCode
-					).show();
-				}
-			});
-
-		}
-
 		// ===========================================================================
 
 		/**
@@ -645,10 +488,65 @@ public class MainActivity
 		 * ===========================================================================
 		 */
 		initApkUpdateChecker();
-		initFirebaseSubscriptions();
 		checkForSnapchatBeta();
 		initReminders();
 		Translator.translateActivity(this);
+	}
+
+	/**
+	 * ===========================================================================
+	 * Set the initial state of the page banners
+	 * ===========================================================================
+	 */
+	private void initBanners() {
+		//noinspection ConstantConditions=
+		txtModInactive.setVisibility(ModuleChecker.isModuleActive() ? GONE : View.VISIBLE);
+
+		// Trigger the master switch visibility check ================================
+		handleMasterSwitchEvent(new MasterSwitchEvent());
+		handleBannerEvent(new BannerUpdateEvent(BannerUpdateEvent.MASTER_SWITCH));
+		handleBannerEvent(new BannerUpdateEvent(BannerUpdateEvent.APK_UPDATE));
+		handleBannerEvent(new BannerUpdateEvent(BannerUpdateEvent.PACK_UPDATE));
+	}
+
+	/**
+	 * ===========================================================================
+	 * Begin checking if an APK update has been released
+	 * ===========================================================================
+	 */
+	private void initApkUpdateChecker() {
+		if (!(boolean) getPref(CHECK_APK_UPDATES))
+			return;
+
+		if (MiscUtils.calcTimeDiff(getPref(LAST_APK_UPDATE_CHECK)) > APK_CHECK_COOLDOWN)
+			CheckAPKUpdate.checkApkUpdate(this, false);
+	}
+
+	/**
+	 * ===========================================================================
+	 * Snapchat Beta versions are not currently supported. As a result, when
+	 * launching SnapTools with a Snapchat Beta version installed, it will
+	 * display an appropriate message.
+	 * <p>
+	 * This function can be controlled via the Firebase Remote Config.
+	 * ===========================================================================
+	 */
+	private void checkForSnapchatBeta() {
+
+		String installedSCVersion = MiscUtils.getInstalledSCVer(this);
+
+		if (installedSCVersion == null)
+			return;
+
+		if (installedSCVersion.toLowerCase().contains("beta")) {
+			DialogFactory.createErrorDialog(
+					this,
+					"Snapchat Beta Detected",
+					"Snapchat Beta version detected ("
+							+ installedSCVersion + ")"
+							+ "\nSnapTools will " + htmlHighlight("NEVER") + " support a Beta version of Snapchat as we require a stable base to work from"
+			).show();
+		}
 	}
 
 	/**
@@ -686,185 +584,6 @@ public class MainActivity
 		}
 
 		putPref(LAST_OPEN_APP, System.currentTimeMillis());
-	}
-
-	/**
-	 * ===========================================================================
-	 * Set the initial state of the page banners
-	 * ===========================================================================
-	 */
-	private void initBanners() {
-		//noinspection ConstantConditions=
-		txtModInactive.setVisibility(ModuleChecker.isModuleActive() ? GONE : View.VISIBLE);
-
-		// Trigger the master switch visibility check ================================
-		handleMasterSwitchEvent(new MasterSwitchEvent());
-		handleBannerEvent(new BannerUpdateEvent(BannerUpdateEvent.MASTER_SWITCH));
-		handleBannerEvent(new BannerUpdateEvent(BannerUpdateEvent.APK_UPDATE));
-		handleBannerEvent(new BannerUpdateEvent(BannerUpdateEvent.PACK_UPDATE));
-	}
-
-	/**
-	 * ===========================================================================
-	 * Display the Login Request showcase view
-	 * ===========================================================================
-	 */
-	private void displayLoginRequest() {
-		ShowcaseFactory.detatchCurrentShowcase(this);
-
-		ShowcaseFactory.getDefaultShowcase(this, (showCaseView, messageContainer, txtTitle, txtMessage, btnClose, btnNext) -> {
-			addRelativeParamRule(messageContainer, RelativeLayout.CENTER_VERTICAL);
-
-			txtTitle.setText("Login Request");
-			txtMessage.setText(
-					"In order to use this software correctly you will be required to log in."
-							+ "\n\n"
-							+ "You will now be asked which Google account you would like to be signed in with"
-			);
-
-			btnClose.setVisibility(GONE);
-
-			btnNext.setText("Okay");
-			btnNext.setOnClickListener(v -> {
-				showCaseView.hide();
-				handleReqGoogleAuthEvent(new ReqGoogleAuthEvent());
-			});
-		}).build().show();
-	}
-
-	/**
-	 * ===========================================================================
-	 * Request Google Sign In
-	 * ===========================================================================
-	 */
-	@Subscribe public void handleReqGoogleAuthEvent(ReqGoogleAuthEvent authEvent) {
-		// Check if it's a developers build ==========================================
-		if (!STApplication.DEBUG) {
-			/**
-			 * ===========================================================================
-			 * Display the Google Signin intent and wait for the result
-			 * ===========================================================================
-			 */
-			Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-			startActivityForResult(signInIntent, GOOGLE_AUTH_RESPONSE);
-		} else {
-
-			// Display the uglier developer login panel ==================================
-			DialogFactory.createBasicTextInputDialog(
-					this,
-					"Debug Login",
-					"You must provide your email",
-					"Account Email",
-					getPref(ST_EMAIL),
-					null,
-					new ThemedClickListener() {
-						@Override public void clicked(ThemedDialog themedDialog) {
-							TextInputBasic input = themedDialog.getExtension();
-							String email = input.getInputMessage();
-							themedDialog.dismiss();
-
-							DialogFactory.createBasicTextInputDialog(
-									MainActivity.this,
-									"Debug Login",
-									"Please enter the current Server Password",
-									"Server Password",
-									null,
-									InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD,
-									new ThemedClickListener() {
-										@Override public void clicked(ThemedDialog themedDialog) {
-											TextInputBasic input = themedDialog.getExtension();
-											String password = input.getInputMessage();
-
-											LoginSync.loginSync2(
-													MainActivity.this,
-													new PacketResultListener<LoginPacket>() {
-														@Override public void success(String message, LoginPacket packet) {
-															loginResult(packet);
-														}
-
-														@Override public void error(String message, Throwable t, int errorCode) {
-															loginError(message, t, errorCode);
-														}
-													},
-													password,
-													email,
-													"Developer",
-													null
-											);
-
-											themedDialog.dismiss();
-										}
-									}
-							).show();
-						}
-					}
-			).show();
-		}
-	}
-
-	/**
-	 * ===========================================================================
-	 * Begin checking if an APK update has been released
-	 * ===========================================================================
-	 */
-	private void initApkUpdateChecker() {
-		if (!(boolean) getPref(CHECK_APK_UPDATES))
-			return;
-
-		if (MiscUtils.calcTimeDiff(getPref(LAST_APK_UPDATE_CHECK)) > APK_CHECK_COOLDOWN)
-			CheckAPKUpdate.checkApkUpdate(this, false);
-	}
-
-	/**
-	 * ===========================================================================
-	 * Handle the firebase topics that should be subscribed to and generate
-	 * a firebase token if needed
-	 * ===========================================================================
-	 */
-	private void initFirebaseSubscriptions() {
-		String storedFireToken = getPref(FTKN);
-
-		if (!InstanceIDService.getNonNullFireToken().equals(storedFireToken))
-			FirebaseTokenRefresh.refreshToken(this);
-
-		//noinspection ConstantConditions
-		if (BuildConfig.FLAVOR.equals("prod"))
-			FirebaseMessaging.getInstance().unsubscribeFromTopic("beta");
-
-		FirebaseMessaging.getInstance().unsubscribeFromTopic(getPref(LAST_BUILD_FLAVOUR));
-		FirebaseMessaging.getInstance().subscribeToTopic(BuildConfig.FLAVOR);
-		FirebaseMessaging.getInstance().subscribeToTopic("all");
-		putPref(LAST_BUILD_FLAVOUR, BuildConfig.FLAVOR);
-	}
-
-	/**
-	 * ===========================================================================
-	 * Snapchat Beta versions are not currently supported. As a result, when
-	 * launching SnapTools with a Snapchat Beta version installed, it will
-	 * display an appropriate message.
-	 * <p>
-	 * This function can be controlled via the Firebase Remote Config.
-	 * ===========================================================================
-	 */
-	private void checkForSnapchatBeta() {
-		// Set `check_sc_beta` remote config to FALSE to disable checks ==============
-		if (!remoteConfig.getBoolean("check_sc_beta"))
-			return;
-
-		String installedSCVersion = MiscUtils.getInstalledSCVer(this);
-
-		if (installedSCVersion == null)
-			return;
-
-		if (installedSCVersion.toLowerCase().contains("beta")) {
-			DialogFactory.createErrorDialog(
-					this,
-					"Snapchat Beta Detected",
-					"Snapchat Beta version detected ("
-							+ installedSCVersion + ")"
-							+ "\nSnapTools will " + htmlHighlight("NEVER") + " support a Beta version of Snapchat as we require a stable base to work from"
-			).show();
-		}
 	}
 
 	/**
@@ -923,165 +642,6 @@ public class MainActivity
 		super.onActivityResult(requestCode, resultCode, data);
 
 		Timber.d("Result: [Request: %s][Result: %s][Data: %s]", requestCode, resultCode, data);
-
-		if (requestCode == GOOGLE_AUTH_RESPONSE) {
-			GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-
-			Timber.d("Sign in acc: %s",
-					result.getSignInAccount());
-			if (result.isSuccess()) {
-				GoogleSignInAccount account = result.getSignInAccount();
-
-				if (account != null) {
-					if (account.getIdToken() != null) {
-						LoginSync.loginSync2(
-								this,
-								new PacketResultListener<LoginPacket>() {
-									@Override public void success(String message, LoginPacket packet) {
-										loginResult(packet);
-									}
-
-									@Override public void error(String message, Throwable t, int errorCode) {
-										loginError(message, t, errorCode);
-									}
-								},
-								account
-						);
-					} else {
-						displayGoogleAuthError("Reason: No Account Id Token");
-					}
-				} else
-					displayGoogleAuthError("Reason: No Account Data Received");
-			} else {
-				String message =
-						result.getStatus().isCanceled() ?
-								"Sign in was cancelled" :
-								result.getStatus().isInterrupted() ?
-										"Sign in was interrupted" :
-										result.getStatus().getStatusMessage() != null ?
-												result.getStatus().getStatusMessage() :
-												"Unknown Reason";
-
-				displayGoogleAuthError("Reason: " + message);
-			}
-		}
-	}
-
-	public void loginResult(LoginPacket loginPacket) {
-		if (loginPacket.device_cap) {
-			DialogFactory.createErrorDialog(
-					this,
-					"Device Cap Reached",
-					"You have logged in on too many devices"
-			);
-
-			new ThemedDialog(this)
-					.setTitle("Device Cap Reached")
-					.setHeaderDrawable(R.drawable.error_header)
-					.setExtension(
-							new DeviceOverrideSelector()
-									.setDevices(loginPacket.getDevices())
-									.setCallable(
-											devicePacket -> Timber.d("CALLABLE")
-									)
-					).show();
-
-			return;
-		}
-
-		if (!loginPacket.auth_status) {
-			loginError(loginPacket.auth_description, null, loginPacket.getErrorCode());
-			return;
-		}
-
-		putPref(ST_DISPLAY_NAME, loginPacket.getDisplayName());
-		putPref(ST_DISPLAY_NAME_OBFUS, obfus(loginPacket.getDisplayName()));
-		putPref(ST_EMAIL, loginPacket.getEmail());
-		putPref(STKN, loginPacket.getToken());
-		putPref(FTKN, InstanceIDService.getNonNullFireToken());
-		putPref(ST_DEV, loginPacket.developer);
-
-
-		ShowcaseFactory.detatchCurrentShowcase(this);
-
-		ShowcaseFactory.getDefaultShowcase(this, (showCaseView, messageContainer, txtTitle, txtMessage, btnClose, btnNext) -> {
-			addRelativeParamRule(messageContainer, RelativeLayout.CENTER_VERTICAL);
-
-			txtTitle.setText("Login Successful");
-			txtMessage.setText(
-					"Successfully logged into SnapTools as "
-							+ loginPacket.getDisplayName()
-			);
-
-			btnClose.setVisibility(GONE);
-			btnNext.setOnClickListener(v -> {
-				showCaseView.hide();
-				EventBus.getInstance().post(new GoogleAuthEvent(loginPacket));
-			});
-			btnNext.setText("Done");
-		}).build().show();
-
-		Answers.safeLogEvent(
-				new LoginEvent()
-						.putMethod("Google Auth")
-						.putSuccess(true)
-		);
-	}
-
-	public void loginError(String reason, @Nullable Throwable throwable, int errorCode) {
-		ShowcaseFactory.detatchCurrentShowcase(this);
-
-		ShowcaseFactory.getDefaultShowcase(this, (showCaseView, messageContainer, txtTitle, txtMessage, btnClose, btnNext) -> {
-			addRelativeParamRule(messageContainer, RelativeLayout.CENTER_VERTICAL);
-
-			txtTitle.setText("Login Failed");
-			txtMessage.setText(
-					"Reason: " + reason + "\n\n"
-							+ "As a result, network communications to the SnapTools server have been disabled"
-							+ "\n\n"
-							+ "Error Code: " + errorCode
-			);
-
-			btnClose.setVisibility(GONE);
-			btnNext.setText("Okay");
-			btnNext.setOnClickListener((view) -> {
-				showCaseView.hide();
-				EventBus.getInstance().post(new GoogleAuthEvent(reason));
-			});
-		}).build().show();
-
-		if (throwable != null)
-			Timber.e(throwable, reason);
-		else {
-			Timber.d("LoginError: " + reason);
-		}
-
-		Auth.GoogleSignInApi.signOut(mGoogleApiClient);
-
-		Answers.safeLogEvent(
-				new LoginEvent()
-						.putMethod("Google Auth")
-						.putSuccess(false)
-		);
-	}
-
-	private void displayGoogleAuthError(String message) {
-		ShowcaseFactory.detatchCurrentShowcase(this);
-
-		ShowcaseFactory.getDefaultShowcase(this, (showCaseView, messageContainer, txtTitle, txtMessage, btnClose, btnNext) -> {
-			addRelativeParamRule(messageContainer, RelativeLayout.CENTER_VERTICAL);
-
-			txtTitle.setText("Error Signing In");
-			txtMessage.setText(
-					"Google sign in was unsuccessful"
-							+ "\n\n"
-							+ message
-			);
-
-			btnClose.setVisibility(GONE);
-			btnNext.setText("Okay");
-			btnNext.setOnClickListener((view) -> showCaseView.hide());
-		}).build().show();
 	}
 
 	@Override public void onBackPressed() {
@@ -1106,38 +666,6 @@ public class MainActivity
 
 	@Override protected void onResume() {
 		super.onResume();
-		GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
-		int statusCode = apiAvailability.isGooglePlayServicesAvailable(this);
-		apiAvailability.getErrorDialog(this, statusCode, GOOGLE_AUTH_RESPONSE);
-
-		if (isInitialised) {
-			displayCachedMessages();
-		}
-	}
-
-	/**
-	 * ===========================================================================
-	 * Process Firebase messages that were cached due to the app not being in
-	 * the foreground.
-	 * ===========================================================================
-	 */
-	private void displayCachedMessages() {
-		List<Map<String, String>> messageMetaDataSet = getPref(STORED_MESSAGE_METADATA_CACHE);
-
-		Timber.d("Found %s cached messages", messageMetaDataSet.size());
-
-		for (Map<String, String> data : messageMetaDataSet) {
-			Timber.d("Working on metadata: " + data);
-
-			MessagingService.handleMessageData(
-					this,
-					data,
-					EventBus.getInstance()
-			);
-		}
-
-		// Reset the cache ===========================================================
-		putPref(STORED_MESSAGE_METADATA_CACHE, new ArrayList<>());
 	}
 
 	@Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -1201,48 +729,8 @@ public class MainActivity
 	}
 
 	@SuppressWarnings("unused")
-	@Subscribe public void handleFirebaseMessage(Message message) {
-		Timber.d("Got firebase message posted: "
-				+ message);
-
-		message.triggerEvent(this, EventBus.getInstance());
-	}
-
-	@SuppressWarnings("unused")
-	@Subscribe public void handleFirebaseTokenRefreshEvent(FirebaseTokenRefreshEvent tokenRefreshEvent) {
-		if (getPref(STKN) != null) {
-			FirebaseTokenRefresh.refreshToken(
-					this
-			);
-		}
-	}
-
-	@SuppressWarnings("unused")
 	@Subscribe public void handleReqCheckApkUpdateEvent(ReqCheckApkUpdateEvent updateEvent) {
 		CheckAPKUpdate.checkApkUpdate(this, false);
-	}
-
-	@SuppressWarnings("unused")
-	@Subscribe public void handleServerNotification(ServerMessageEvent serverMessageEvent) {
-		Observable.create(
-				e -> {
-					new ModularDialog(this)
-							.addComponent(new ModularHeader("Server Message"))
-							.addComponent(new ModularTextView(serverMessageEvent.getMessage()))
-							.addComponent(new ModularButtonsContainer()
-									.addButton(
-											new ModularButtonPrimary(
-													"Understood",
-													Dialog::dismiss
-											)
-									)
-							)
-							.show();
-
-					e.onComplete();
-				}
-		).subscribeOn(AndroidSchedulers.mainThread())
-				.subscribe();
 	}
 
 	@SuppressWarnings("unused")
@@ -1271,102 +759,6 @@ public class MainActivity
 				}
 		).subscribeOn(AndroidSchedulers.mainThread())
 				.subscribe(new ErrorObserver<>());
-	}
-
-	@SuppressWarnings("unused")
-	@Subscribe public void handleReqLogoutEvent(ReqLogoutEvent logoutEvent) {
-		Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
-				status -> {
-					if (status.isSuccess()) {
-						Logout.logout(
-								MainActivity.this,
-								getPref(ST_EMAIL),
-								getPref(STKN),
-								DeviceIdManager.getDeviceId(MainActivity.this),
-								new PacketResultListener<LogoutPacket>() {
-									@Override public void success(String message, LogoutPacket packet) {
-									}
-
-									@Override public void error(String message, Throwable t, int errorCode) {
-									}
-								}
-						);
-
-						logoutPref();
-
-						ShowcaseFactory.getDefaultShowcase(this, (showCaseView, messageContainer, txtTitle, txtMessage, btnClose, btnNext) -> {
-							addRelativeParamRule(messageContainer, RelativeLayout.CENTER_VERTICAL);
-
-							txtTitle.setText("Logout Successful");
-							txtMessage.setText("You have successfully logged out of SnapTools");
-
-							btnClose.setVisibility(GONE);
-							btnNext.setText("Okay");
-							btnNext.setOnClickListener((view) -> showCaseView.hide());
-						}).build().show();
-
-					} else {
-
-						ShowcaseFactory.getDefaultShowcase(this, (showCaseView, messageContainer, txtTitle, txtMessage, btnClose, btnNext) -> {
-							addRelativeParamRule(messageContainer, RelativeLayout.CENTER_VERTICAL);
-
-							txtTitle.setText("Logout Failure");
-							txtMessage.setText(
-									"Couldn't log out from SnapTools"
-											+ "\n\nReason: " + status.getStatusMessage()
-							);
-
-							btnClose.setVisibility(GONE);
-							btnNext.setText("Okay");
-							btnNext.setOnClickListener((view) -> showCaseView.hide());
-						}).build().show();
-					}
-				});
-	}
-
-	public void logoutPref() {
-		removePref(STKN);
-		removePref(ST_DISPLAY_NAME);
-		removePref(TRIAL_MODE);
-
-		EventBus.getInstance().post(new LogoutEvent());
-	}
-
-	@SuppressWarnings("unused")
-	@Subscribe public void handleReqGoogleDisconnectEvent(ReqGoogleDisconnectEvent disconnectEvent) {
-		Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient).setResultCallback(
-				status -> {
-					if (status.isSuccess()) {
-						logoutPref();
-
-						ShowcaseFactory.getDefaultShowcase(this, (showCaseView, messageContainer, txtTitle, txtMessage, btnClose, btnNext) -> {
-							txtTitle.setText("Disconnect Successful");
-							txtMessage.setText("Your google account has been disconnected from SnapTools and you have been logged out");
-
-							btnClose.setVisibility(GONE);
-							btnNext.setText("Okay");
-							btnNext.setOnClickListener((view) -> showCaseView.hide());
-						}).build().show();
-
-					} else {
-
-						ShowcaseFactory.getDefaultShowcase(this, (showCaseView, messageContainer, txtTitle, txtMessage, btnClose, btnNext) -> {
-							addRelativeParamRule(messageContainer, RelativeLayout.CENTER_VERTICAL);
-
-							txtTitle.setText("Disconnect Failure");
-							txtMessage.setText(
-									"Couldn't disconnect your account from SnapTools"
-											+ "\n\nReason: " + status.getStatusMessage()
-							);
-
-							btnClose.setVisibility(GONE);
-							btnNext.setText("Okay");
-							btnNext.setOnClickListener((view) -> showCaseView.hide());
-						}).build().show();
-
-					}
-				}
-		);
 	}
 
 	@SuppressWarnings("unused")
@@ -1650,10 +1042,6 @@ public class MainActivity
 		}
 	}
 
-	@Override public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-		Timber.d("Failed google connection");
-	}
-
 	@OnClick(R.id.btn_tutorial) public void tutorialClicked() {
 		FragmentHelper activeFragment = navigationView.getActiveFragment();
 
@@ -1683,4 +1071,39 @@ public class MainActivity
 
 		return true;
 	}
+
+//	@OnClick(R.id.btn_repackage) public void repackageClicked() {
+//		try {
+//			com.ljmu.andre.modulepackloader.ModulePack modulePack = new com.ljmu.andre.modulepackloader.ModulePack.Builder()
+//					.setPackJarFile(new File(getExternalPath(), "STModulePack_9_Premium_10.26.5.0.jar"))
+//					.setPackClassPath("com.ljmu.andre.snaptools.ModulePack.NewModulePack")
+//					.setPackAttributes(new TestPackAttributes())
+//					.setDexFileDir(getCodeCacheDir())
+//					.setConstructorArguments(Arrays.asList("This is the base string", "This is the new pack string"))
+//					.build();
+//
+//			Timber.d("NewMod: " + modulePack.toString());
+//		} catch (IOException e) {
+//			Timber.e(e);
+//		} catch (PackSecurityException e) {
+//			Timber.e(e);
+//		} catch (PackBuildException e) {
+//			Timber.e(e);
+//		} catch (PackLoadException e) {
+//			Timber.e(e);
+//		}
+//
+////		SharedPreferences prefs = this.getPreferences(MODE_PRIVATE);
+////
+////		Timber.d("Starting preference benchmark");
+////		long start = System.currentTimeMillis();
+////
+////		for(int i = 0; i < 100000; i++) {
+////			getPref(FrameworkPreferencesDef.BACK_OPENS_MENU);
+////		}
+////
+////		long end = System.currentTimeMillis() - start;
+////
+////		Timber.d("Benchmark time %sms", end);
+//	}
 }

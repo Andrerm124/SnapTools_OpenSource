@@ -9,8 +9,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.google.common.base.MoreObjects;
-import com.google.common.collect.ImmutableList;
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.ljmu.andre.ConstantDefiner.Constant;
 import com.ljmu.andre.ConstantDefiner.ConstantDefiner;
 import com.ljmu.andre.snaptools.Networking.Helpers.GetTranslations;
@@ -20,7 +18,7 @@ import com.ljmu.andre.snaptools.Utils.Callable;
 import com.ljmu.andre.snaptools.Utils.RequiresFramework;
 
 import java.io.ByteArrayInputStream;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -41,6 +39,8 @@ import static com.ljmu.andre.snaptools.Utils.ResourceUtils.getView;
  */
 
 public class Translator {
+	private static final String TRANSLATION_GITHUB_URL = "https://github.com/Andrerm124/SnapToolsTranslations";
+	private static final List<String> AVAILABLE_TRANSLATIONS = Arrays.asList("English", "German", "French", "Polski", "TestLanguage");
 	private static final Object MAP_LOCK = new Object();
 	private static final Map<String, Translation> TRANSLATION_MAP = new HashMap<>(64);
 	private static final Set<Class<? extends ConstantDefiner<Translation>>> INITIALISED_DEFINERS = new HashSet<>(6);
@@ -59,7 +59,7 @@ public class Translator {
 	public static void init(Activity activity, @Nullable String translationFilename, Callable<Boolean> completionCallback) {
 		init(
 				activity,
-				FirebaseRemoteConfig.getInstance().getString("translation_url_root"),
+				TRANSLATION_GITHUB_URL,
 				translationFilename,
 				completionCallback
 		);
@@ -139,26 +139,7 @@ public class Translator {
 
 	@RequiresFramework(73)
 	public static List<String> getAvailableTranslations() {
-		try {
-			String translationFilesCSV = FirebaseRemoteConfig.getInstance().getString("translation_files");
-			String[] translationFiles = translationFilesCSV.split(",");
-
-			List<String> availableTranslations = new ArrayList<>(translationFiles.length);
-
-			for (String translation : translationFiles) {
-				availableTranslations.add(translation.replace(",", "").trim());
-			}
-
-			if (availableTranslations.size() > 0) {
-				return availableTranslations;
-			}
-		} catch (Exception e) {
-			Timber.e(e, "Failed to fetch available translations");
-		}
-
-		return ImmutableList.<String>builder()
-				.add("English")
-				.build();
+		return AVAILABLE_TRANSLATIONS;
 	}
 
 	@RequiresFramework(73)

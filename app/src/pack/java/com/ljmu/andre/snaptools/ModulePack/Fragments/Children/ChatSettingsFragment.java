@@ -10,6 +10,7 @@ import com.ljmu.andre.snaptools.Fragments.FragmentHelper;
 import com.ljmu.andre.snaptools.ModulePack.Fragments.KotlinViews.ChatSettingsViewProvider;
 
 import static com.ljmu.andre.snaptools.Utils.ResourceUtils.getIdFromString;
+import static com.ljmu.andre.snaptools.Utils.StringEncryptor.decryptMsg;
 
 /**
  * This class was created by Andre R M (SID: 701439)
@@ -23,7 +24,7 @@ public class ChatSettingsFragment extends FragmentHelper {
 	}
 
 	@Override public String getName() {
-		return "Chat Settings";
+		return /*Chat Settings*/ decryptMsg(new byte[]{72, -125, 37, -36, 49, -23, 79, 9, -78, -126, 1, -75, -36, -108, -11, -62});
 	}
 
 	@Override public Integer getMenuId() {

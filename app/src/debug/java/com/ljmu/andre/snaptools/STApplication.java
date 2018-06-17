@@ -2,7 +2,6 @@ package com.ljmu.andre.snaptools;
 
 import android.app.Application;
 
-import com.github.anrwatchdog.ANRWatchDog;
 import com.ljmu.andre.ErrorLogger.ErrorLogger;
 import com.ljmu.andre.snaptools.Networking.VolleyHandler;
 import com.ljmu.andre.snaptools.Utils.ContextHelper;
@@ -35,17 +34,6 @@ public class STApplication extends Application {
 		Timber.d("Initialising Activities");
 		super.onCreate();
 		mInstance = this;
-
-		try {
-			ANRWatchDog.setDefaultUncaughtExceptionHandler(Thread.getDefaultUncaughtExceptionHandler());
-			new ANRWatchDog(10000)
-					.setANRListener(
-							error -> Timber.e(error, "Application Not Responding")
-					)
-					.start();
-		} catch (Throwable t) {
-			Timber.e(t, "Error initialising ANRWatchdog");
-		}
 	}
 
 	@DebugLog public static synchronized STApplication getInstance() {

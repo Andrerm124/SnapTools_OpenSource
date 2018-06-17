@@ -14,7 +14,6 @@ import android.widget.Toast;
 
 import com.ljmu.andre.snaptools.ModulePack.Notifications.SaveNotification;
 import com.ljmu.andre.snaptools.ModulePack.Notifications.SaveNotification.ToastType;
-import com.ljmu.andre.snaptools.ModulePack.Notifications.StackingDotNotification;
 import com.ljmu.andre.snaptools.ModulePack.SavingUtils.SavingTriggers.SavingTrigger;
 import com.ljmu.andre.snaptools.ModulePack.SavingUtils.SavingTriggers.SavingTrigger.SavingMode;
 import com.ljmu.andre.snaptools.ModulePack.SavingUtils.Snaps.Snap.SaveState;
