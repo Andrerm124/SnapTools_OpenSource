@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import hugo.weaving.DebugLog;
+
 import timber.log.Timber;
 
 import static com.ljmu.andre.GsonPreferences.Preferences.getPref;
@@ -154,7 +154,7 @@ public class CBIDatabaseCore extends SQLiteOpenHelper {
 		return (CBITable<T>) classTableMap.get(cbiObjectClass);
 	}
 
-	@DebugLog private static String getDBPath(String name) {
+	private static String getDBPath(String name) {
 		return getPref(DATABASES_PATH) + name + ".db";
 	}
 }

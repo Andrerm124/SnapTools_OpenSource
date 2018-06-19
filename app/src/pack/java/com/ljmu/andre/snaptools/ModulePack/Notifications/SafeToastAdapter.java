@@ -3,6 +3,7 @@ package com.ljmu.andre.snaptools.ModulePack.Notifications;
 import android.app.Activity;
 import android.widget.Toast;
 
+import com.ljmu.andre.snaptools.BuildConfig;
 import com.ljmu.andre.snaptools.Utils.Constants;
 import com.ljmu.andre.snaptools.Utils.SafeToast;
 

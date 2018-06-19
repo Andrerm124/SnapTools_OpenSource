@@ -9,7 +9,7 @@ import com.ljmu.andre.CBIDatabase.CBITable;
 
 import java.util.concurrent.TimeUnit;
 
-import hugo.weaving.DebugLog;
+
 import timber.log.Timber;
 
 /**
@@ -19,7 +19,7 @@ import timber.log.Timber;
 
 @SuppressWarnings("WeakerAccess")
 @TableName(value = "ErrorReports", VERSION = 1)
-@DebugLog public class ErrorReportObject implements CBIObject {
+public class ErrorReportObject implements CBIObject {
 	private final static int REPORT_ATTEMPT_CAP = 5;
 	private final static long REPORT_ATTEMPT_COOLDOWN = TimeUnit.MINUTES.toMillis(5);
 
@@ -47,7 +47,7 @@ import timber.log.Timber;
 		this.reportBody = reportBody;
 	}
 
-	@DebugLog @Override public void onTableUpgrade(CBIDatabaseCore linkedDBCore, CBITable table, int oldVersion, int newVersion) {
+	@Override public void onTableUpgrade(CBIDatabaseCore linkedDBCore, CBITable table, int oldVersion, int newVersion) {
 		Timber.d("Table Upgrade");
 
 	}

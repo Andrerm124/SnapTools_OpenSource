@@ -5,11 +5,20 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 
 import com.ljmu.andre.snaptools.Fragments.FragmentHelper;
 import com.ljmu.andre.snaptools.ModulePack.Fragments.KotlinViews.ChatSettingsViewProvider;
+import com.ljmu.andre.snaptools.ModulePack.Utils.ViewFactory;
 
+import static com.ljmu.andre.GsonPreferences.Preferences.getPref;
+import static com.ljmu.andre.snaptools.ModulePack.Utils.ModulePreferenceDef.SAVE_CHAT_IN_SC;
+import static com.ljmu.andre.snaptools.ModulePack.Utils.ModulePreferenceDef.STORE_CHAT_MESSAGES;
 import static com.ljmu.andre.snaptools.Utils.ResourceUtils.getIdFromString;
+import static com.ljmu.andre.snaptools.Utils.PreferenceHelpers.putAndKill;
 import static com.ljmu.andre.snaptools.Utils.StringEncryptor.decryptMsg;
 
 /**

@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-import hugo.weaving.DebugLog;
+
 import timber.log.Timber;
 
 /**
@@ -126,7 +126,7 @@ public class StringUtils {
 		return null;
 	}
 
-	@DebugLog public static String getDateHeader(long timestamp) {
+	public static String getDateHeader(long timestamp) {
 		long DAY_IN_MS = TimeUnit.DAYS.toMillis(1);
 		long timeDiff = MiscUtils.calcTimeDiff(timestamp);
 

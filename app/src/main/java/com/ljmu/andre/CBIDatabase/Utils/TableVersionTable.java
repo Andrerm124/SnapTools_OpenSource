@@ -7,7 +7,7 @@ import com.ljmu.andre.CBIDatabase.CBIDatabaseCore;
 import com.ljmu.andre.CBIDatabase.CBIObject;
 import com.ljmu.andre.CBIDatabase.CBITable;
 
-import hugo.weaving.DebugLog;
+
 import timber.log.Timber;
 
 /**
@@ -32,7 +32,7 @@ public class TableVersionTable implements CBIObject {
 		this.tableVersion = tableVersion;
 	}
 
-	@DebugLog @Override public void onTableUpgrade(CBIDatabaseCore linkedDBCore, CBITable table, int oldVersion, int newVersion) {
+	@Override public void onTableUpgrade(CBIDatabaseCore linkedDBCore, CBITable table, int oldVersion, int newVersion) {
 		Timber.d("Table Upgrade");
 	}
 }

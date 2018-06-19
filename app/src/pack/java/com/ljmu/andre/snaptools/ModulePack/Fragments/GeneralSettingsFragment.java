@@ -37,7 +37,7 @@ import com.ljmu.andre.snaptools.Utils.ResourceUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import hugo.weaving.DebugLog;
+
 import timber.log.Timber;
 
 import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.DISABLED_MODULES;
@@ -176,7 +176,7 @@ public class GeneralSettingsFragment extends FragmentHelper {
 		}
 	}
 
-	@DebugLog public int getIndexFromName(String packName) {
+	public int getIndexFromName(String packName) {
 		int index = -1;
 		Timber.d("Adapter Count: " + adapter.getItemCount());
 

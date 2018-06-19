@@ -7,7 +7,7 @@ import android.util.SparseIntArray;
 
 import com.ljmu.andre.snaptools.BuildConfig;
 
-import hugo.weaving.DebugLog;
+
 import timber.log.Timber;
 
 /**
@@ -52,7 +52,7 @@ public class ResourceMapper {
 		addFakeRes(res, xResources.addResource(target, res));
 	}
 
-	@DebugLog public static void addFakeRes(Integer originalRes, Integer fakeRes) {
+	public static void addFakeRes(Integer originalRes, Integer fakeRes) {
 		Timber.d("Putting Res [Original: %s][Fake: %s]", originalRes, fakeRes);
 
 		resourceMap.put(originalRes, fakeRes);

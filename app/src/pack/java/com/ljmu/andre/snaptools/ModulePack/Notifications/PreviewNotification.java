@@ -23,7 +23,7 @@ import com.ljmu.andre.snaptools.Utils.BitmapUtils;
 
 import java.io.File;
 
-import hugo.weaving.DebugLog;
+
 import timber.log.Timber;
 
 import static com.ljmu.andre.snaptools.Utils.ResourceUtils.getDSLView;
@@ -95,7 +95,7 @@ public class PreviewNotification extends SaveNotification {
 		Timber.w("FAILED");
 	}
 
-	@DebugLog private Pair<Integer, Integer> calculateBestImageRes(Activity activity, int inWidth, int inHeight) {
+	private Pair<Integer, Integer> calculateBestImageRes(Activity activity, int inWidth, int inHeight) {
 		int outWidth;
 		int outHeight;
 

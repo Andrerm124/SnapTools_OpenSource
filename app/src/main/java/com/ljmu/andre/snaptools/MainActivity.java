@@ -80,7 +80,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnLongClick;
 import butterknife.Unbinder;
-import hugo.weaving.DebugLog;
+
 import io.reactivex.Observable;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -721,7 +721,7 @@ public class MainActivity
 		btnTutorial.setVisibility(fragment.hasTutorial() ? View.VISIBLE : GONE);
 	}
 
-	@DebugLog private void replaceFragmentContainer(FragmentHelper newFragment) {
+	private void replaceFragmentContainer(FragmentHelper newFragment) {
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 		//transaction.setCustomAnimations(R.anim.enter, R.anim.exit);
 		transaction.replace(R.id.fragment_container, newFragment);
@@ -762,7 +762,7 @@ public class MainActivity
 	}
 
 	@SuppressWarnings("unused")
-	@DebugLog @Subscribe public void handlePackLoadEvent(PackLoadEvent loadEvent) {
+	@Subscribe public void handlePackLoadEvent(PackLoadEvent loadEvent) {
 		try {
 			ModulePack modulePack = loadEvent.getModulePack();
 
@@ -844,7 +844,7 @@ public class MainActivity
 	}
 
 	@SuppressWarnings("unused")
-	@DebugLog @Subscribe public void handlePackUnloadEvent(PackUnloadEvent packUnloadEvent) {
+	@Subscribe public void handlePackUnloadEvent(PackUnloadEvent packUnloadEvent) {
 		LocalPackMetaData packMetaData = packUnloadEvent.getPackMetaData();
 
 		Menu menu = navigationView.getMenu();
@@ -931,7 +931,7 @@ public class MainActivity
 	}
 
 	@SuppressWarnings("unused")
-	@DebugLog @Subscribe public void handleLoadPackSettingsEvent(LoadPackSettingsEvent loadEvent) {
+	@Subscribe public void handleLoadPackSettingsEvent(LoadPackSettingsEvent loadEvent) {
 		String packName = loadEvent.getPackName();
 		ModulePack pack = FrameworkManager.getModulePack(packName);
 

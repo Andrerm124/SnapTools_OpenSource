@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
@@ -48,7 +49,7 @@ import com.ljmu.andre.snaptools.R;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-import hugo.weaving.DebugLog;
+
 import timber.log.Timber;
 
 import static android.os.Build.VERSION.SDK_INT;
@@ -81,6 +82,32 @@ public class ViewFactory {
 
 		drawable.setCornerRadius(cornerRadius);
 		return drawable;
+	}
+
+	public static GradientDrawable getBorderedDrawable(@ColorInt Integer bgColor, @ColorInt Integer strokeColor, int strokeWidth,
+	                                                   float[] cornerRadii) {
+		GradientDrawable drawable = new GradientDrawable();
+		drawable.setShape(GradientDrawable.RECTANGLE);
+
+		if (bgColor != null)
+			drawable.setColor(bgColor);
+
+		if (strokeColor != null)
+			drawable.setStroke(strokeWidth, strokeColor);
+
+		drawable.setCornerRadii(cornerRadii);
+		return drawable;
+	}
+
+	public static StateListDrawable getSelectableBorderedDrawable(@ColorInt Integer bgColor, @ColorInt Integer selectedBgColor,
+	                                                              float[] cornerRadii) {
+		StateListDrawable res = new StateListDrawable();
+		res.setExitFadeDuration(200);
+		res.setEnterFadeDuration(200);
+		res.addState(new int[]{android.R.attr.state_pressed}, getBorderedDrawable(selectedBgColor, null, 0, cornerRadii));
+		res.addState(new int[]{}, getBorderedDrawable(bgColor, null, 0, cornerRadii));
+
+		return res;
 	}
 
 	public static SwitchCompat getSwitch(Context context, String text, boolean checked,
@@ -152,7 +179,7 @@ public class ViewFactory {
 	 * @param context Context to get resources and device specific display metrics
 	 * @return A int value to represent sp equivalent to px value
 	 */
-	@DebugLog public static int sp(float px, Context context) {
+	public static int sp(float px, Context context) {
 		Resources resources = context.getResources();
 		DisplayMetrics metrics = resources.getDisplayMetrics();
 		return (int) Math.ceil(px * metrics.scaledDensity);

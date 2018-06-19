@@ -26,7 +26,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import hugo.weaving.DebugLog;
+
 import timber.log.Timber;
 
 import static com.ljmu.andre.GsonPreferences.Preferences.getPref;
@@ -80,7 +80,7 @@ public class HomeFragment extends FragmentHelper {
 		return layoutContainer;
 	}
 
-	@DebugLog private void replaceFragmentContainer(Fragment newFragment) {
+	private void replaceFragmentContainer(Fragment newFragment) {
 		FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
 		transaction.replace(R.id.auth_panel, newFragment);
 		transaction.commit();

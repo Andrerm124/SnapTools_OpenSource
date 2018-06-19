@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import hugo.weaving.DebugLog;
+
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
@@ -180,7 +180,7 @@ public abstract class StorageFormat {
 	 * rebuild the Media directory
 	 * ===========================================================================
 	 */
-	@DebugLog protected int performStorageFormatConversion(Progress progress) {
+	protected int performStorageFormatConversion(Progress progress) {
 		List<SnapMetaData> snapMetaDataList = buildSnapList(progress);
 
 		Timber.d("Processed Snaps: " + snapMetaDataList.size());

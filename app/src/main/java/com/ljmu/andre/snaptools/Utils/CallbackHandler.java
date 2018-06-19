@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
-import hugo.weaving.DebugLog;
+
 import timber.log.Timber;
 
 /**
@@ -46,7 +46,7 @@ public class CallbackHandler {
 		}
 	}
 
-	@Nullable @DebugLog Object[] addParams(@NonNull Object... newParams) {
+	@Nullable Object[] addParams(@NonNull Object... newParams) {
 		int newParamLength = newParams.length;
 
 		Object[] newParamList = new Object[parameters.length + newParamLength];

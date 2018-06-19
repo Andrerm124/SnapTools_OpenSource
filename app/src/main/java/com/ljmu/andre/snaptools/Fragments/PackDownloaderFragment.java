@@ -59,7 +59,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import hugo.weaving.DebugLog;
+
 import timber.log.Timber;
 
 import static com.ljmu.andre.GsonPreferences.Preferences.getPref;
@@ -311,7 +311,7 @@ public class PackDownloaderFragment
 		}
 	}
 
-	@DebugLog public int getIndexFromName(String packName) {
+	public int getIndexFromName(String packName) {
 		int index = -1;
 
 		int id = getIdFromString(packName);
@@ -426,7 +426,7 @@ public class PackDownloaderFragment
 		return null;
 	}
 
-	@DebugLog @Subscribe public void handlePackDeleteEvent(PackDeleteEvent deleteEvent) {
+	@Subscribe public void handlePackDeleteEvent(PackDeleteEvent deleteEvent) {
 		Pair<ServerPackMetaData, Integer> metaIndexPair =
 				getMetaDataAndIndexFromName(deleteEvent.getPackName());
 
@@ -608,7 +608,7 @@ public class PackDownloaderFragment
 		}
 	}
 
-	@DebugLog @Nullable public ServerPackMetaData getMetaDataFromName(String packName) {
+	@Nullable public ServerPackMetaData getMetaDataFromName(String packName) {
 		Pair<ServerPackMetaData, Integer> result = getMetaDataAndIndexFromName(packName);
 
 		return result == null ? null : result.first;

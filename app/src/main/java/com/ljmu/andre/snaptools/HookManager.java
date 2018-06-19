@@ -185,7 +185,7 @@ public class HookManager implements IXposedHookLoadPackage {
 															Timber.d("Loading FrameworkManager");
 
 															// Load the certificate required to validate the ModulePack ==================
-															Security.init(ContextHelper.getModuleResources(snapActivity));
+//															Security.init(ContextHelper.getModuleResources(snapActivity));
 
 															List<PackLoadState> packLoadStates;
 

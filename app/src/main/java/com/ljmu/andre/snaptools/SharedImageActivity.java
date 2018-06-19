@@ -59,7 +59,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-import hugo.weaving.DebugLog;
+
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
@@ -396,7 +396,7 @@ public class SharedImageActivity extends AppCompatActivity {
 				});
 	}
 
-	@DebugLog private float getHeightWidthRatio(int height, int width) {
+	private float getHeightWidthRatio(int height, int width) {
 		return ((float) height / (float) width);
 	}
 

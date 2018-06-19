@@ -25,7 +25,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import hugo.weaving.DebugLog;
+
 import timber.log.Timber;
 
 import static com.ljmu.andre.GsonPreferences.Preferences.getPref;
@@ -147,7 +147,7 @@ class ErrorProcessor implements Runnable {
 		}
 	}
 
-	@DebugLog private void writeCollectedErrors() {
+	private void writeCollectedErrors() {
 		CharSink charSink = Files.asCharSink(outputFile, Charset.defaultCharset(), FileWriteMode.APPEND);
 
 		synchronized (LOCK) {
@@ -174,7 +174,7 @@ class ErrorProcessor implements Runnable {
 		lastWriteTime = System.currentTimeMillis();
 	}
 
-	@DebugLog private String generateDebugData() {
+	private String generateDebugData() {
 		try {
 			StringBuilder output = new StringBuilder();
 

@@ -11,7 +11,7 @@ import com.ljmu.andre.snaptools.Networking.WebResponse;
 import com.ljmu.andre.snaptools.Networking.WebResponse.PacketResultListener;
 import com.ljmu.andre.snaptools.Utils.DeviceIdManager;
 
-import hugo.weaving.DebugLog;
+
 import timber.log.Timber;
 
 import static com.ljmu.andre.snaptools.Networking.WebRequest.assertParam;
@@ -25,7 +25,7 @@ public class GetPackChangelog {
 	public static final String TAG = "get_changelog";
 	private static final String GET_CHANGELOG_URL = "https://snaptools.org/SnapTools/Scripts/get_pack_changelog.php";
 
-	@DebugLog public static void performCheck(
+	public static void performCheck(
 			@Nullable Activity activity,
 			@NonNull String packType,
 			@NonNull String snapVersion,

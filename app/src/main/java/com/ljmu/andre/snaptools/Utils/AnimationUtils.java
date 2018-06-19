@@ -16,7 +16,7 @@ import android.view.animation.TranslateAnimation;
 import com.fujiyuu75.sequent.Sequent;
 import com.ljmu.andre.snaptools.R;
 
-import hugo.weaving.DebugLog;
+
 import timber.log.Timber;
 
 import static com.ljmu.andre.GsonPreferences.Preferences.getPref;
@@ -150,7 +150,7 @@ public class AnimationUtils {
 		fade(v, 500, fadeIn);
 	}
 
-	@DebugLog public static void fade(View v, int duration, boolean fadeIn) {
+	public static void fade(View v, int duration, boolean fadeIn) {
 		Animation animation = new AlphaAnimation(fadeIn ? 0 : 1, fadeIn ? 1 : 0);
 		animation.setDuration(duration);
 		v.clearAnimation();

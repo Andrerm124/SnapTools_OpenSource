@@ -3,7 +3,7 @@ package com.ljmu.andre.snaptools.Utils;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 
-import hugo.weaving.DebugLog;
+
 
 /**
  * This class was created by Andre R M (SID: 701439)
@@ -15,7 +15,7 @@ public class BitmapUtils {
 		return null;
 	}
 
-	@DebugLog public static int getSampleSizeForMaxSize(BitmapFactory.Options options, int maxSize) {
+	public static int getSampleSizeForMaxSize(BitmapFactory.Options options, int maxSize) {
 		int inSampleSize = 1;
 
 		int inWidth = options.outWidth;
@@ -41,7 +41,7 @@ public class BitmapUtils {
 		return inSampleSize;
 	}
 
-	@DebugLog public static int calculateInSampleSize(
+	public static int calculateInSampleSize(
 			BitmapFactory.Options options, int reqWidth, int reqHeight) {
 		// Raw height and width of image
 		final int height = options.outHeight;

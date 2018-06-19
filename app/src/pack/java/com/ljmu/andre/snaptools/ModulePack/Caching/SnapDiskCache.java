@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import hugo.weaving.DebugLog;
+
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
@@ -60,7 +60,7 @@ public class SnapDiskCache {
 		duplicateStream(snap, byteArrayOutput, tempSnapFile);
 	}
 
-	@DebugLog public void destroyTempDir() {
+	public void destroyTempDir() {
 		Observable.create(
 				emitter -> {
 					try {
@@ -175,7 +175,7 @@ public class SnapDiskCache {
 	 * 1 = OVERWRITE
 	 * ===========================================================================
 	 */
-	@DebugLog private int compareSnapFiles(SaveableFile newSnapFile, long newSnapFileLength,
+	private int compareSnapFiles(SaveableFile newSnapFile, long newSnapFileLength,
 	                                       SaveableFile existingSnapFile) {
 		Timber.d("Comparing [f1: %s] to [f2: %s]", newSnapFile, existingSnapFile);
 

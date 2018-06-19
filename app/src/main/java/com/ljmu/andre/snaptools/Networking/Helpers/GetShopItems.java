@@ -21,7 +21,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import hugo.weaving.DebugLog;
+
 import io.reactivex.Observable;
 import timber.log.Timber;
 
@@ -46,7 +46,7 @@ public class GetShopItems {
 		return Observable.fromCallable(GetShopItems::getCache);
 	}
 
-	@DebugLog @NonNull public static List<ShopItem> getCache() {
+	@NonNull public static List<ShopItem> getCache() {
 		Collection<ShopItem> shopItems = CacheDatabase.getTable(ShopItem.class).getAll();
 
 		if (shopItems.isEmpty())
@@ -55,7 +55,7 @@ public class GetShopItems {
 		return new ArrayList<>(shopItems);
 	}
 
-	@DebugLog public static void getFromServer(Activity activity, ServerListResultListener<ShopItem> resultListener) {
+	public static void getFromServer(Activity activity, ServerListResultListener<ShopItem> resultListener) {
 		Class cls = GetShopItems.class;
 		String token;
 		String email;

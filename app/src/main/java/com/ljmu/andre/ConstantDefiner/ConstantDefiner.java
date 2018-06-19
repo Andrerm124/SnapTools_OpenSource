@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import hugo.weaving.DebugLog;
+
 
 /**
  * This class was created by Andre R M (SID: 701439)
@@ -36,7 +36,7 @@ public abstract class ConstantDefiner<T extends Constant> {
 		CONST_CACHE = null;
 	}
 
-	@DebugLog public T[] values() {
+	public T[] values() {
 		if (CONST_CACHE != null) {
 			//Timber.d("Using Cache [Values: %s]", CONST_CACHE.length);
 			return CONST_CACHE;

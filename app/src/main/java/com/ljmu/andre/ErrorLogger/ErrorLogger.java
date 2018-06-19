@@ -9,7 +9,7 @@ import com.ljmu.andre.snaptools.Utils.StringUtils;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.Date;
 
-import hugo.weaving.DebugLog;
+
 import timber.log.Timber;
 
 /**
@@ -26,12 +26,12 @@ public class ErrorLogger implements Thread.UncaughtExceptionHandler {
 	private ErrorLogger() {
 	}
 
-	@DebugLog public void addError(Thread t, int logLevel, Throwable error, String errorMessage) {
+	public void addError(Thread t, int logLevel, Throwable error, String errorMessage) {
 		checkAndCreateProcessor();
 		processor.addError(t, logLevel, error, errorMessage);
 	}
 
-	@DebugLog private void checkAndCreateProcessor() {
+	private void checkAndCreateProcessor() {
 		if (thread == null || !thread.isAlive()) {
 			Timber.d("Creating and starting new Thread");
 			thread = new Thread(processor);
@@ -39,7 +39,7 @@ public class ErrorLogger implements Thread.UncaughtExceptionHandler {
 		}
 	}
 
-	@DebugLog public void addError(int logLevel, String error) {
+	public void addError(int logLevel, String error) {
 		checkAndCreateProcessor();
 		processor.addError(logLevel, error);
 	}
@@ -49,7 +49,7 @@ public class ErrorLogger implements Thread.UncaughtExceptionHandler {
 		defaultHandler.uncaughtException(t, e);
 	}
 
-	@DebugLog public void addError(Thread t, int logLevel, Throwable error) {
+	public void addError(Thread t, int logLevel, Throwable error) {
 		checkAndCreateProcessor();
 		processor.addError(t, logLevel, error, null);
 	}

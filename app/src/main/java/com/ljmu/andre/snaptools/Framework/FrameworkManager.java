@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import hugo.weaving.DebugLog;
+
 import timber.log.Timber;
 
 import static com.ljmu.andre.GsonPreferences.Preferences.getPref;
@@ -57,7 +57,7 @@ public class FrameworkManager {
 	 * This function was originally used to handle UI events (Such as updates)
 	 * ===========================================================================
 	 */
-	@DebugLog public static void checkPacksForUpdate(Activity activity) {
+	public static void checkPacksForUpdate(Activity activity) {
 		if (modulePackMap.isEmpty())
 			return;
 
@@ -114,7 +114,7 @@ public class FrameworkManager {
 	 * @param activity - An activity used for {@link this#loadModPack(Activity, String, PackLoadState)}
 	 * @return A List of {@link PackLoadState}
 	 */
-	@DebugLog public static List<PackLoadState> loadAllModulePacks(Activity activity) {
+	public static List<PackLoadState> loadAllModulePacks(Activity activity) {
 		Set<String> selectPackSet = getPref(SELECTED_PACKS);
 		List<PackLoadState> packLoadStates = new ArrayList<>();
 		modulePackMap.clear();
@@ -289,7 +289,7 @@ public class FrameworkManager {
 		}
 	}
 
-	@DebugLog @Nullable public static String getFailReason(String packName) {
+	@Nullable public static String getFailReason(String packName) {
 		return packFailReasons.get(packName);
 	}
 

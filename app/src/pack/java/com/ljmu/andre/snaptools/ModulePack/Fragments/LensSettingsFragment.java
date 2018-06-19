@@ -2,6 +2,7 @@ package com.ljmu.andre.snaptools.ModulePack.Fragments;
 
 import android.content.ClipData;
 import android.content.Intent;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -23,6 +24,7 @@ import com.google.common.eventbus.Subscribe;
 import com.ljmu.andre.CBIDatabase.CBITable;
 import com.ljmu.andre.CBIDatabase.Utils.QueryBuilder;
 import com.ljmu.andre.snaptools.Dialogs.Content.Options.OptionsButtonData;
+import com.ljmu.andre.snaptools.Dialogs.Content.Progress;
 import com.ljmu.andre.snaptools.Dialogs.DialogFactory;
 import com.ljmu.andre.snaptools.Dialogs.ThemedDialog;
 import com.ljmu.andre.snaptools.Dialogs.ThemedDialog.ThemedClickListener;
@@ -33,6 +35,7 @@ import com.ljmu.andre.snaptools.ModulePack.Databases.Tables.LensObject;
 import com.ljmu.andre.snaptools.ModulePack.Events.LensEventRequest;
 import com.ljmu.andre.snaptools.ModulePack.Fragments.KotlinViews.LensViewProvider;
 import com.ljmu.andre.snaptools.ModulePack.Notifications.SafeToastAdapter;
+import com.ljmu.andre.snaptools.ModulePack.Utils.InterruptFlag;
 import com.ljmu.andre.snaptools.ModulePack.Utils.Result;
 import com.ljmu.andre.snaptools.ModulePack.Utils.ViewFactory.EditTextListener;
 import com.ljmu.andre.snaptools.UIComponents.Adapters.ExpandableItemAdapter;
@@ -50,7 +53,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import hugo.weaving.DebugLog;
+
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
@@ -133,23 +136,60 @@ public class LensSettingsFragment extends FragmentHelper {
 				return;
 			}
 
-			Result<Boolean, Long> mergedLensResult = LensDatabase.mergeLensDatabases(getActivity(), lensPaths);
+			InterruptFlag interruptFlag = new InterruptFlag();
 
-			if (!mergedLensResult.getKey()) {
-				SafeToastAdapter.showErrorToast(
-						getActivity(),
-						"Couldn't insert all lenses... Inserted " + mergedLensResult.getValue() + " lenses"
-				);
-			} else {
+			ThemedDialog progressDialog = new ThemedDialog(getActivity())
+					.setTitle("Merging Lenses")
+					.setExtension(
+							new Progress()
+									.setMessage(
+											"Currently merging " + lensPaths.size() + " lens databases."
+													+ "\nDepending on how many lenses are in each database this can take quite some time as there is a lot of work going on in the background"
+									)
+									.setCancelable(true)
+									.setCancelCallback(aVoid -> interruptFlag.interrupt())
+					);
+			progressDialog.show();
 
-				SafeToastAdapter.showDefaultToast(
-						getActivity(),
-						"Successfully merged " + mergedLensResult.getValue() + " lenses"
-				);
-			}
+			Observable.fromCallable(() ->
+					LensDatabase.mergeLensDatabases(getActivity(), lensPaths, interruptFlag)
+			).observeOn(AndroidSchedulers.mainThread())
+					.subscribeOn(Schedulers.computation())
+					.subscribe(new SimpleObserver<Result<Boolean, Point>>() {
+						@Override public void onError(Throwable e) {
+							progressDialog.dismiss();
+							Timber.e(e, "Fatal error merging lenses");
 
-			if (mergedLensResult.getValue() > 0)
-				generateMetaData();
+							SafeToastAdapter.showErrorToast(
+									getActivity(),
+									"Fatal error merging lenses... Reason unknown"
+							);
+						}
+
+						@Override public void onNext(Result<Boolean, Point> mergedLensResult) {
+							progressDialog.dismiss();
+							Point successDuplicatePoint = mergedLensResult.getValue();
+
+							if (!mergedLensResult.getKey()) {
+
+								SafeToastAdapter.showErrorToast(
+										getActivity(),
+										String.format("Couldn't insert all lenses...\nInserted %s lenses\nRemoved %s duplicates",
+												successDuplicatePoint.x, successDuplicatePoint.y)
+								);
+							} else {
+
+								SafeToastAdapter.showDefaultToast(
+										getActivity(),
+										String.format("Inserted %s lenses\nRemoved %s duplicates",
+												successDuplicatePoint.x, successDuplicatePoint.y)
+								);
+							}
+
+							if (successDuplicatePoint.x > 0 || successDuplicatePoint.y > 0)
+								generateMetaData();
+						}
+					});
 		}
 	}
 
@@ -241,6 +281,8 @@ public class LensSettingsFragment extends FragmentHelper {
 	}
 
 	private void generateMetaData() {
+		swipeRefreshLayout.setRefreshing(true);
+
 		Observable.fromCallable(
 				() -> {
 					Map<String, LensTypeEntity> lensTypeMap = new HashMap<>();
@@ -301,16 +343,16 @@ public class LensSettingsFragment extends FragmentHelper {
 		).subscribeOn(Schedulers.computation())
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(new SimpleObserver<Collection<LensTypeEntity>>() {
-					@Override public void onNext(@NonNull Collection<LensTypeEntity> lensTypeEntities) {
-						swipeRefreshLayout.setRefreshing(false);
-
-						setLensList(lensTypeEntities);
-					}
-
 					@Override public void onError(Throwable e) {
 						super.onError(e);
 
 						swipeRefreshLayout.setRefreshing(false);
+					}
+
+					@Override public void onNext(@NonNull Collection<LensTypeEntity> lensTypeEntities) {
+						swipeRefreshLayout.setRefreshing(false);
+
+						setLensList(lensTypeEntities);
 					}
 				});
 	}
@@ -430,7 +472,7 @@ public class LensSettingsFragment extends FragmentHelper {
 		}
 	}
 
-	@DebugLog private int getLensListSize() {
+	private int getLensListSize() {
 		return (int) lensTable.getRowCount();
 	}
 
@@ -498,7 +540,7 @@ public class LensSettingsFragment extends FragmentHelper {
 		}
 	}
 
-	@DebugLog private int getIndexFromName(String code) {
+	private int getIndexFromName(String code) {
 		int index = -1;
 		Timber.d("Adapter Count: " + adapter.getItemCount());
 

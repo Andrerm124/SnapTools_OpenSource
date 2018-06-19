@@ -43,6 +43,8 @@ public class UnlimitedViewing extends ModuleHelper {
 	// ===========================================================================
 
 	@Override public void loadHooks(ClassLoader snapClassLoader, Activity snapActivity) {
+		boolean unlimitedViewingImages = getPref(UNLIMITED_VIEWING_IMAGES);
+		boolean unlimitedViewingVideos = getPref(UNLIMITED_VIEWING_VIDEOS);
 
 			hookMethod(
 					TEXTURE_VIDVIEW_START,
@@ -91,10 +93,10 @@ public class UnlimitedViewing extends ModuleHelper {
 						@Override protected void after(MethodHookParam param) throws Throwable {
 							boolean isVideo = callHook(SNAP_GET_MEDIA_TYPE, param.thisObject);
 
-							if(isVideo && !(boolean) getPref(UNLIMITED_VIEWING_VIDEOS))
+							if(isVideo && !unlimitedViewingVideos)
 								return;
 
-							if(!isVideo && !(boolean) getPref(UNLIMITED_VIEWING_IMAGES))
+							if(!isVideo && !unlimitedViewingImages)
 								return;
 
 							setObjectField(

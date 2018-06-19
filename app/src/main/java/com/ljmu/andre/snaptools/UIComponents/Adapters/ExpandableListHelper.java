@@ -3,7 +3,7 @@ package com.ljmu.andre.snaptools.UIComponents.Adapters;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 
-import hugo.weaving.DebugLog;
+
 
 /**
  * This class was created by Andre R M (SID: 701439)
@@ -39,7 +39,7 @@ public abstract class ExpandableListHelper extends BaseExpandableListAdapter {
 		}
 	}
 
-	@DebugLog @Override public void onGroupExpanded(int groupPosition) {
+	@Override public void onGroupExpanded(int groupPosition) {
 		if (lastExpandedGroupPosition != -1 && groupPosition != lastExpandedGroupPosition)
 			listView.collapseGroup(lastExpandedGroupPosition);
 

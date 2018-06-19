@@ -2,7 +2,9 @@ package com.ljmu.andre.snaptools.ModulePack.Fragments.KotlinViews
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.support.v4.content.ContextCompat
 import android.view.Gravity
+import android.widget.CompoundButton
 import android.widget.LinearLayout
 import com.ljmu.andre.GsonPreferences.Preferences.getPref
 import com.ljmu.andre.snaptools.Dialogs.DialogFactory

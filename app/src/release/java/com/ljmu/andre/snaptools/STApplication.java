@@ -8,7 +8,7 @@ import com.ljmu.andre.snaptools.Networking.VolleyHandler;
 import com.ljmu.andre.snaptools.Utils.ContextHelper;
 import com.ljmu.andre.snaptools.Utils.TimberUtils;
 
-import hugo.weaving.DebugLog;
+
 import timber.log.Timber;
 
 import static com.ljmu.andre.snaptools.Utils.StringEncryptor.decryptMsg;
@@ -50,7 +50,7 @@ public class STApplication extends Application {
 		}
 	}
 
-	@DebugLog public static synchronized STApplication getInstance() {
+	public static synchronized STApplication getInstance() {
 		Timber.d("Instance: " + mInstance);
 		return mInstance;
 	}

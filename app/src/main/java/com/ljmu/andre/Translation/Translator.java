@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import hugo.weaving.DebugLog;
+
 import timber.log.Timber;
 
 import static com.ljmu.andre.snaptools.Utils.ContextHelper.getModuleContext;
@@ -66,7 +66,7 @@ public class Translator {
 	}
 
 	@RequiresFramework(73)
-	@DebugLog
+
 	public static void init(Activity activity, String translationRootUrl, @Nullable String translationFilename, Callable<Boolean> completionCallback) {
 		if (atomicHasInitialised.get()) {
 			Timber.w("Already initialised translations");
@@ -143,7 +143,7 @@ public class Translator {
 	}
 
 	@RequiresFramework(73)
-	@DebugLog
+
 	public static <T extends ConstantDefiner<Translation>> void initTranslationDefinitions(Context context, T translationConstantDefiner, boolean shouldPurgeAfter) {
 		synchronized (MAP_LOCK) {
 			//noinspection SuspiciousMethodCalls
@@ -175,7 +175,7 @@ public class Translator {
 	}
 
 	@RequiresFramework(73)
-	@DebugLog
+
 	public static void translateFragment(Fragment fragment) {
 		Class<? extends ComponentCallbacks> fragmentClass = fragment.getClass();
 		Timber.d("Attempting to translate fragment: "
@@ -214,7 +214,7 @@ public class Translator {
 	}
 
 	@RequiresFramework(73)
-	@DebugLog
+
 	public static String translate(Translation translation) {
 		Translation mappedTranslation;
 
@@ -229,7 +229,7 @@ public class Translator {
 	}
 
 	@RequiresFramework(73)
-	@DebugLog
+
 	public static void translateActivity(Activity activity) {
 		Class<? extends ComponentCallbacks> activityClass = activity.getClass();
 		Timber.d("Attempting to translate activity: "

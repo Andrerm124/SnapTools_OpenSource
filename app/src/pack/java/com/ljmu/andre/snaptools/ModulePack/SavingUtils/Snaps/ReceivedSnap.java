@@ -6,7 +6,7 @@ import com.ljmu.andre.snaptools.ModulePack.SavingUtils.SaveTriggerManager;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import hugo.weaving.DebugLog;
+
 import timber.log.Timber;
 
 /**
@@ -21,7 +21,7 @@ public class ReceivedSnap extends Snap {
 	ReceivedSnap() {
 	}
 
-	@DebugLog @Override public SaveState providingAlgorithm() {
+	@Override public SaveState providingAlgorithm() {
 		synchronized (PROCESSING_LOCK) {
 			return null;
 		}

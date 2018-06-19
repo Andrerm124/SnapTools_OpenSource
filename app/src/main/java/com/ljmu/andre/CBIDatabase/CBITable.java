@@ -22,7 +22,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import hugo.weaving.DebugLog;
+
 import timber.log.Timber;
 
 /**
@@ -142,11 +142,11 @@ import timber.log.Timber;
 		return false;
 	}
 
-	@DebugLog public boolean deleteAll() {
+	public boolean deleteAll() {
 		return deleteAll(null, null);
 	}
 
-	@DebugLog public boolean deleteAll(String whereClause, String[] whereArgs) {
+	public boolean deleteAll(String whereClause, String[] whereArgs) {
 		SQLiteDatabase database = linkedDatabase.getDatabase();
 
 		int deletedRows = database.delete(tableName, null, null);
@@ -154,7 +154,7 @@ import timber.log.Timber;
 		return deletedRows > 0;
 	}
 
-	@DebugLog public boolean delete(@NonNull T cbiObject) {
+	public boolean delete(@NonNull T cbiObject) {
 		if (!cbiObject.getClass().equals(tableType))
 			throw new IllegalArgumentException("CBIObject Type Mismatch. Expecting: " + tableType.getSimpleName());
 
@@ -188,7 +188,7 @@ import timber.log.Timber;
 		return false;
 	}
 
-	@DebugLog public boolean delete(QueryBuilder queryBuilder) {
+	public boolean delete(QueryBuilder queryBuilder) {
 		SQLiteDatabase database = linkedDatabase.getDatabase();
 
 		int deletedRows = database.delete(
@@ -203,7 +203,7 @@ import timber.log.Timber;
 		return insertAll(cbiObjectList, Collections.emptySet());
 	}
 
-	@DebugLog public boolean insertAll(@NonNull Collection<T> cbiObjectList,
+	public boolean insertAll(@NonNull Collection<T> cbiObjectList,
 	                                   Set<String> blacklist) {
 		boolean hasFailed = false;
 		for (T cbiObject : cbiObjectList) {

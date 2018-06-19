@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import hugo.weaving.DebugLog;
+
 
 /**
  * This class was created by Andre R M (SID: 701439)
@@ -16,7 +16,7 @@ public class MapUtils {
 		return convertList(new HashMap<>(), collection, binder);
 	}
 
-	@DebugLog public static <K, V> Map<K, V> convertList(Map<K, V> map, Collection<V> collection, KeyBinder<K, V> binder) {
+	public static <K, V> Map<K, V> convertList(Map<K, V> map, Collection<V> collection, KeyBinder<K, V> binder) {
 		if (collection == null)
 			return map;
 

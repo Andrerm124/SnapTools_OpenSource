@@ -2,6 +2,7 @@ package com.ljmu.andre.snaptools.ModulePack.Fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.Html;
 import android.text.SpannableString;
 import android.text.format.DateUtils;
 import android.text.style.BulletSpan;

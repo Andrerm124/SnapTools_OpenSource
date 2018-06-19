@@ -49,7 +49,7 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import hugo.weaving.DebugLog;
+
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
@@ -236,7 +236,7 @@ public class PackSelectorFragment extends FragmentHelper {
 		}
 	}
 
-	@DebugLog @Nullable public LocalPackMetaData getMetaDataFromName(String packName) {
+	@Nullable public LocalPackMetaData getMetaDataFromName(String packName) {
 		Pair<LocalPackMetaData, Integer> result = getMetaDataAndIndexFromName(packName);
 
 		return result == null ? null : result.first;
@@ -361,7 +361,7 @@ public class PackSelectorFragment extends FragmentHelper {
 		}
 	}
 
-	@DebugLog public int getIndexFromName(String packName) {
+	public int getIndexFromName(String packName) {
 		int index = -1;
 		Timber.d("Adapter Count: " + adapter.getItemCount());
 

@@ -7,7 +7,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import hugo.weaving.DebugLog;
+
 
 import static com.ljmu.andre.GsonPreferences.Preferences.getPref;
 import static com.ljmu.andre.snaptools.ModulePack.Utils.ModulePreferenceDef.MEDIA_PATH;
@@ -19,7 +19,7 @@ import static com.ljmu.andre.snaptools.ModulePack.Utils.ModulePreferenceDef.MEDI
 
 public class UsernameTypeSnaps extends StorageFormat {
 
-	@DebugLog @Override public List<File> getSnapTypeFolders(SnapType snapType) {
+	@Override public List<File> getSnapTypeFolders(SnapType snapType) {
 		File mediaDir = new File(
 				(String) getPref(MEDIA_PATH)
 		);

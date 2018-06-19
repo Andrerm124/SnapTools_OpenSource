@@ -8,7 +8,7 @@ import android.widget.LinearLayout;
 import java.util.HashMap;
 import java.util.Map;
 
-import hugo.weaving.DebugLog;
+
 import timber.log.Timber;
 
 /**
@@ -54,7 +54,7 @@ public class SettingBasedLayout<T> extends LinearLayout {
 		return settingContainerMap;
 	}
 
-	@DebugLog public T getSettingKey() {
+	public T getSettingKey() {
 		return settingKey;
 	}
 

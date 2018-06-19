@@ -1,6 +1,6 @@
 package com.ljmu.andre.snaptools.Framework.Utils;
 
-import hugo.weaving.DebugLog;
+
 
 /**
  * This class was created by Andre R M (SID: 701439)
@@ -32,7 +32,7 @@ public abstract class LoadState {
 		return name;
 	}
 
-	@DebugLog public State getState() {
+	public State getState() {
 		return state;
 	}
 

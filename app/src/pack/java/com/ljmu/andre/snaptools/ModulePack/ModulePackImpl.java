@@ -13,6 +13,7 @@ import com.ljmu.andre.snaptools.Framework.Utils.ModuleLoadState;
 import com.ljmu.andre.snaptools.Framework.Utils.PackLoadState;
 import com.ljmu.andre.snaptools.ModulePack.Caching.SnapDiskCache;
 import com.ljmu.andre.snaptools.ModulePack.Fragments.GeneralSettingsFragment;
+import com.ljmu.andre.snaptools.ModulePack.Fragments.GeneralSettingsFragment.ModuleDisplayHolder;
 import com.ljmu.andre.snaptools.ModulePack.Fragments.KnownBugsFragment;
 import com.ljmu.andre.snaptools.ModulePack.ModulesDef.Modules;
 import com.ljmu.andre.snaptools.Utils.Constants;
@@ -24,7 +25,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import hugo.weaving.DebugLog;
+
 import timber.log.Timber;
 
 import static com.ljmu.andre.GsonPreferences.Preferences.getCreateDir;
@@ -68,7 +69,7 @@ public class ModulePackImpl extends ModulePack {
 	 * Pull the Settings UI for this Pack
 	 * ===========================================================================
 	 */
-	@DebugLog @Override public FragmentHelper[] getStaticFragments() {
+	@Override public FragmentHelper[] getStaticFragments() {
 		GeneralSettingsFragment settingsFragment = new GeneralSettingsFragment();
 		settingsFragment.setPackName(getPackName());
 
@@ -158,7 +159,12 @@ public class ModulePackImpl extends ModulePack {
 				continue;
 			}
 
-			module.injectHooks(snapClassLoader, snapActivity, moduleLoadState);
+			try {
+				module.injectHooks(snapClassLoader, snapActivity, moduleLoadState);
+			} catch (Throwable t) {
+				Timber.e(t);
+				moduleLoadState.fail();
+			}
 		}
 
 		hasInjected = true;

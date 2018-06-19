@@ -10,7 +10,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 
-import hugo.weaving.DebugLog;
+
 import timber.log.Timber;
 
 /**
@@ -72,7 +72,7 @@ public class ChatVideoSnap extends Snap {
 			return this;
 		}
 
-		@DebugLog public ChatVideoSnap build() {
+		public ChatVideoSnap build() {
 			ChatVideoSnap snap = super.build(ChatVideoSnap.class);
 			snap.setVideoPath(videoPath);
 

@@ -25,7 +25,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
-import hugo.weaving.DebugLog;
+
 
 import static com.ljmu.andre.snaptools.Utils.ResourceUtils.getIdFromString;
 import static com.ljmu.andre.snaptools.Utils.StringUtils.getFlavourText;
@@ -229,7 +229,7 @@ public abstract class PackMetaData extends ExpandableItemEntity<MultiItemEntity>
 	 * finds the first ordering difference between the two objects.
 	 * ===========================================================================
 	 */
-	@DebugLog @Override public int compareTo(PackMetaData o) {
+	@Override public int compareTo(PackMetaData o) {
 		for (Comparator<PackMetaData> comparator : comparators) {
 			int comparison = comparator.compare(this, o);
 
@@ -356,7 +356,7 @@ public abstract class PackMetaData extends ExpandableItemEntity<MultiItemEntity>
 			this.linkedMeta = linkedMeta;
 		}
 
-		@DebugLog @Override public String getText() {
+		@Override public String getText() {
 			return linkedMeta.getFailReason();
 		}
 

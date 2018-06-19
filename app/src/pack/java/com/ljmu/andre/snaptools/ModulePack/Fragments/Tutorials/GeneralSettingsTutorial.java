@@ -1,11 +1,14 @@
 package com.ljmu.andre.snaptools.ModulePack.Fragments.Tutorials;
 
+import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.google.common.collect.ImmutableList;
 import com.ljmu.andre.snaptools.UIComponents.Adapters.ExpandableItemAdapter;
 import com.ljmu.andre.snaptools.Utils.TutorialDetail;
 import com.ljmu.andre.snaptools.Utils.TutorialDetail.MessagePosition;
+import com.ljmu.andre.snaptools.Utils.TutorialDetail.ViewProcessor;
 
 import static com.ljmu.andre.snaptools.Utils.ResourceUtils.getDSLView;
 import static com.ljmu.andre.snaptools.Utils.ResourceUtils.getIdFromString;

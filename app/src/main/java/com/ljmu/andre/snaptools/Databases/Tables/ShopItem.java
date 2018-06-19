@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import hugo.weaving.DebugLog;
+
 import timber.log.Timber;
 
 import static com.ljmu.andre.snaptools.Utils.ResourceUtils.getView;
@@ -76,7 +76,7 @@ public class ShopItem extends ExpandableItemEntity<MultiItemEntity> implements C
 	private boolean isTutorial;
 	private Boolean isPack;
 
-	@DebugLog @Override public void onTableUpgrade(CBIDatabaseCore linkedDBCore, CBITable table, int oldVersion, int newVersion) {
+	@Override public void onTableUpgrade(CBIDatabaseCore linkedDBCore, CBITable table, int oldVersion, int newVersion) {
 		Timber.d("Table Upgrade");
 
 		List<SQLCommand> sqlCommandList = new ArrayList<>();

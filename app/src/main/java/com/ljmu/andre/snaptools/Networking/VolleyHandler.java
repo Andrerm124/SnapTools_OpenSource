@@ -9,7 +9,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.ljmu.andre.snaptools.STApplication;
 
-import hugo.weaving.DebugLog;
+
 
 /**
  * This class was created by Andre R M (SID: 701439)
@@ -31,7 +31,7 @@ public class VolleyHandler {
 		addToRequestQueue(req, null);
 	}
 
-	@DebugLog public <T> void addToRequestQueue(@NonNull Request<T> req, String tag) {
+	public <T> void addToRequestQueue(@NonNull Request<T> req, String tag) {
 		req.setTag(TextUtils.isEmpty(tag) ? STApplication.MODULE_TAG : tag);
 		getHttpRequestQueue().add(req);
 	}
@@ -43,7 +43,7 @@ public class VolleyHandler {
 		return httpRequestQueue;
 	}
 
-	@DebugLog public void cancelPendingRequests(@NonNull Object tag) {
+	public void cancelPendingRequests(@NonNull Object tag) {
 		if (httpRequestQueue != null)
 			httpRequestQueue.cancelAll(tag);
 	}

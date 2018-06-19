@@ -31,7 +31,7 @@ import com.ljmu.andre.snaptools.Utils.TutorialDetail.MessagePosition;
 import java.util.Collections;
 import java.util.List;
 
-import hugo.weaving.DebugLog;
+
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -320,7 +320,7 @@ public abstract class FragmentHelper extends Fragment implements RedirectDispatc
 		return dispatchRedirection("back_press", false);
 	}
 
-	@DebugLog @Override public CompatibilityRedirector getRedirector() {
+	@Override public CompatibilityRedirector getRedirector() {
 		Timber.d("Getting redirector");
 		return redirector;
 	}

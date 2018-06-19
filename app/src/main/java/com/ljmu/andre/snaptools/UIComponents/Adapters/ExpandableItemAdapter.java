@@ -19,7 +19,7 @@ import com.ljmu.andre.snaptools.Utils.RequiresFramework;
 
 import java.util.List;
 
-import hugo.weaving.DebugLog;
+
 import timber.log.Timber;
 
 import static com.ljmu.andre.snaptools.Utils.FrameworkViewFactory.getSpannedHtml;
@@ -202,7 +202,7 @@ public class ExpandableItemAdapter<T extends ExpandableItemEntity> extends BaseM
 			label.setGravity(Gravity.CENTER_VERTICAL);
 		}
 
-		@DebugLog public String getText() {
+		public String getText() {
 			return text;
 		}
 

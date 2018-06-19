@@ -11,7 +11,7 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
 
-import hugo.weaving.DebugLog;
+
 import timber.log.Timber;
 
 /**
@@ -30,12 +30,12 @@ class DeadlockMonitor extends Thread {
 		}
 	};
 
-	@DebugLog private DeadlockMonitor(String name) {
+	private DeadlockMonitor(String name) {
 		super(name);
 		Timber.d("Created deadlock monitor");
 	}
 
-	@DebugLog @Override public void run() {
+	@Override public void run() {
 		HandlerThread lockHandlerThread = new HandlerThread("Pref Lock Handler");
 		lockHandlerThread.start();
 		Handler lockHandler = new Handler(lockHandlerThread.getLooper());
@@ -98,7 +98,7 @@ class DeadlockMonitor extends Thread {
 		return thread.getName() + " (state = " + thread.getState() + ")";
 	}
 
-	@DebugLog public synchronized static void init() {
+	public synchronized static void init() {
 		boolean wasDead = false;
 
 		if (instance != null && !instance.isAlive()) {

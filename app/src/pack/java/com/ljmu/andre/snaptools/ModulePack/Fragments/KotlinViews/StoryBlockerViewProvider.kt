@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import com.ljmu.andre.GsonPreferences.Preferences.getPref
 import com.ljmu.andre.snaptools.Dialogs.Content.TextInput
+import com.ljmu.andre.snaptools.Dialogs.Content.TextInputBasic
 import com.ljmu.andre.snaptools.Dialogs.DialogFactory
 import com.ljmu.andre.snaptools.Dialogs.ThemedDialog
 import com.ljmu.andre.snaptools.ModulePack.Notifications.SafeToastAdapter
@@ -62,6 +63,16 @@ class StoryBlockerViewProvider {
                         verticalPadding = dip(10)
                         setOnCheckedChangeListener { _, isChecked ->
                             putAndKill(STORY_BLOCKER_ADVERTS_BLOCKED, isChecked, activity)
+                        }
+                    }
+
+                    themedSwitchCompat(ResourceUtils.getStyle(activity, "DefaultSwitch")) {
+                        text = "Show Block Stories button in Snapchat"
+                        isChecked = getPref(STORY_BLOCKER_SHOW_BUTTON)
+
+                        verticalPadding = dip(10)
+                        setOnCheckedChangeListener { _, isChecked ->
+                            putAndKill(STORY_BLOCKER_SHOW_BUTTON, isChecked, activity)
                         }
                     }
 

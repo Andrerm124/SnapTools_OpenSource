@@ -32,7 +32,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.jar.Attributes;
 
-import hugo.weaving.DebugLog;
+
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
@@ -117,7 +117,7 @@ public class PackUtils {
 
 	}
 
-	@DebugLog @Nullable public static Map<String, LocalPackMetaData> getInstalledMetaData() {
+	@Nullable public static Map<String, LocalPackMetaData> getInstalledMetaData() {
 		try {
 			File packDirectory = new File((String) getPref(MODULES_PATH));
 
@@ -188,7 +188,7 @@ public class PackUtils {
 		return flavour;
 	}
 
-	@DebugLog public static Observable<Map<String, LocalPackMetaData>> getAllMetaData() {
+	public static Observable<Map<String, LocalPackMetaData>> getAllMetaData() {
 		Callable<Map<String, LocalPackMetaData>> callable = () -> {
 			File packDirectory = new File((String) getPref(MODULES_PATH));
 
@@ -238,7 +238,7 @@ public class PackUtils {
 		return System.currentTimeMillis() - (Long) getPref(LAST_CHECK_PACKS);
 	}
 
-	@DebugLog @Nullable public static String generatePacksChecksum() {
+	@Nullable public static String generatePacksChecksum() {
 		Set<String> selectPackSet = getPref(SELECTED_PACKS);
 		if (selectPackSet == null || selectPackSet.isEmpty())
 			return null;

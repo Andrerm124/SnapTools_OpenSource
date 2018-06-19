@@ -14,13 +14,14 @@ import android.widget.Toast;
 
 import com.ljmu.andre.snaptools.ModulePack.Notifications.SaveNotification;
 import com.ljmu.andre.snaptools.ModulePack.Notifications.SaveNotification.ToastType;
+import com.ljmu.andre.snaptools.ModulePack.Notifications.StackingDotNotification;
 import com.ljmu.andre.snaptools.ModulePack.SavingUtils.SavingTriggers.SavingTrigger;
 import com.ljmu.andre.snaptools.ModulePack.SavingUtils.SavingTriggers.SavingTrigger.SavingMode;
 import com.ljmu.andre.snaptools.ModulePack.SavingUtils.Snaps.Snap.SaveState;
 import com.ljmu.andre.snaptools.ModulePack.SavingUtils.Snaps.Snap.SnapType;
 import com.ljmu.andre.snaptools.ModulePack.Utils.GestureEvent.ReturnType;
 
-import hugo.weaving.DebugLog;
+
 import timber.log.Timber;
 
 import static com.ljmu.andre.snaptools.ModulePack.SavingUtils.SavingTriggers.SavingTrigger.SavingMode.FLING_TO_SAVE;
@@ -45,7 +46,7 @@ public class SavingLayout extends RelativeLayout {
 		super(context);
 	}
 
-	@DebugLog @Override public boolean dispatchTouchEvent(MotionEvent ev) {
+	@Override public boolean dispatchTouchEvent(MotionEvent ev) {
 		Timber.d("onTouchEvent: " + ev.toString());
 
 		if (savingMode != FLING_TO_SAVE)

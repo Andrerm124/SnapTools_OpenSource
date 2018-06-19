@@ -13,7 +13,7 @@ import com.ljmu.andre.CBIDatabase.Utils.SQLCommand;
 import java.util.ArrayList;
 import java.util.List;
 
-import hugo.weaving.DebugLog;
+
 import timber.log.Timber;
 
 /**
@@ -48,7 +48,7 @@ public class PurchaseTable implements CBIObject {
 		this.identifier = identifier;
 	}
 
-	@DebugLog @Override public void onTableUpgrade(CBIDatabaseCore linkedDBCore, CBITable table, int oldVersion, int newVersion) {
+	@Override public void onTableUpgrade(CBIDatabaseCore linkedDBCore, CBITable table, int oldVersion, int newVersion) {
 		Timber.d("Table Upgrade");
 		List<SQLCommand> sqlCommands = new ArrayList<>();
 

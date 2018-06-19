@@ -6,7 +6,7 @@ import com.ljmu.andre.CBIDatabase.CBIDatabaseCore;
 import com.ljmu.andre.CBIDatabase.CBIObject;
 import com.ljmu.andre.CBIDatabase.CBITable;
 
-import hugo.weaving.DebugLog;
+
 import timber.log.Timber;
 
 import static com.ljmu.andre.GsonPreferences.Preferences.getPref;
@@ -38,7 +38,7 @@ public class CacheDatabase {
 		return databaseCore;
 	}
 
-	@DebugLog public static <T extends CBIObject> boolean insert(T object) {
+	public static <T extends CBIObject> boolean insert(T object) {
 		try {
 			CBITable<T> table = getTable((Class<T>) object.getClass());
 			return table.insert(object);
@@ -49,7 +49,7 @@ public class CacheDatabase {
 		return false;
 	}
 
-	@DebugLog public static <T extends CBIObject> CBITable<T> getTable(Class<T> cbiClass) {
+	public static <T extends CBIObject> CBITable<T> getTable(Class<T> cbiClass) {
 		CBITable<T> table = databaseCore.getTable(cbiClass);
 
 		if (table == null) {

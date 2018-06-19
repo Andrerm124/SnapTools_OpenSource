@@ -15,7 +15,7 @@ import com.ljmu.andre.snaptools.Utils.Assert;
 import com.ljmu.andre.snaptools.Utils.DeviceIdManager;
 import com.ljmu.andre.snaptools.Utils.MiscUtils;
 
-import hugo.weaving.DebugLog;
+
 import timber.log.Timber;
 
 import static com.ljmu.andre.GsonPreferences.Preferences.getPref;
@@ -33,7 +33,7 @@ public class CheckPackUpdate {
 	private static final String CHECK_UPDATE_URL = "https://snaptools.org/SnapTools/Scripts/check_version.php";
 
 	// TODO Setup JSON Error=True detection
-	@DebugLog public static void performCheck(
+	public static void performCheck(
 			@Nullable Activity activity,
 			@NonNull String packType,
 			@NonNull String snapVersion,

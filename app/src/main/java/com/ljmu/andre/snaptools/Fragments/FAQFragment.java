@@ -36,7 +36,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-import hugo.weaving.DebugLog;
+
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -149,7 +149,7 @@ public class FAQFragment extends FragmentHelper {
 		});
 	}
 
-	@DebugLog private void performSearch(String searchTermCased) {
+	private void performSearch(String searchTermCased) {
 		String searchTerm = searchTermCased.toLowerCase();
 		Observable.fromCallable(() -> {
 			List<FAQItem> validItems = new ArrayList<>();

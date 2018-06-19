@@ -6,7 +6,7 @@ import android.support.v4.util.LruCache;
 
 import java.lang.ref.WeakReference;
 
-import hugo.weaving.DebugLog;
+
 import timber.log.Timber;
 
 /**
@@ -20,7 +20,7 @@ public class BitmapCache extends LruCache<String, WeakReference<Bitmap>> {
 	private static int cacheSize;
 	private int currentMemUsage = 0;
 
-	@DebugLog public BitmapCache(int memoryModifier) {
+	public BitmapCache(int memoryModifier) {
 		super(maxMemory / memoryModifier);
 		cacheSize = maxMemory / memoryModifier;
 	}
@@ -88,7 +88,7 @@ public class BitmapCache extends LruCache<String, WeakReference<Bitmap>> {
 		currentMemUsage = 0;
 	}
 
-	@DebugLog public static BitmapCache getMasterCache() {
+	public static BitmapCache getMasterCache() {
 		if (masterCache == null)
 			masterCache = new BitmapCache(8);
 

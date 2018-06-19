@@ -25,7 +25,7 @@ import java.util.Set;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
-import hugo.weaving.DebugLog;
+
 import io.reactivex.Observable;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.schedulers.Schedulers;
@@ -67,7 +67,7 @@ public class Security {
 	 * to have been called on application start
 	 * ===========================================================================
 	 */
-	@DebugLog public static void verifyJar(Manifest manifest, JarFile jarFile)
+	public static void verifyJar(Manifest manifest, JarFile jarFile)
 			throws IOException, SecurityException {
 //		Vector<JarEntry> entriesVec = new Vector<>();
 //
@@ -173,7 +173,7 @@ public class Security {
 	public static class ApkCertification {
 		private static String cachedSSH1;
 
-		@DebugLog public static String getApkFingerprint(Context context) {
+		public static String getApkFingerprint(Context context) {
 			if (cachedSSH1 != null)
 				return cachedSSH1;
 
@@ -221,13 +221,13 @@ public class Security {
 		private static Set<String> cachedSHA1Set = new HashSet<>();
 		private static String cachedFingerprint;
 
-		@DebugLog public static String getFingerprint() {
+		public static String getFingerprint() {
 			synchronized (FINGERPRINT_LOCK) {
 				return cachedFingerprint;
 			}
 		}
 
-		@DebugLog static void putPackSHA1(String sha1) {
+		static void putPackSHA1(String sha1) {
 			if (!cachedSHA1Set.contains(sha1)) {
 				cachedSHA1Set.add(sha1);
 				recomputeFingerprint();

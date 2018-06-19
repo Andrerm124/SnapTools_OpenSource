@@ -5,7 +5,7 @@ import android.app.Activity;
 import com.ljmu.andre.GsonPreferences.Preferences.Preference;
 import com.ljmu.andre.snaptools.UIComponents.SettingBasedLayout;
 
-import hugo.weaving.DebugLog;
+
 
 import static com.ljmu.andre.GsonPreferences.Preferences.getPref;
 
@@ -23,7 +23,7 @@ public class PreferenceBasedLayout<T> extends SettingBasedLayout<T> {
 		this.preference = preference;
 	}
 
-	@DebugLog @Override public T getSettingKey() {
+	@Override public T getSettingKey() {
 		return getPref(preference);
 	}
 }

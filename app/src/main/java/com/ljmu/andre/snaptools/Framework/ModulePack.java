@@ -32,7 +32,7 @@ import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
 import dalvik.system.DexClassLoader;
-import hugo.weaving.DebugLog;
+
 
 import static com.ljmu.andre.snaptools.Utils.PackUtils.getFlavourFromAttributes;
 
@@ -224,7 +224,7 @@ public abstract class ModulePack {
 	 * @throws ModulePackNotFound
 	 * @throws ModulePackLoadAborted
 	 */
-	@DebugLog public static ModulePack getInstance(
+	public static ModulePack getInstance(
 			Activity activity,
 			File modulePackFile,
 			PackLoadState packLoadState) throws ModuleCertificateException, ModulePackFatalError, ModulePackNotFound, ModulePackLoadAborted {
@@ -298,7 +298,7 @@ public abstract class ModulePack {
 	 * @return
 	 * @throws ModulePackFatalError
 	 */
-	@DebugLog private static DexClassLoader createClassLoader(File codeCacheDir, File modulePackFile)
+	private static DexClassLoader createClassLoader(File codeCacheDir, File modulePackFile)
 			throws ModulePackFatalError {
 		if (!codeCacheDir.exists() && !codeCacheDir.mkdirs())
 			throw new ModulePackFatalError("Couldn't create optimised Code Cache");
@@ -334,7 +334,7 @@ public abstract class ModulePack {
 	 * @throws ModulePackLoadAborted
 	 */
 	@SuppressWarnings("unchecked")
-	@DebugLog private static ModulePack instantiatePack(
+	private static ModulePack instantiatePack(
 			DexClassLoader dexClassLoader,
 			LocalPackMetaData packMetaData,
 			PackLoadState packLoadState)

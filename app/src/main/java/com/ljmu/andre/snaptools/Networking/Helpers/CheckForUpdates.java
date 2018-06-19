@@ -18,7 +18,7 @@ import com.ljmu.andre.snaptools.Utils.DeviceIdManager;
 import com.ljmu.andre.snaptools.Utils.MiscUtils;
 import com.ljmu.andre.snaptools.Utils.PackUtils;
 
-import hugo.weaving.DebugLog;
+
 import timber.log.Timber;
 
 import static com.ljmu.andre.snaptools.Utils.Constants.PACK_CHECK_COOLDOWN;
@@ -37,7 +37,7 @@ public class CheckForUpdates {
 	}
 
 	// TODO Setup JSON Error=True detection
-	@DebugLog public static void performCheck(
+	public static void performCheck(
 			@Nullable Activity activity,
 			@NonNull String packType,
 			@NonNull String snapVersion,

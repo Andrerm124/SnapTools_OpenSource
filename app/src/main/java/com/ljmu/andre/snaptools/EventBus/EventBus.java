@@ -2,7 +2,7 @@ package com.ljmu.andre.snaptools.EventBus;
 
 import java.util.HashSet;
 
-import hugo.weaving.DebugLog;
+
 import timber.log.Timber;
 
 /**
@@ -32,7 +32,7 @@ public class EventBus extends com.google.common.eventbus.EventBus {
 		}
 	}
 
-	@DebugLog public static EventBus getInstance() {
+	public static EventBus getInstance() {
 		synchronized (BUS_LOCK) {
 			if (eventBus == null)
 				eventBus = new EventBus(EventBus.class.getSimpleName());

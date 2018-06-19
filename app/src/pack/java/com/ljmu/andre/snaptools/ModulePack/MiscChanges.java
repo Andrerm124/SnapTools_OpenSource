@@ -9,33 +9,27 @@ import android.text.InputType;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MenuItem.OnMenuItemClickListener;
-import android.view.SubMenu;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 
-import com.ljmu.andre.snaptools.Dialogs.Content.Options.OptionsButtonData;
 import com.ljmu.andre.snaptools.Dialogs.Content.TextInputBasic;
 import com.ljmu.andre.snaptools.Dialogs.DialogFactory;
 import com.ljmu.andre.snaptools.Dialogs.ThemedDialog;
-import com.ljmu.andre.snaptools.Dialogs.ThemedDialog.ThemedClickListener;
+import com.ljmu.andre.snaptools.Dialogs.ThemedDialog.ThemedClickWrapper;
 import com.ljmu.andre.snaptools.Fragments.FragmentHelper;
-import com.ljmu.andre.snaptools.ModulePack.Fragments.ColorPickerExtension;
+import com.ljmu.andre.snaptools.ModulePack.Fragments.KotlinViews.ColorPickerDialogExtension;
+import com.ljmu.andre.snaptools.ModulePack.Fragments.KotlinViews.FontPickerDialogExtension;
 import com.ljmu.andre.snaptools.ModulePack.Fragments.MiscChangesFragment;
-import com.ljmu.andre.snaptools.ModulePack.Utils.FontUtils;
-import com.ljmu.andre.snaptools.R;
-import com.ljmu.andre.snaptools.Utils.Callable;
 import com.ljmu.andre.snaptools.Utils.ResourceMapper;
 import com.ljmu.andre.snaptools.Utils.ResourceUtils;
-import com.ljmu.andre.snaptools.Utils.XposedUtils.ST_MethodHook;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 import timber.log.Timber;
 
+import static com.ljmu.andre.GsonPreferences.Preferences.getCreateDir;
 import static com.ljmu.andre.GsonPreferences.Preferences.getPref;
+import static com.ljmu.andre.GsonPreferences.Preferences.putPref;
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookClassDef.SNAPCHAT_CAPTION_VIEW_CLASS;
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookDef.CAPTION_CREATE_HOOK;
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookDef.FONT_HOOK;
@@ -59,7 +53,7 @@ import com.flask.colorpicker.builder.ColorPickerDialogBuilder;*/
  */
 
 public class MiscChanges extends ModuleHelper {
-	static Boolean fontOverride = true;
+	public static boolean isInternalFontCall;
 
 	public MiscChanges(String name, boolean canBeDisabled) {
 		super(name, canBeDisabled);
@@ -70,242 +64,224 @@ public class MiscChanges extends ModuleHelper {
 	}
 
 	@Override public void loadHooks(ClassLoader snapClassLoader, Activity snapActivity) {
+		String currentFontFile = getPref(CURRENT_FONT);
 
-		hookMethod(FONT_HOOK, new ST_MethodHook() {
-			@Override protected void before(MethodHookParam param) throws Throwable {
-				if (/*(Boolean)getPref(ENABLE_ST_OVERRIDE_FONT) &&*/ fontOverride) {
-					String font = (String) param.args[0];
-					String replacement = (String) getPref(FONTS_PATH) + getPref(CURRENT_FONT);
-					if (!getPref(CURRENT_FONT).equals("Default") && new File(replacement).exists()) {
-						font = replacement;
-						Timber.d("[FONT] Font handled by hook");
+//		try {
+//			Class cheetahModeEnumClass = resolveHookClass(CHEETAH_EXPERIMENT_ENUM);
+//			Class cheetahExperimentClass = resolveHookClass(CHEETAH_EXPERIMENT);
+//
+//			boolean forceCheetah = getPref(FORCE_CHEETAH);
+//
+//			hookMethod(
+//					CHEETAH_DEFINE_MODE,
+//					new XC_MethodReplacement() {
+//						@Override protected Object replaceHookedMethod(MethodHookParam param) throws Throwable {
+//							setObjectField(UI_MODE_NAME, param.thisObject, forceCheetah ? "CHEETAH_ANDROID" : null);
+//							setObjectField(UI_MODE_ENUM, param.thisObject,
+//									Enum.valueOf(
+//											cheetahModeEnumClass,
+//											forceCheetah ? "FULL_CHEETAH" : "OLD_DESIGN"
+//									)
+//							);
+//
+//							if (forceCheetah) {
+//								Object cheetahExperiment = newInstance(cheetahExperimentClass);
+//								callHook(EXPERIMENT_PUSH_STATE, cheetahExperiment);
+//							}
+//
+//							return null;
+//						}
+//					});
+//		} catch (HookNotFoundException e) {
+//			Timber.e(e);
+//			moduleLoadState.fail();
+//		}
+
+		if (!currentFontFile.equals("Default")) {
+			hookMethod(
+					FONT_HOOK,
+					new HookWrapper((HookBefore) param -> {
+						if (isInternalFontCall) {
+							isInternalFontCall = false;
+							return;
+						}
+
+						String fontFilename = (String) param.args[0];
+
+						File fontDir = getCreateDir(FONTS_PATH);
+						File replacementFontFile = new File(fontDir, currentFontFile);
+
+						if (replacementFontFile.exists()) {
+							fontFilename = replacementFontFile.getAbsolutePath();
+							Timber.d("[FONT] Font handled by hook");
+						}
+
+						param.args[0] = fontFilename;
+					})
+			);
+		}
+
+		hookMethod(
+				CAPTION_CREATE_HOOK,
+				new HookWrapper((HookBefore) param -> {
+					Timber.d("Attempting to load custom menu");
+
+					/**
+					 * ===========================================================================
+					 * Recreate Snapchat's context menu
+					 * ===========================================================================
+					 */
+					ActionMode actionMode = (ActionMode) param.args[0];
+					Menu menu = (Menu) param.args[1];
+					menu.clear();
+					actionMode.getMenuInflater().inflate(ResourceMapper.getResId(snapActivity, "caption_context_menu", "menu"), menu);
+
+					EditText captionEditText = getObjectField(SNAPCAPTIONVIEW_CONTEXT, param.thisObject);
+
+					int paste = ResourceUtils.getId(snapActivity, "menu_item_paste");
+					int cut = ResourceUtils.getId(snapActivity, "menu_item_cut");
+					int copy = ResourceUtils.getId(snapActivity, "menu_item_copy");
+
+					if (getPref(COPY_BUTTON)) {
+						menu.findItem(copy).setVisible(true);
 					}
-					param.args[0] = font;
-				}
-			}
-		});
+					if (getPref(CUT_BUTTON)) {
+						menu.findItem(cut).setVisible(true);
+					}
+					//TODO: check if something is on the clipboard
+					ClipboardManager clipboardManager = (ClipboardManager) snapActivity.getSystemService(Context.CLIPBOARD_SERVICE);
+					if (getPref(PASTE_BUTTON)) {
+						if (clipboardManager != null) {
+							if (!clipboardManager.hasPrimaryClip()) {
+								menu.findItem(paste).setVisible(false);
 
-		hookMethod(CAPTION_CREATE_HOOK, new ST_MethodHook() {
-			@Override protected void before(MethodHookParam param) throws Throwable {
-				/*if (lastUsed == null) {
-					Timber.d("No data found from SnapCaptionView. Unable to load context menu.");
-					return;
-				}*/
-				Timber.d("Attempting to load custom menu");
-				/*
-					Do snapchat's work for them
-				 */
-				ActionMode actionMode = (ActionMode) param.args[0];
-				Menu menu = (Menu) param.args[1];
-				menu.clear();
-				actionMode.getMenuInflater().inflate(ResourceMapper.getResId(snapActivity, "caption_context_menu", "menu"), menu);
-
-				EditText text = getObjectField(SNAPCAPTIONVIEW_CONTEXT, param.thisObject);
-
-				int paste = ResourceUtils.getId(snapActivity, "menu_item_paste");
-				int cut = ResourceUtils.getId(snapActivity, "menu_item_cut");
-				int copy = ResourceUtils.getId(snapActivity, "menu_item_copy");
-				/*if (text.getSelectionStart() == text.getSelectionEnd()) {
-					menu.findItem(paste).setVisible(true);
-					menu.findItem(copy).setVisible(false);
-					menu.findItem(cut).setVisible(false);
-				} else {
-					menu.findItem(copy).setVisible(true);
-					menu.findItem(cut).setVisible(true);
-					menu.findItem(paste).setVisible(false);
-				}*/
-				if (getPref(COPY_BUTTON)) {
-					menu.findItem(copy).setVisible(true);
-				}
-				if (getPref(CUT_BUTTON)) {
-					menu.findItem(cut).setVisible(true);
-				}
-				//TODO: check if something is on the clipboard
-				ClipboardManager clipboardManager = (ClipboardManager) snapActivity.getSystemService(Context.CLIPBOARD_SERVICE);
-				if ((Boolean) getPref(PASTE_BUTTON)) {
-					if (clipboardManager != null) {
-						if (!clipboardManager.hasPrimaryClip()) {
-							menu.findItem(paste).setVisible(false);
-
+							} else {
+								menu.findItem(paste).setVisible(true);
+							}
 						} else {
 							menu.findItem(paste).setVisible(true);
 						}
-					} else {
-						menu.findItem(paste).setVisible(true);
 					}
-				}
-				int bold = ResourceUtils.getId(snapActivity, "menu_item_bold");
-				int italic = ResourceUtils.getId(snapActivity, "menu_item_italic");
-				int underline = ResourceUtils.getId(snapActivity, "menu_item_underline");
-				menu.findItem(bold).setVisible(true);
-				menu.findItem(italic).setVisible(true);
-				menu.findItem(underline).setVisible(true);
+					int bold = ResourceUtils.getId(snapActivity, "menu_item_bold");
+					int italic = ResourceUtils.getId(snapActivity, "menu_item_italic");
+					int underline = ResourceUtils.getId(snapActivity, "menu_item_underline");
+					menu.findItem(bold).setVisible(true);
+					menu.findItem(italic).setVisible(true);
+					menu.findItem(underline).setVisible(true);
 
+					// ===========================================================================
 
+					/**
+					 * ===========================================================================
+					 * Add a BG Color Picker
+					 * ===========================================================================
+					 */
+					MenuItem bgColor = menu.add("BG Color");
+					bgColor.setOnMenuItemClickListener(item -> {
+						Timber.d("Changing BG color");
+						new ThemedDialog(snapActivity)
+								.setTitle("Color Picker")
+								.setExtension(
+										new ColorPickerDialogExtension(
+												snapActivity,
+												"primary",
+												captionEditText::setBackgroundColor
+										)
+								).show();
 
-				/*
-					Load our own menuitems, do fancy things
-				 */
-				MenuItem bgColor = menu.add("BG Color");
-				bgColor.setOnMenuItemClickListener(item -> {
-					Timber.d("Changing BG color");
-					//try {
-							/*ColorPickerDialogBuilder
-									//TODO: Replace the second snapActivity with a reference to SnapTools' activity
-									.with(snapActivity, ContextHelper.getModuleContext(snapActivity))
-									.setTitle("Choose BG Color")
-									.initialColor(0)
-									.wheelType(WHEEL_TYPE.CIRCLE)
-									.density(12)
-									.setOnColorSelectedListener(i -> {
-										//We dont care
-									})
-									.setPositiveButton("OK", (dialogInterface, selectedColor, integers) -> {
-										text.setBackgroundColor(selectedColor);
-										dialogInterface.dismiss();
-									})
-									.setNegativeButton("Cancel", (dialog, which) -> {
-										dialog.dismiss(); // just close
-									}).build().show();*/
-
-					SubMenu sub = menu.addSubMenu("TestMenu");
-					sub.add("Test1");
-					sub.add("Test2");
-					sub.add("Test3");
-					sub.add("Test4");
-
-					//TODO: Attach HSLColorPicker to ThemedDialog
-					ThemedDialog prompt = new ThemedDialog(snapActivity);
-					Integer color;
-					ColorPickerExtension dialog = new ColorPickerExtension(snapActivity);
-					dialog.setCallback(new Callable<Integer>() {
-						@Override public void call(Integer integer) {
-							if (integer == -5 || integer == -1) {
-								prompt.dismiss();
-							} else {
-								Integer color = integer;
-								//text.setBackgroundColor(integer);
-								prompt.dismiss();
-								//Integer opacity = getOpacity(snapActivity);
-								text.setBackgroundColor(color);
-								//text.setAlpha(Float.parseFloat(opacity/100 + ""));
-							}
-						}
+						return true;
 					});
+					bgColor.setVisible(true);
 
-					prompt.setTitle("Color Picker")
-							.setHeaderDrawable(R.drawable.neutral_header)
-							.setExtension(dialog)
-							.setDismissable(false);
-					prompt.show();
+					// ===========================================================================
 
-					return true;
-				});
-				bgColor.setVisible(true);
+					/**
+					 * ===========================================================================
+					 * Add a Font Picker
+					 * ===========================================================================
+					 */
+					MenuItem font = menu.add("Font");
+					font.setOnMenuItemClickListener(item -> {
+						new ThemedDialog(snapActivity)
+								.setTitle("Choose Font")
+								.setExtension(
+										new FontPickerDialogExtension(
+												snapActivity,
+												MiscChangesFragment.getInstalledFonts(),
+												s -> {
+													Timber.d("Selected font: " + s);
+													putPref(CURRENT_FONT, s);
+													captionEditText.setTypeface(MiscChangesFragment.getTypefaceSafe(s));
+												}
+										)
+								).show();
 
-				//if (((Boolean)getPref(ENABLE_ST_OVERRIDE_FONT))) {
-				MenuItem font = menu.add("Font");
-				font.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-					@Override public boolean onMenuItemClick(MenuItem item) {
-						ArrayList<OptionsButtonData> buttons = new ArrayList<>();
-						List<String> fonts = FontUtils.getInstalledFonts();
-						for (String s : fonts) {
-							buttons.add(new OptionsButtonData(s, new ThemedClickListener() {
-								@Override public void clicked(ThemedDialog themedDialog) {
-									if (!s.equalsIgnoreCase("Default")) {
-										swipSwapBippityBop();
-										text.setTypeface(Typeface.createFromFile(new File(getPref(FONTS_PATH) + s)));
-										swipSwapBippityBop();
+						return true;
+					});
+					font.setVisible(true);
+					// ===========================================================================
+
+					/**
+					 * ===========================================================================
+					 * Add a Size Picker
+					 * ===========================================================================
+					 */
+					MenuItem size = menu.add("Size");
+					size.setOnMenuItemClickListener(item -> {
+						DialogFactory.createBasicTextInputDialog(
+								snapActivity,
+								"Font Size",
+								"What size should the text be set to?",
+								null,
+								null,
+								InputType.TYPE_CLASS_NUMBER,
+								new ThemedClickWrapper(themedDialog -> {
+									String input = themedDialog.<TextInputBasic>getExtension()
+											.getInputMessage();
+
+									try {
+										Float f = Float.parseFloat(input);
+										captionEditText.setTextSize(f);
+										themedDialog.dismiss();
+										return;
+									} catch (Exception ignored) {
+
 									}
+
 									themedDialog.dismiss();
-								}
-							}));
-						}
-						OptionsButtonData[] b = buttons.toArray(new OptionsButtonData[buttons.size()]);
-						DialogFactory.createOptions(snapActivity, "Choose Font", b).show();
+								})).show();
+
 						return true;
-					}
-				});
-				font.setVisible(true);
-				//}
-				MenuItem size = menu.add("Size");
-				size.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-					@Override public boolean onMenuItemClick(MenuItem item) {
-						DialogFactory.createBasicTextInputDialog(snapActivity, "Font Size", "What size should the text be set to?", null, null, InputType.TYPE_CLASS_NUMBER, new ThemedClickListener() {
-							@Override public void clicked(ThemedDialog themedDialog) {
-								TextInputBasic input = themedDialog.getExtension();
-								String inputs = input.getInputMessage();
-								try {
-									Float f = Float.parseFloat(inputs);
-									text.setTextSize(f);
-									themedDialog.dismiss();
-									return;
-								} catch (Exception e) {
-
-								}
-								themedDialog.dismiss();
-							}
-						}).show();
-						return true;
-					}
-				});
-				size.setVisible(true);
-				param.setResult(true);
-			}
-		});
-
-
-		hookAllConstructors(SNAPCHAT_CAPTION_VIEW_CLASS, new ST_MethodHook() {
-			@Override protected void after(MethodHookParam param) throws Throwable {
-				EditText text = (EditText) param.thisObject;
-				if (getPref(FORCE_MULTILINE)) {
-					text.setSingleLine(false);
-					text.setMaxLines(500);
-					text.setImeOptions(EditorInfo.IME_ACTION_NONE);
-					text.setFilters(new InputFilter[0]);
-
-					text.setOnLongClickListener(v -> {
-						text.showContextMenu();
-						return false;
 					});
-				}
-			}
-		});
-	}
+					size.setVisible(true);
+					// ===========================================================================
 
-	void swipSwapBippityBop() {
-		if (fontOverride) {
-			fontOverride = false;
-		} else {
-			fontOverride = true;
-		}
-	}
+					param.setResult(true);
+				})
+		);
 
-	int getOpacity(Activity snapActivity) {
-		final int[] retVal = new int[1];
-		DialogFactory.createBasicTextInputDialog(snapActivity, "Opacity", "What should the caption opacity be set to?", "0-100", null, InputType.TYPE_CLASS_NUMBER, new ThemedClickListener() {
-			@Override public void clicked(ThemedDialog themedDialog) {
-				TextInputBasic input = themedDialog.getExtension();
-				String inputs = input.getInputMessage();
-				try {
-					Integer f = Integer.parseInt(inputs);
-					if (f > 100 || f < 0) {
-						retVal[0] = -1;
-					} else {
-						retVal[0] = f;
+
+		hookAllConstructors(
+				SNAPCHAT_CAPTION_VIEW_CLASS,
+				new HookWrapper((HookBefore) param -> {
+					EditText text = (EditText) param.thisObject;
+					if (getPref(FORCE_MULTILINE)) {
+						text.setSingleLine(false);
+						text.setMaxLines(500);
+						text.setImeOptions(EditorInfo.IME_ACTION_NONE);
+						text.setFilters(new InputFilter[0]);
+
+						text.setOnLongClickListener(v -> {
+							text.showContextMenu();
+							return false;
+						});
 					}
-					themedDialog.dismiss();
-					return;
-				} catch (Exception e) {
+				})
+		);
+	}
 
-				}
-				retVal[0] = -1;
-			}
-		}).show();
-		if (retVal[0] == -1) {
-			return getOpacity(snapActivity);
-		} else {
-			return retVal[0];
-		}
+	public static Typeface createTypefaceSafe(File fontFile) {
+		isInternalFontCall = true;
+		return Typeface.createFromFile(fontFile);
 	}
 }

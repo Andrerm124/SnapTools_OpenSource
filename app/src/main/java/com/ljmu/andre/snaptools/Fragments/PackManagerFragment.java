@@ -33,7 +33,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import hugo.weaving.DebugLog;
+
 import timber.log.Timber;
 
 /**
@@ -52,7 +52,7 @@ public class PackManagerFragment extends FragmentHelper {
 
 	private boolean hasExpanded;
 
-	@DebugLog @Nullable @Override public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+	@Nullable @Override public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		View layoutContainer = inflater.inflate(R.layout.frag_pack_manager, container, false);
 		unbinder = ButterKnife.bind(this, layoutContainer);
 		EventBus.soleRegister(this);
@@ -138,7 +138,7 @@ public class PackManagerFragment extends FragmentHelper {
 		selectorFragment.generateTutorialData();
 	}
 
-	@SuppressWarnings("RestrictedApi") @DebugLog public <T extends FragmentHelper> T getChildFragment(Class<T> helperClass) {
+	@SuppressWarnings("RestrictedApi") public <T extends FragmentHelper> T getChildFragment(Class<T> helperClass) {
 		for (Fragment frag : getChildFragmentManager().getFragments()) {
 			if (frag.getClass().equals(helperClass))
 				return (T) frag;

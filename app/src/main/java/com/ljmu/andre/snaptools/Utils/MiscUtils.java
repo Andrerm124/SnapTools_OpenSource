@@ -16,7 +16,7 @@ import com.ljmu.andre.snaptools.STApplication;
 
 import java.util.List;
 
-import hugo.weaving.DebugLog;
+
 import timber.log.Timber;
 
 import static android.content.Context.CONNECTIVITY_SERVICE;
@@ -72,7 +72,7 @@ public class MiscUtils {
 	 * @deprecated Use {@link Version#compareTo(Version)}
 	 */
 	@Deprecated
-	@DebugLog public static int versionCompare(String str1, String str2) {
+	public static int versionCompare(String str1, String str2) {
 		try {
 			String[] vals1 = str1.split("\\.");
 			String[] vals2 = str2.split("\\.");

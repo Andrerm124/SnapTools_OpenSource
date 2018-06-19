@@ -18,7 +18,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import hugo.weaving.DebugLog;
+
 import timber.log.Timber;
 
 import static com.ljmu.andre.GsonPreferences.Preferences.getPref;
@@ -118,16 +118,16 @@ public abstract class Snap {
 		return snapType;
 	}
 
-	@DebugLog public <T extends Snap> T setSnapType(SnapType snapType) {
+	public <T extends Snap> T setSnapType(SnapType snapType) {
 		this.snapType = snapType;
 		return (T) this;
 	}
 
-	@SuppressWarnings("ResultOfMethodCallIgnored") @DebugLog public File getOutputFile() {
+	@SuppressWarnings("ResultOfMethodCallIgnored") public File getOutputFile() {
 		return getOutputFile(null);
 	}
 
-	@SuppressWarnings("ResultOfMethodCallIgnored") @DebugLog public File getOutputFile(@Nullable Integer snapIndex) {
+	@SuppressWarnings("ResultOfMethodCallIgnored") public File getOutputFile(@Nullable Integer snapIndex) {
 		Assert.notNull("Incomplete: " + toString(), username, dateTime, snapType, fileExtension);
 
 		return storageFormat.getOutputFile(snapType, username, dateTime, snapIndex, fileExtension);
@@ -144,7 +144,7 @@ public abstract class Snap {
 				.toString();
 	}
 
-	@DebugLog public void runMediaScanner(String path) {
+	public void runMediaScanner(String path) {
 		try {
 			MediaScannerConnection.scanFile(context, new String[]{path}, null,
 					(path1, uri) -> Timber.d("Scanned file: " + path1));

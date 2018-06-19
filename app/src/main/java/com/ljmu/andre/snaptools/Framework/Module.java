@@ -14,7 +14,7 @@ import com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef;
 
 import java.util.List;
 
-import hugo.weaving.DebugLog;
+
 import timber.log.Timber;
 
 import static android.view.View.GONE;
@@ -55,7 +55,7 @@ public abstract class Module implements StatefulListable<Void> {
 	 * @return The moduleLoadState argument (Unnecessary)
 	 */
 	@SuppressWarnings({"unused", "WeakerAccess"})
-	@DebugLog
+
 	public ModuleLoadState injectHooks(ClassLoader snapClassLoader, Activity snapActivity,
 	                                   ModuleLoadState moduleLoadState) {
 		if (hasInjected) {

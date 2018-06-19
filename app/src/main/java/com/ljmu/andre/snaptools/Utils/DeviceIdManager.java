@@ -18,7 +18,7 @@ import com.ljmu.andre.snaptools.Utils.CustomObservers.SimpleObserver;
 import java.lang.reflect.Method;
 import java.nio.charset.Charset;
 
-import hugo.weaving.DebugLog;
+
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import timber.log.Timber;
 
@@ -53,7 +53,7 @@ public class DeviceIdManager {
 	 * @return TRUE - If system id was assigned synchronously
 	 * FALSE - If user input is required before progressing
 	 */
-	@DebugLog public static boolean assignSystemId(Activity activity) {
+	public static boolean assignSystemId(Activity activity) {
 		// Generate a SystemID to be assigned ========================================
 		String systemId = generateSystemId(activity);
 
@@ -96,7 +96,7 @@ public class DeviceIdManager {
 	 * Generate a new SystemID using the AndroidID or a random hex value
 	 * ===========================================================================
 	 */
-	@DebugLog private static String generateSystemId(Activity activity) {
+	private static String generateSystemId(Activity activity) {
 		String androidId = getAndroidId(activity);
 
 		// If we can't get the AndroidID generate a random Hex String ================
@@ -121,7 +121,7 @@ public class DeviceIdManager {
 	 *
 	 * @throws Throwable - When invocation failed
 	 */
-	@DebugLog private static void setSystemIdWReflection(String systemId) throws Throwable {
+	private static void setSystemIdWReflection(String systemId) throws Throwable {
 		Class<?> systemPropertiesClass = Class.forName("android.os.SystemProperties");
 		Method method = systemPropertiesClass.getDeclaredMethod(
 				"set",
@@ -250,7 +250,7 @@ public class DeviceIdManager {
 	 * Retrieve the android id of the device using the regular means
 	 * ===========================================================================
 	 */
-	@DebugLog private static String getAndroidId(Context context) {
+	private static String getAndroidId(Context context) {
 		return Secure.getString(context.getContentResolver(), Secure.ANDROID_ID);
 	}
 
@@ -261,7 +261,7 @@ public class DeviceIdManager {
 	 *
 	 * @return TRUE - If SystemID has been assigned
 	 */
-	@DebugLog public static boolean isSystemIdAssigned() {
+	public static boolean isSystemIdAssigned() {
 		try {
 			String systemId = getSystemId();
 			return systemId != null && !systemId.isEmpty();
@@ -277,7 +277,7 @@ public class DeviceIdManager {
 	 * Efficiency method used for determining if system property has been assigned
 	 * ===========================================================================
 	 */
-	@DebugLog private static String getSystemId() throws Throwable {
+	private static String getSystemId() throws Throwable {
 		Class<?> systemPropertiesClass = Class.forName("android.os.SystemProperties");
 
 		Method method = systemPropertiesClass.getDeclaredMethod(

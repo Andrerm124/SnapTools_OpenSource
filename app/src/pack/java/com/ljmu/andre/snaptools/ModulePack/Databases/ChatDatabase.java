@@ -6,7 +6,7 @@ import com.ljmu.andre.CBIDatabase.CBIDatabaseCore;
 import com.ljmu.andre.CBIDatabase.CBIObject;
 import com.ljmu.andre.CBIDatabase.CBITable;
 
-import hugo.weaving.DebugLog;
+
 import timber.log.Timber;
 
 import static com.ljmu.andre.GsonPreferences.Preferences.getPref;
@@ -18,7 +18,7 @@ import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.DATABASES_P
  */
 
 public class ChatDatabase {
-	private static final String DB_NAME = "ChatMessages.db";
+	public static final String DB_NAME = "ChatMessages.db";
 	private static final int VERSION = 1;
 	private static CBIDatabaseCore databaseCore;
 
@@ -31,7 +31,7 @@ public class ChatDatabase {
 		return databaseCore;
 	}
 
-	@DebugLog public static boolean insert(CBIObject object) {
+	public static boolean insert(CBIObject object) {
 		try {
 			CBITable table = getTable(object.getClass());
 			return table.insert(object);
@@ -42,7 +42,7 @@ public class ChatDatabase {
 		return false;
 	}
 
-	@DebugLog public static <T extends CBIObject> CBITable<T> getTable(Class<T> cbiClass) {
+	public static <T extends CBIObject> CBITable<T> getTable(Class<T> cbiClass) {
 		CBITable<T> table = databaseCore.getTable(cbiClass);
 
 		if (table == null) {

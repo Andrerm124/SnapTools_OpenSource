@@ -8,7 +8,7 @@ import com.google.common.base.MoreObjects;
 import java.util.ArrayList;
 import java.util.List;
 
-import hugo.weaving.DebugLog;
+
 import timber.log.Timber;
 
 /**
@@ -93,7 +93,7 @@ public class QueryBuilder {
 		return this;
 	}
 
-	@DebugLog public Cursor query(SQLiteDatabase database) {
+	public Cursor query(SQLiteDatabase database) {
 		if (arrProjections == null)
 			arrProjections = getProjections().toArray(new String[0]);
 

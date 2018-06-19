@@ -1,5 +1,6 @@
 package com.ljmu.andre.snaptools.ModulePack.Events;
 
+import com.ljmu.andre.snaptools.EventBus.Events.PackEventRequest.EventRequest;
 import com.ljmu.andre.snaptools.ModulePack.Databases.Tables.LensObject;
 
 /**
