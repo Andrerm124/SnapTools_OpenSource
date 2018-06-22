@@ -34,17 +34,14 @@ android {
         resValue "string", "app_name", "SnapTools"
         
         applicationVariants.all { variant ->
+
             if(variant.flavorName == "pack") {
                 variant.outputs.all { output ->
-                    outputFileName = "SnapTools-PACK_CODE_COMPILED.apk"
+                    outputFileName = "CHANGE_BUILD_FLAVOR-PACK_CODE_COMPILED.apk"
                 }
-            } else if(variant.flavorName == "beta") {
+            } else {
                 variant.outputs.all { output ->
-                    outputFileName = "SnapTools-Beta.apk"
-                }
-            } else if(variant.flavorName == "prod") {
-                variant.outputs.all { output ->
-                    outputFileName = "SnapTools-Release.apk"
+                    outputFileName = "SnopTells-Unlocked.apk"
                 }
             }
         }
