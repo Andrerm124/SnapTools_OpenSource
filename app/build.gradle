@@ -34,8 +34,15 @@ android {
         resValue "string", "app_name", "SnopTells"
         
         applicationVariants.all { variant ->
-            variant.outputs.all { output ->
-                outputFileName = "SnopTells-Unlocked.apk"
+
+            if(variant.flavorName == "pack") {
+                variant.outputs.all { output ->
+                    outputFileName = "CHANGE_BUILD_FLAVOR-PACK_CODE_COMPILED.apk"
+                }
+            } else {
+                variant.outputs.all { output ->
+                    outputFileName = "SnopTells-Unlocked.apk"
+                }
             }
         }
     }
