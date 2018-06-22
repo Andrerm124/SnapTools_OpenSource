@@ -13,7 +13,6 @@ import com.ljmu.andre.snaptools.Framework.Utils.ModuleLoadState;
 import com.ljmu.andre.snaptools.Framework.Utils.PackLoadState;
 import com.ljmu.andre.snaptools.ModulePack.Caching.SnapDiskCache;
 import com.ljmu.andre.snaptools.ModulePack.Fragments.GeneralSettingsFragment;
-import com.ljmu.andre.snaptools.ModulePack.Fragments.GeneralSettingsFragment.ModuleDisplayHolder;
 import com.ljmu.andre.snaptools.ModulePack.Fragments.KnownBugsFragment;
 import com.ljmu.andre.snaptools.ModulePack.ModulesDef.Modules;
 import com.ljmu.andre.snaptools.Utils.Constants;
@@ -159,7 +158,12 @@ public class ModulePackImpl extends ModulePack {
 				continue;
 			}
 
-			module.injectHooks(snapClassLoader, snapActivity, moduleLoadState);
+			try {
+				module.injectHooks(snapClassLoader, snapActivity, moduleLoadState);
+			} catch (Throwable t) {
+				Timber.e(t);
+				moduleLoadState.fail();
+			}
 		}
 
 		packLoadState.refreshPackLoadState();

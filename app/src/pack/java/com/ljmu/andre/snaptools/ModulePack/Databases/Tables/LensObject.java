@@ -2,8 +2,6 @@ package com.ljmu.andre.snaptools.ModulePack.Databases.Tables;
 
 import android.content.Context;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -22,9 +20,7 @@ import com.ljmu.andre.CBIDatabase.CBIDatabaseCore;
 import com.ljmu.andre.CBIDatabase.CBIObject;
 import com.ljmu.andre.CBIDatabase.CBITable;
 import com.ljmu.andre.CBIDatabase.Utils.SQLCommand;
-import com.ljmu.andre.snaptools.Dialogs.DialogFactory;
 import com.ljmu.andre.snaptools.EventBus.EventBus;
-import com.ljmu.andre.snaptools.EventBus.Events.PackEventRequest.EventRequest;
 import com.ljmu.andre.snaptools.Exceptions.HookNotFoundException;
 import com.ljmu.andre.snaptools.ModulePack.Databases.LensDatabase;
 import com.ljmu.andre.snaptools.ModulePack.Events.LensEventRequest;
@@ -32,6 +28,7 @@ import com.ljmu.andre.snaptools.ModulePack.Events.LensEventRequest.LensEvent;
 import com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookClassDef;
 import com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookVariableDef;
 import com.ljmu.andre.snaptools.ModulePack.HookResolver;
+import com.ljmu.andre.snaptools.ModulePack.Utils.FieldMapper;
 import com.ljmu.andre.snaptools.UIComponents.Adapters.ExpandableItemAdapter;
 import com.ljmu.andre.snaptools.UIComponents.Adapters.ExpandableItemAdapter.ExpandableItemEntity;
 import com.ljmu.andre.snaptools.Utils.GlideApp;
@@ -41,10 +38,12 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import de.robv.android.xposed.XposedHelpers;
 
@@ -53,22 +52,27 @@ import timber.log.Timber;
 import static com.ljmu.andre.GsonPreferences.Preferences.getPref;
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookClassDef.ENUM_LENS_ACTIVATOR_TYPE;
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookClassDef.ENUM_LENS_TYPE;
+import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookClassDef.LENS_APPLICATION_CONTEXT_ENUM;
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookClassDef.LENS_ASSET_BUILT;
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookClassDef.LENS_ASSET_LOAD_MODE;
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookClassDef.LENS_ASSET_TYPE;
+import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookClassDef.LENS_CAMERA_CONTEXT_ENUM;
+import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookClassDef.LENS_CONTEXT_HOLDER;
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookVariableDef.LENS_ACTIVATOR;
 import static com.ljmu.andre.snaptools.ModulePack.HookResolver.resolveHookClass;
 import static com.ljmu.andre.snaptools.ModulePack.Utils.ModulePreferenceDef.SHOW_LENS_NAMES;
 import static com.ljmu.andre.snaptools.Utils.ResourceUtils.getDrawable;
 import static com.ljmu.andre.snaptools.Utils.ResourceUtils.getView;
 import static de.robv.android.xposed.XposedHelpers.getObjectField;
+import static de.robv.android.xposed.XposedHelpers.getStaticObjectField;
+import static de.robv.android.xposed.XposedHelpers.newInstance;
 
 /**
  * This class was created by Andre R M (SID: 701439)
  * It and its contents are free to use by all
  */
 
-@SuppressWarnings("WeakerAccess") @TableName(value = "Lenses", VERSION = 7)
+@SuppressWarnings("WeakerAccess") @TableName(value = "Lenses", VERSION = 8)
 public class LensObject extends ExpandableItemEntity implements CBIObject {
 	public static final int type = 1;
 	private static final Gson gson = new Gson();
@@ -78,6 +82,7 @@ public class LensObject extends ExpandableItemEntity implements CBIObject {
 			.put("mType", new LensTypeAdapter())
 			.put("categories", new CategoryAdapter())
 			.put("mAssetsManifestList", new AssetAdapter())
+			.put("lensContext", new LensContextAdapter())
 			.build();
 
 
@@ -140,7 +145,6 @@ public class LensObject extends ExpandableItemEntity implements CBIObject {
 	public String mCreatorUsername;
 	public List<Object> mScheduleIntervals = Collections.emptyList();
 
-	//TODO Convert old db's to accept this field
 	@TableField("mAssetsManifestList")
 	public List<String> mAssetsManifestList;
 
@@ -149,6 +153,9 @@ public class LensObject extends ExpandableItemEntity implements CBIObject {
 
 	@TableField(value = "favourited", SQL_DEFAULT = "0")
 	public boolean favourited;
+
+	@TableField("lensContext")
+	public List<String> lensContext;
 
 	@Override public void onTableUpgrade(CBIDatabaseCore linkedDBCore, CBITable table, int oldVersion, int newVersion) {
 		List<SQLCommand> sqlCommands = new ArrayList<>();
@@ -180,12 +187,23 @@ public class LensObject extends ExpandableItemEntity implements CBIObject {
 			);
 		}
 
-		if(oldVersion < 7) {
-			if(!table.columnExists("favourited")) {
+		if (oldVersion < 7) {
+			if (!table.columnExists("favourited")) {
 				sqlCommands.add(
 						new SQLCommand(
 								"ALTER TABLE " + table.getTableName()
 										+ " ADD COLUMN favourited String DEFAULT 0"
+						)
+				);
+			}
+		}
+
+		if (oldVersion < 8) {
+			if (!table.columnExists("lensContext")) {
+				sqlCommands.add(
+						new SQLCommand(
+								"ALTER TABLE " + table.getTableName()
+										+ " ADD COLUMN lensContext String DEFAULT null"
 						)
 				);
 			}
@@ -397,7 +415,7 @@ public class LensObject extends ExpandableItemEntity implements CBIObject {
 
 		@Override public String convertFromOriginal(List<Object> value) {
 			try {
-				if(value == null)
+				if (value == null)
 					return null;
 
 				List<Category> categories = new ArrayList<>(value.size());
@@ -455,7 +473,7 @@ public class LensObject extends ExpandableItemEntity implements CBIObject {
 
 				for (Category category : unconvertedList) {
 					Enum<?> activatorEnum = Enum.valueOf(lensActivatorClass, category.activatorType);
-					Object lensCategory = XposedHelpers.newInstance(lensCategoryClass, category.category, activatorEnum);
+					Object lensCategory = newInstance(lensCategoryClass, category.category, activatorEnum);
 					convertedList.add(lensCategory);
 				}
 
@@ -567,6 +585,97 @@ public class LensObject extends ExpandableItemEntity implements CBIObject {
 				Timber.e(t);
 			}
 			return convertedAssets.isEmpty() ? null : convertedAssets;
+		}
+	}
+
+	private static class LensContextAdapter implements ValueAdapter<Object, List<String>> {
+		@Override public List<String> convertFromOriginal(Object value) {
+			if (value == null)
+				return Collections.emptyList();
+
+			Timber.d("Converting new lens contexts");
+
+			List<String> contextList = new ArrayList<>();
+			FieldMapper mapper = FieldMapper.getMapper("Context");
+			Set<Enum> cameraSet = mapper.getFieldVal(value, "cameraContexts");
+			Set<Enum> applicationSet = mapper.getFieldVal(value, "applicableContexts");
+
+			if (cameraSet != null) {
+				for (Enum cameraContext : cameraSet) {
+					contextList.add("CAM:" + cameraContext);
+					Timber.d("Added lens context: " + "CAM:" + cameraContext.name());
+				}
+			}
+
+			if (applicationSet != null) {
+				for (Enum applicationContext : applicationSet) {
+					contextList.add("APP:" + applicationContext.name());
+					Timber.d("Added application context: " + "APP:" + applicationContext.name());
+				}
+			}
+
+			return contextList;
+		}
+
+		@Override public Object convertToOriginal(List<String> value) {
+			Timber.d("Converting context list to original: " + value);
+
+			Class contextHolderClass;
+
+			try {
+				contextHolderClass = HookResolver.resolveHookClass(LENS_CONTEXT_HOLDER);
+			} catch (HookNotFoundException e) {
+				Timber.e(e);
+				return null;
+			}
+
+			try {
+				Class cameraContextClass = HookResolver.resolveHookClass(LENS_CAMERA_CONTEXT_ENUM);
+				Class applicationContextClass = HookResolver.resolveHookClass(LENS_APPLICATION_CONTEXT_ENUM);
+
+				Set cameraContextSet = EnumSet.noneOf(cameraContextClass);
+				Set appContextSet = EnumSet.noneOf(applicationContextClass);
+
+				boolean hasCameraContext = false;
+				boolean hasAppContext = false;
+
+				if(value != null) {
+					for (String context : value) {
+						Timber.d("Converted lens context to original: " + context);
+
+						if (context.startsWith("CAM:")) {
+							hasCameraContext = true;
+							cameraContextSet.add(Enum.valueOf(
+									cameraContextClass,
+									context.substring(4)
+							));
+
+						} else if (context.startsWith("APP:")) {
+							hasAppContext = true;
+							appContextSet.add(Enum.valueOf(
+									applicationContextClass,
+									context.substring(4)
+							));
+						}
+					}
+				}
+
+				if (!hasCameraContext) {
+					cameraContextSet = (Set) getStaticObjectField(cameraContextClass, "FRONT_AND_REAR");
+					Timber.d("Lens context contains no camera context... Using default");
+				}
+
+				if (!hasAppContext) {
+					appContextSet = (Set) getStaticObjectField(applicationContextClass, "LIVE_CAMERA_AND_VIDEO_CHAT");
+					Timber.d("Lens context contains no app context... Using default");
+				}
+
+				return newInstance(contextHolderClass, cameraContextSet, appContextSet);
+			} catch (HookNotFoundException e) {
+				Timber.e(e);
+			}
+
+			return newInstance(contextHolderClass, Collections.emptySet(), Collections.emptySet());
 		}
 	}
 }

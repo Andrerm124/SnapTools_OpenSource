@@ -8,8 +8,13 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewManager
-import android.widget.*
+import android.widget.BaseAdapter
+import android.widget.LinearLayout
+import android.widget.SeekBar
+import android.widget.TextView
 import com.kekstudio.dachshundtablayout.DachshundTabLayout
+import com.ljmu.andre.snaptools.ModulePack.UIComponents.CenteredArrayAdapter
+import com.ljmu.andre.snaptools.ModulePack.UIComponents.ColourPicker.HSLColorPicker
 import com.ljmu.andre.snaptools.ModulePack.Utils.KotlinUtils.Companion.toDp
 import com.ljmu.andre.snaptools.ModulePack.Utils.ViewFactory
 import com.ljmu.andre.snaptools.ModulePack.Utils.ViewFactory.assignItemChangedProvider
@@ -83,13 +88,13 @@ class CustomViews {
                                           itemSelectedListener: ViewFactory.OnItemChangedProvider<T>, id: String? = null,
                                           adapter: BaseAdapter? = null) =
                 linearLayout {
-                    var mAdapter = adapter;
+                    var mAdapter = adapter
                     if (mAdapter == null) {
-                        mAdapter = ArrayAdapter<String>(context,
+                        mAdapter = CenteredArrayAdapter<String>(context,
                                 R.layout.simple_spinner_dropdown_item, items)
                     }
 
-                    val currentIndex = items.indexOf(initialItem)
+                    val currentIndex = Math.max(0, items.indexOf(initialItem))
 
                     label(label).lparams(width = matchParent, weight = 1f) {
                         gravity = Gravity.CENTER_VERTICAL
@@ -180,6 +185,14 @@ class CustomViews {
 
                     init()
                 }
+
+        // ===========================================================================
+        // ===========================================================================
+        // ===========================================================================
+
+        fun ViewManager.hslColorPicker(): HSLColorPicker = hslColorPicker {}
+        fun ViewManager.hslColorPicker(init: (@AnkoViewDslMarker HSLColorPicker).() -> Unit): HSLColorPicker =
+                ankoView({ ctx: Context -> HSLColorPicker(ctx) }, theme = 0) { init() }
 
         // ===========================================================================
         // ===========================================================================

@@ -6,6 +6,7 @@ import android.widget.ImageView.ScaleType;
 import com.ljmu.andre.ConstantDefiner.ConstantDefiner;
 import com.ljmu.andre.GsonPreferences.Preferences.ConditionalCheck;
 import com.ljmu.andre.GsonPreferences.Preferences.Preference;
+import com.ljmu.andre.snaptools.ModulePack.Fragments.KotlinViews.StealthLocationOverlay.StealthPosition;
 import com.ljmu.andre.snaptools.ModulePack.Notifications.DotNotification.DotLocation;
 import com.ljmu.andre.snaptools.ModulePack.Notifications.SaveNotification.NotificationType;
 import com.ljmu.andre.snaptools.ModulePack.Notifications.StackingDotNotification.StackingOrientation;
@@ -79,6 +80,14 @@ public class ModulePreferenceDef extends ConstantDefiner<Preference> {
 		}
 	});
 
+	public static final Preference ACCOUNTS_PATH = new Preference(
+			/*ACCOUNTS_PATH*/ decryptMsg(new byte[]{-58, -47, -81, 106, -60, -68, -101, -128, -30, 54, -93, 66, 82, -24, -23, 118}),
+			null, String.class, new ConditionalCheck() {
+		@NonNull @Override protected Object performConditionCheck(Preference preference, Object preferenceVal) {
+			return getPref(CONTENT_PATH) + "Accounts/";
+		}
+	});
+
 	public static final Preference RECEIVED_FOLDER_NAME = new Preference(
 			/*RECEIVED_FOLDER_NAME*/ decryptMsg(new byte[]{-26, 49, -92, -22, 93, -93, 115, -107, -17, -98, 71, 21, 28, 110, 17, 57, -107, -92, -127, 125, -82, -53, -70, -93, -25, -110, -98, -45, -8, 114, -112, -35}),
 			"Received", String.class
@@ -129,8 +138,106 @@ public class ModulePreferenceDef extends ConstantDefiner<Preference> {
 			"Default", String.class
 	);
 
+	public static final Preference SC_USERNAME = new Preference(
+			/*SC_USERNAME*/ decryptMsg(new byte[]{-100, 121, -100, -55, -120, 74, -1, 87, 7, -23, 106, 67, 84, -55, 64, -123}),
+			"", String.class
+	);
+
+	public static final Preference STEALTH_SNAP_BUTTON_LOCATION = new Preference(
+			/*STEALTH_SNAP_BUTTON_LOCATION*/ decryptMsg(new byte[]{41, -115, 120, -80, -122, 79, 65, 110, 102, -49, 101, -93, -21, -79, -67, -74, -51, -67, 89, 60, -91, -28, 53, -113, -109, -44, 57, -125, -38, -44, -13, 104}),
+			StealthPosition.TOP.name(), String.class
+	);
+
 	// ===========================================================================
 
+	/**
+	 * ===========================================================================
+	 * Experimental Feature States
+	 * ===========================================================================
+	 */
+	public static final Preference FORCE_CHEETAH_STATE = new Preference(
+			"FORCE_CHEETAH_STATE",
+			"Default", String.class
+	);// developerOptionCheetahMode
+
+	public static final Preference FORCE_CHEETAH_CHAT_STATE = new Preference(
+			"FORCE_CHEETAH_CHAT_STATE",
+			"Default", String.class
+	); // chat_v10
+	/*true, false*/
+
+	public static final Preference FORCE_INSIGHTS_STATE = new Preference(
+			"FORCE_INSIGHTS_STATE",
+			"Default", String.class
+	); // developerOptionsImpalaForceShowInsights
+	/*true, false*/
+
+	public static final Preference FORCE_MULTI_SNAP_STATE = new Preference(
+			"FORCE_MULTI_SNAP_STATE",
+			"Default", String.class
+	); // magikarp_overwrite
+	/*OVERWRITE_OFF, FORCE_ENABLED, FORCE_DISABLED;*/
+
+	public static final Preference FORCE_CHAT_VIDEO_STATE = new Preference(
+			"FORCE_CHAT_VIDEO_STATE",
+			"Default", String.class
+	);// chat_video_enabled
+	/*true, false*/
+
+	public static final Preference FORCE_ANIMATED_CONTENT_STATE = new Preference(
+			"FORCE_ANIMATED_CONTENT_STATE",
+			"Default", String.class
+	);// animated_content_overwrite
+	/*OVERWRITE_OFF, FORCE_ENABLED, FORCE_DISABLED;*/
+
+	public static final Preference FORCE_GIPHY_STATE = new Preference(
+			"FORCE_GIPHY_STATE",
+			"Default", String.class
+	);// giphy_in_preview
+	/*true, false*/
+
+	public static final Preference FORCE_CAPTIONV2_STATE = new Preference(
+			"FORCE_CAPTIONV2_STATE",
+			"Default", String.class
+	);// caption_v2_overwrite
+	/*OVERWRITE_OFF, FORCE_ENABLED, FORCE_DISABLED;*/
+
+	public static final Preference FORCE_CAMERA2_STATE = new Preference(
+			"FORCE_CAMERA2_STATE",
+			"Default", String.class
+	);// camera2_overwrite_state
+	/*OVERWRITE_OFF, FORCE_ENABLED, FORCE_DISABLED;*/
+
+	public static final Preference FORCE_HANDSFREEREC_STATE = new Preference(
+			"FORCE_HANDSFREEREC_STATE",
+			"Default", String.class
+	);// developerOptionsHandsFreeRecordingMode
+	/*DISABLED, FULLY_ENABLED*/
+
+	public static final Preference FORCE_FPS_OVERLAY_STATE = new Preference(
+			"FORCE_FPS_OVERLAY_STATE",
+			"Default", String.class
+	);// developerOptionsShouldShowFpsOverlay
+	/*true, false*/
+
+	public static final Preference FORCE_SKYFILTERS_STATE = new Preference(
+			"FORCE_SKYFILTERS_STATE",
+			"Default", String.class
+	);// sky_filters_overwrite
+	/*OVERWRITE_OFF, FORCE_ENABLED, FORCE_DISABLED;*/
+
+	public static final Preference FORCE_EMOJIBRUSH_STATE = new Preference(
+			"FORCE_EMOJIBRUSH_STATE",
+			"Default", String.class
+	);// emoji_brush
+	/*true, false*/
+
+//	public static final Preference FORCE_CAMERA2_STATE = new Preference(
+//			"FORCE_CAMERA2_STATE",
+//			"Default", String.class
+//	);
+
+	// ===========================================================================
 
 	/**
 	 * ===========================================================================
@@ -256,6 +363,11 @@ public class ModulePreferenceDef extends ConstantDefiner<Preference> {
 			true, Boolean.class
 	);
 
+	public static final Preference STORY_BLOCKER_SHOW_BUTTON = new Preference(
+			/*STORY_BLOCKER_SHOW_BUTTON*/ decryptMsg(new byte[]{-16, -91, -127, -72, -56, 21, 11, 72, 119, -75, -42, -127, 9, -8, -75, 98, -23, -88, -9, -88, -30, 105, 125, 22, -24, -124, -9, 6, 88, -86, -17, 95}),
+			true, Boolean.class
+	);
+
 	public static final Preference FORCE_MULTILINE = new Preference(
 			/*FORCE_MULTILINE*/ decryptMsg(new byte[]{-27, -116, -9, -28, -44, 92, -65, 117, 103, -15, -65, 64, 40, -71, -109, 24}),
 			true, Boolean.class
@@ -286,9 +398,34 @@ public class ModulePreferenceDef extends ConstantDefiner<Preference> {
 			true, Boolean.class
 	);
 
+	public static final Preference FORCE_CHEETAH = new Preference(
+			/*FORCE_CHEETAH*/ decryptMsg(new byte[]{-9, 115, -49, 39, -91, 127, -75, 95, -66, 68, -101, -23, -48, 25, 99, -62}),
+			false, Boolean.class
+	);
+
 	public static final Preference BLOCK_TYPING_NOTIFICATIONS = new Preference(
 			/*BLOCK_TYPING_NOTIFICATIONS*/ decryptMsg(new byte[]{-40, 100, 57, -67, 124, -78, -126, -114, 22, -3, -53, -66, -59, 108, -75, -38, -10, 1, 2, 53, -91, -70, 29, -123, -82, -94, -122, -9, -126, -49, -123, 18}),
 			false, Boolean.class
+	);
+
+	public static final Preference SHOW_CHAT_STEALTH_BUTTON = new Preference(
+			/*SHOW_CHAT_STEALTH_BUTTON*/ decryptMsg(new byte[]{-103, -20, 99, -127, 64, 84, -64, 104, 5, 57, -2, 4, 98, -49, -67, 19, 109, -74, 15, 34, -124, 77, 42, -124, -18, -15, -87, 87, -104, 19, 95, 75}),
+			true, Boolean.class
+	);
+
+	public static final Preference SHOW_SNAP_STEALTH_BUTTON = new Preference(
+			/*SHOW_SNAP_STEALTH_BUTTON*/ decryptMsg(new byte[]{12, 25, 35, -60, 118, -77, -102, 124, 116, -17, 39, 72, -32, -37, -84, 57, 109, -74, 15, 34, -124, 77, 42, -124, -18, -15, -87, 87, -104, 19, 95, 75}),
+			true, Boolean.class
+	);
+
+	public static final Preference SHOW_CHAT_STEALTH_MESSAGE = new Preference(
+			/*SHOW_CHAT_STEALTH_MESSAGE*/ decryptMsg(new byte[]{-103, -20, 99, -127, 64, 84, -64, 104, 5, 57, -2, 4, 98, -49, -67, 19, 79, -57, -1, -53, 51, 40, 94, 50, -78, 55, -33, -3, -90, 9, 85, -94}),
+			true, Boolean.class
+	);
+
+	public static final Preference SHOW_SNAP_STEALTH_MESSAGE = new Preference(
+			/*SHOW_SNAP_STEALTH_MESSAGE*/ decryptMsg(new byte[]{12, 25, 35, -60, 118, -77, -102, 124, 116, -17, 39, 72, -32, -37, -84, 57, 79, -57, -1, -53, 51, 40, 94, 50, -78, 55, -33, -3, -90, 9, 85, -94}),
+			true, Boolean.class
 	);
 
 	public static final Preference DEFAULT_CHAT_STEALTH = new Preference(
@@ -304,6 +441,11 @@ public class ModulePreferenceDef extends ConstantDefiner<Preference> {
 	public static final Preference STEALTH_CHAT_BUTTON_LEFT = new Preference(
 			/*STEALTH_CHAT_BUTTON_LEFT*/ decryptMsg(new byte[]{-107, -115, -21, 105, -35, -87, 60, 126, -85, 67, -6, 77, -21, -35, -93, -25, 108, -50, -100, 36, -72, -54, 23, 65, 123, 46, 111, 55, -31, -104, -111, -108}),
 			true, Boolean.class
+	);
+
+	public static final Preference STEALTH_MARK_STORY_VIEWED = new Preference(
+			/*STEALTH_MARK_STORY_VIEWED*/ decryptMsg(new byte[]{74, -128, 83, 105, 59, -4, -82, -18, -120, -116, -99, 46, 51, -64, 73, 77, 13, 42, 19, 76, 98, -3, -84, 50, 48, -109, -6, -122, -54, 57, 40, -43}),
+			false, Boolean.class
 	);
 
 	/**

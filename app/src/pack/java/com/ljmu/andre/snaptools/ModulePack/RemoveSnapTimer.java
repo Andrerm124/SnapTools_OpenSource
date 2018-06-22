@@ -6,10 +6,8 @@ import com.ljmu.andre.snaptools.Fragments.FragmentHelper;
 
 import de.robv.android.xposed.XC_MethodReplacement;
 
-import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookDef.CONCENTRIC_TIMERVIEW_ONDRAW;
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookDef.COUNTDOWNTIMER_VIEW_ONDRAW;
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookDef.NEW_CONCENTRIC_TIMERVIEW_ONDRAW;
-import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookDef.SNAPTIMERVIEW_ONDRAW;
 
 /**
  * This class was created by Andre R M (SID: 701439)
@@ -30,15 +28,16 @@ public class RemoveSnapTimer extends ModuleHelper {
 	// ===========================================================================
 
 	@Override public void loadHooks(ClassLoader snapClassLoader, Activity snapActivity) {
-		hookMethod(
-				SNAPTIMERVIEW_ONDRAW,
-				XC_MethodReplacement.DO_NOTHING
-		);
-
-		hookMethod(
-				CONCENTRIC_TIMERVIEW_ONDRAW,
-				XC_MethodReplacement.DO_NOTHING
-		);
+		// Removed within snapchat ===================================================
+//		hookMethod(
+//				SNAPTIMERVIEW_ONDRAW,
+//				XC_MethodReplacement.DO_NOTHING
+//		);
+//
+//		hookMethod(
+//				CONCENTRIC_TIMERVIEW_ONDRAW,
+//				XC_MethodReplacement.DO_NOTHING
+//		);
 
 		hookMethod(
 				NEW_CONCENTRIC_TIMERVIEW_ONDRAW,
