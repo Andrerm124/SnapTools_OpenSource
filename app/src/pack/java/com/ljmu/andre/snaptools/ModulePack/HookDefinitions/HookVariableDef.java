@@ -13,15 +13,30 @@ import static com.ljmu.andre.snaptools.Utils.StringEncryptor.decryptMsg;
 public class HookVariableDef extends ConstantDefiner<HookVariable> {
 	public static final HookVariable MCANONICALDISPLAYNAME = new HookVariable(
 			/*MCANONICALDISPLAYNAME*/ decryptMsg(new byte[]{50, 81, -54, 88, 53, 101, -116, 63, 121, 50, 78, -93, -49, 56, -100, -8, 72, 91, -9, -39, 95, 40, 66, 47, 4, 8, -43, -8, 71, 2, 69, -74}),
-			"az"
+			"ap"
 
 			/** CLASS: {@link HookClassDef.RECEIVED_SNAP} =============================*/
 			// CODE CHUNK ================================================================
 			/**
-			 return (int) (this.az * 1000.0d);
+			 return (int) (this.ap * 1000.0d);
 			 ^^^^^^^^
 			 */
-	); // TODO: DONE
+	);
+
+	// ===========================================================================
+
+	public static final HookVariable GALLERY_STORY_DURATION = new HookVariable(
+			/*GALLERY_STORY_DURATION*/ decryptMsg(new byte[]{41, 25, -13, -39, 24, -19, 58, -69, -59, -10, 89, 48, 52, -109, -101, 99, -88, 125, -94, 45, -54, -124, 33, 74, -45, 8, -79, 127, -16, -58, -104, 109}),
+			"K"
+
+			/** CLASS: {@link HookClassDef.GALLERY_SNAP} =============================*/
+			// CODE CHUNK ================================================================
+			/**
+			 @SerializedName(alternate = {"H"}, value = "duration")
+			 private final double K;
+			 ^^^^^^^
+			 */
+	);
 
 	// ===========================================================================
 
@@ -32,95 +47,66 @@ public class HookVariableDef extends ConstantDefiner<HookVariable> {
 			/** CLASS: Parent Of {@link HookClassDef.STORY_ADVANCER} ==================*/
 			// CODE CHUNK ================================================================
 			/**
-			 this.f = bub.NONE;
+			 this.f = qdo.NONE;
 			 ^^^^^^
 			 */
-	); // TODO: DONE
+	);
 
 	// ===========================================================================
 
 	public static final HookVariable SNAP_IS_ZIPPED = new HookVariable(
 			/*SNAP_IS_ZIPPED*/ decryptMsg(new byte[]{-14, 59, -77, -67, -72, -128, -81, 114, 32, -43, 93, 38, -39, 49, -36, -61}),
-			"ax"
+			"an"
 
 			/** CLASS: {@link HookClassDef.RECEIVED_SNAP} ============================*/
 			// CODE CHUNK ================================================================
 			/**
-			 "isZipped", this.ax
+			 "isZipped", this.an
 			 ^^^^^^^
 			 */
-	); // TODO: DONE
+	);
 
 	// ===========================================================================
 
 	public static final HookVariable SENT_MEDIA_TIMESTAMP = new HookVariable(
 			/*SENT_MEDIA_TIMESTAMP*/ decryptMsg(new byte[]{-38, -92, 68, 109, 54, -65, -120, -42, -73, -108, 64, -43, -66, -124, 99, 13, -29, 31, 63, 57, -114, -91, 40, -3, 53, -94, 99, 106, 81, -13, 20, 47}),
-			"bt"
+			"bn"
 
-			/** CLASS: rbi ==============================================================*/
+			/** CLASS: {@link HookClassDef.SENT_SNAP_BASE} ===========================*/
 			// CODE CHUNK ================================================================
 			/**
-			 *	public long bt = -1;
+			 if (this.bn == ((Long) azw.a(Long.TYPE)).longValue()) {
+			 ^^^^^^^
+			 this.bn = System.currentTimeMillis();
+			 }
 			 */
-	); // TODO: DONE
+	);
 
 	// ===========================================================================
 
 	public static final HookVariable SENT_MEDIA_BITMAP = new HookVariable(
 			/*SENT_MEDIA_BITMAP*/ decryptMsg(new byte[]{-80, 55, -18, -128, 63, -28, 49, -60, 116, 67, -75, -103, -92, 120, 15, 123, 42, -92, 127, 10, 40, 65, -70, -67, -40, -37, 84, -3, 18, 89, -30, -123}),
-			"ay"
+			"F"
 
 			/** CLASS: {@link HookClassDef.SENT_SNAP_BASE} ===========================*/
 			// CODE CHUNK ================================================================
 			/**
-			 *	super.a(this.ay);
-			 *           ^^^^^^
-			 *	this.ay = null;
-			 *	this.J = qjw.RECYCLE;
+			 public Bitmap F;
 			 */
-	); // TODO: DONE
+	);
 
 	// ===========================================================================
 
 	public static final HookVariable SENT_MEDIA_VIDEO_URI = new HookVariable(
 			/*SENT_MEDIA_VIDEO_URI*/ decryptMsg(new byte[]{22, -20, 3, -101, -69, 21, -34, -11, 28, 62, -112, -29, -121, -118, 100, 10, 110, 36, -24, 116, 74, 25, -70, -29, -33, 120, -54, 29, 109, 20, -83, -35}),
-			"aG"
+			"av"
 
 			/** CLASS: Parent Of: {@link HookClassDef.SENT_SNAP_BASE} ==================*/
 			// CODE CHUNK ================================================================
 			/**
-			 * public final Uri aG;
-			 *
-			 * ALSO: return this.aG == null ? null : this.aG.getPath();
+			 public final Uri av;
 			 */
-	); // TODO: DONE
-
-	public static final HookVariable SENT_BATCHED_VIDEO_MEDIAHOLDER = new HookVariable(
-			/*SENT_BATCHED_VIDEO_MEDIAHOLDER*/ decryptMsg(new byte[]{10, -125, 35, -42, 35, -31, 107, -43, -60, -10, -51, -44, -105, -90, 73, -91, 75, -24, -63, 86, -1, 64, 39, -25, -111, 56, -34, 99, 59, 78, -77, 0}),
-			"c"
-
-
-			/** CLASS: {@link HookClassDef.SENT_BATCHED_VIDEO} ===========================*/
-			// CODE CHUNK ================================================================
-			/**
-			 * "Original video has no Magikarp playback metadata", this.c.bd
-			 *                                                      ^^^^^
-			 */
-	); // TODO: DONE
-
-	// ===========================================================================
-
-	public static final HookVariable SENT_MEDIA_BATCH_DATA = new HookVariable(
-			/*SENT_MEDIA_BATCH_DATA*/ decryptMsg(new byte[]{-15, -10, -124, -62, 49, -27, 56, -45, -14, 123, -24, 37, 69, -9, 38, 53, 68, 120, 33, -116, 5, 38, 87, -83, -60, 80, 10, 18, -39, -5, -56, 116}),
-			"bP"
-
-			/** CLASS: Interface Of: {@link HookClassDef.SENT_BATCHED_VIDEO} =============*/
-			/** FOUND IN: {@link HookClassDef.SENT_VIDEO} ================================*/
-			// CODE CHUNK ================================================================
-			/**
-			 * private rba bG;
-			 */
-	); // TODO: DONE
+	);
 
 	// ===========================================================================
 
@@ -136,26 +122,41 @@ public class HookVariableDef extends ConstantDefiner<HookVariable> {
 			 throw new IllegalStateException("Chat media is null before playing");
 			 }
 			 */
-	); // TODO: DONE
+	);
 
 	// ===========================================================================
 
 	public static final HookVariable NO_AUTO_ADVANCE = new HookVariable(
 			/*NO_AUTO_ADVANCE*/ decryptMsg(new byte[]{43, -41, 8, -104, -105, -61, 90, -81, 33, 28, -32, 116, -95, -97, -75, 25}),
 			/*NO_AUTO_ADVANCE*/ decryptMsg(new byte[]{43, -41, 8, -104, -105, -61, 90, -81, 33, 28, -32, 116, -95, -97, -75, 25})
-	); // TODO: DONE
+	);
+
+	// ===========================================================================
+
+	/*public static final HookVariable SHARED_MEDIA_TYPE = new HookVariable(
+			/*SHARED_MEDIA_TYPE decryptMsg(new byte[]{17, 54, -53, 18, 39, -116, -38, -53, -45, -26, -23, 85, 80, -94, -70, -32, -37, -50, -10, 27, -98, -89, -128, 49, 58, -45, 112, -48, -76, 15, 50, -13}),
+			"am"
+	);//
+
+	// ===========================================================================
+
+	public static final HookVariable SHARED_MEDIA_SOURCE = new HookVariable(
+			/*SHARED_MEDIA_SOURCE decryptMsg(new byte[]{-113, 48, 37, -25, 69, 40, 19, 90, -4, -54, 109, -40, -7, -57, 119, 23, -114, 111, -53, 74, -3, 65, -89, 35, -64, -65, -37, 80, -43, 14, -102, -25}),
+			"an"
+	);/*/
 
 	// ===========================================================================
 
 	public static final HookVariable LENS_CATEGORY = new HookVariable(
 			/*LENS_CATEGORY*/ decryptMsg(new byte[]{106, 40, 31, 69, 15, -45, 46, -40, 18, 101, -7, 91, -47, 78, -46, -124}),
 			"a"
-			/** CLASS: {@link HookClassDef.LENS_CATEGORY} ================================*/
+
+			// CLASS: hmb ================================================================
 			// CODE CHUNK ================================================================
 			/**
 			 public final String a;
 			 */
-	); // TODO: DONE
+	);
 
 	// ===========================================================================
 
@@ -163,24 +164,18 @@ public class HookVariableDef extends ConstantDefiner<HookVariable> {
 			/*LENS_ACTIVATOR*/ decryptMsg(new byte[]{102, 35, -44, 108, 6, -111, 85, 98, -58, 74, -29, -109, 126, 113, 48, 127}),
 			"b"
 
-			/** CLASS: {@link HookClassDef.LENS_CATEGORY} ================================*/
+			// CLASS: hmb ================================================================
 			// CODE CHUNK ================================================================
 			/**
 			 public final ActivatorType b;
 			 */
-	); // TODO: DONE
+	);
 
 	// ===========================================================================
-	public static final HookVariable SNAPCAPTIONVIEW_CONTEXT = new HookVariable(
-			/*SNAPCAPTIONVIEW_CONTEXT*/ decryptMsg(new byte[]{-32, 116, -114, -63, -52, 89, 70, -42, 120, 64, -22, 47, 83, -118, -76, 77, 109, -29, 9, -92, -26, -17, -124, 17, -2, 117, -103, -37, -6, 100, 114, 106}),
-			"b"
+	/*public static final HookVariable FONT_REGULAR = new HookVariable("FONT_REGULAR", "b");
 
-			/** CLASS: {@link HookClassDef.CAPTION_MANAGER_CLASS} ========================*/
-			// CODE CHUNK ================================================================
-			/**
-			 private final SnapCaptionView b;
-			 */
-	); // TODO: DONE
+	public static final HookVariable FONT_BOLD = new HookVariable("FONT_BOLD", "c");*/
+	public static final HookVariable SNAPCAPTIONVIEW_CONTEXT = new HookVariable("SNAPCAPTIONVIEW_CONTEXT", "b");
 
 	// ===========================================================================
 
@@ -194,7 +189,7 @@ public class HookVariableDef extends ConstantDefiner<HookVariable> {
 			 (this.d && a.markSupported())
 			 ^^^^^^
 			 */
-	); // TODO: DONE
+	);
 
 	// ===========================================================================
 
@@ -205,10 +200,10 @@ public class HookVariableDef extends ConstantDefiner<HookVariable> {
 			/** CLASS: Parent Of: {@link HookClassDef.STORY_ADVANCER} ====================*/
 			// CODE CHUNK ================================================================
 			/**
-			 this.d.a("OPEN_VIEW_DISPLAYED", this.c, cez.a("page_view_id", this.p, buv.u, Long.valueOf(tkp.c())));
-			 -----------------------------^^^^^^^^^^^
+			 this.d.a("OPEN_VIEW_DISPLAYED", (mgs)this.c, mgs.a("page_view_id", (Object)this.o, mco.l, (Object)kck.c()));
+			 ^^^^^^^^^^^
 			 */
-	); // TODO: DONE
+	);
 
 	// ===========================================================================
 
@@ -219,20 +214,20 @@ public class HookVariableDef extends ConstantDefiner<HookVariable> {
 			/** CLASS: {@link HookClassDef.CHAT_MESSAGE_VIEW_HOLDER}======================*/
 			// CODE CHUNK ================================================================
 			/**
-			 * this.N.a(new b[]{this.M, this.p});
-			 * ^^^^^^
-			 * this.N.a(new b[]{(b) this.L});
-			 * if (this.Y != null) {
-			 * 	View view2 = this.Y;
-			 * 	OnTouchListener mtg = new mtg(this.A);
-			 * 	mtg.c = new mje$b(this, (byte) 0);
-			 * 	mtg.d = this.R;
-			 * 	mtg.b = this.Q;
-			 * 	view2.setOnTouchListener(mtg);
-			 * }
+			 this.N.a(this.M, this.o);
+			 this.N.a((ieg$b) this.L;
+			 ^^^^^^^
 
+			 if (this.W != null) {
+			 View view2 = this.W;
+			 OnTouchListener jdk = new jdk(this.A);
+			 jdk.b = new iud$b(this, (byte) 0);
+			 jdk.c = this.R;
+			 jdk.a = this.Q;
+			 view2.setOnTouchListener(jdk);
+			 }
 			 **/
-	); // TODO: DONE
+	);
 
 	// ===========================================================================
 
@@ -240,33 +235,33 @@ public class HookVariableDef extends ConstantDefiner<HookVariable> {
 			/*CHAT_SAVING_LINKER_CHAT_REF*/ decryptMsg(new byte[]{-74, -17, 35, 112, 102, 23, 127, 18, -86, -109, 104, 89, -109, -70, 24, -56, 77, 96, -17, 99, -13, -58, 109, 11, 105, 91, 122, -53, 77, 71, -53, -64}),
 			"d"
 
-			// CLASS: lru ================================================================
+			// CLASS: ieg ================================================================
 			// CODE CHUNK ================================================================
 			/**
-			 public mnt d;
+			 public iyo d;
 			 ^^^^^^^^^^^^ - The only interfaced non final field
-			 public mnl e;
+			 public iyh e;
 			 public boolean f;
 			 */
-	); // TODO: DONE
+	);
 
 	// ===========================================================================
 
 	public static final HookVariable BATCHED_MEDIA_LIST = new HookVariable(
 			/*BATCHED_MEDIA_LIST*/ decryptMsg(new byte[]{-44, -14, -59, 117, 55, -9, 126, -37, 115, -103, -14, -125, -26, -19, 122, -22, -74, 104, 11, 65, -44, -41, 66, 75, -36, 105, 119, 17, 7, -85, 64, 58}),
-			"aB"
+			"bm"
 
 			/** CLASS: {@link HookClassDef.SENT_VIDEO} ===================================*/
-	); // TODO: DONE
+	);
 
 	// ===========================================================================
 
 	public static final HookVariable BATCHED_MEDIA_ITEM_BOOLEAN = new HookVariable(
-			/*BATCHED_MEDIA_ITEM_BOOLEAN*/ decryptMsg(new byte[]{53, 60, 71, -107, -101, -83, -125, 43, -104, 55, -4, 20, -19, 122, 69, -80, 125, 47, -29, 74, -105, -49, 116, 89, 66, -57, -29, -84, -6, 19, -76, -35}),
+			/*BATCHED_MEDIA_LIST*/ decryptMsg(new byte[]{-44, -14, -59, 117, 55, -9, 126, -37, 115, -103, -14, -125, -26, -19, 122, -22, -74, 104, 11, 65, -44, -41, 66, 75, -36, 105, 119, 17, 7, -85, 64, 58}),
 			"b"
 
-			/** CLASS: qkn ===============================================================*/
-	); // TODO: DONE
+			/** CLASS: lws ===============================================================*/
+	);
 
 	// ===========================================================================
 
@@ -277,9 +272,9 @@ public class HookVariableDef extends ConstantDefiner<HookVariable> {
 			/** CLASS: {@link HookClassDef.LENS_CATEGORY_RESOLVER} =======================*/
 			// CODE CHUNK ================================================================
 			/**
-			 * public final Map<String, jkq> a = new HashMap();
+			 public final Map<String, hly> a = new HashMap();
 			 */
-	); // TODO: DONE
+	);
 
 	// ===========================================================================
 
@@ -290,10 +285,9 @@ public class HookVariableDef extends ConstantDefiner<HookVariable> {
 			/** CLASS: {@link HookClassDef.FILTER_METADATA_LOADER} =======================*/
 			// CODE CHUNK ================================================================
 			/**
-			 * arrayList.add(ghb.a(a, context, this.a));
-			 *                                 ^^^^^^
+			 arrayList.add(ehh.a(a, context, this.a));
 			 */
-	); // TODO: DONE
+	);
 
 	// ===========================================================================
 
@@ -301,12 +295,12 @@ public class HookVariableDef extends ConstantDefiner<HookVariable> {
 			/*NOTIFICATION_TYPE*/ decryptMsg(new byte[]{-97, -70, -119, 102, 19, -57, 110, -31, -25, -100, 91, -101, 82, 6, -128, 58, -37, -50, -10, 27, -98, -89, -128, 49, 58, -45, 112, -48, -76, 15, 50, -13}),
 			"a"
 
-			/** CLASS: sof ===============================================================*/
+			/** CLASS: nvt ===============================================================*/
 			// CODE CHUNK ================================================================
 			/**
-			 * this.a = sob.a(bundle.getString("type"));
+			 * this.a = nvp.a(bundle.getString("type"));
 			 */
-	); // TODO: DONE
+	);
 
 	// ===========================================================================
 
@@ -317,11 +311,11 @@ public class HookVariableDef extends ConstantDefiner<HookVariable> {
 			/** CLASS: {@link HookClassDef.RECEIVED_SNAP_PAYLOAD_BUILDER} ================*/
 			// CODE CHUNK ================================================================
 			/**
-			 * public final rnw getRequestPayload() {
+			 * public final oqq getRequestPayload() {
 			 *      this.d = new HashMap(this.b.b());
 			 *                               ^^^
 			 */
-	); // TODO: DONE
+	);
 
 	// ===========================================================================
 
@@ -329,12 +323,12 @@ public class HookVariableDef extends ConstantDefiner<HookVariable> {
 			/*RECEIVED_SNAP_PAYLOAD_MAP*/ decryptMsg(new byte[]{98, -94, 121, 124, -100, -96, 40, -16, -64, -51, -80, -68, 56, 76, 127, -42, 104, 53, -16, -112, -46, 0, 21, -104, 38, -118, -60, -117, 12, 127, -114, -2}),
 			"a"
 
-			/** CLASS: dyq ===============================================================*/
+			/** CLASS: ctn ===============================================================*/
 			// CODE CHUNK ================================================================
 			/**
-			 * final Map<String, rbl> a;
+			 * final Map<String, mlv> a;
 			 */
-	); // TODO: DONE
+	);
 
 	// ===========================================================================
 
@@ -345,9 +339,9 @@ public class HookVariableDef extends ConstantDefiner<HookVariable> {
 			/** CLASS: {@link HookClassDef.STORY_SNAP_PAYLOAD_BUILDER} ===================*/
 			// CODE CHUNK ================================================================
 			/**
-			 * private final List<qtg> b;
+			 * private final List<mex> b;
 			 */
-	); // TODO: DONE
+	);
 
 	// ===========================================================================
 
@@ -355,12 +349,12 @@ public class HookVariableDef extends ConstantDefiner<HookVariable> {
 			/*STORY_UPDATE_METADATA*/ decryptMsg(new byte[]{-31, -4, -54, 91, -106, 121, -14, -11, -102, -18, 48, 107, 13, -33, 2, -47, 35, 108, 78, -36, 77, -82, 21, 99, -117, 72, 87, 32, 49, 74, 108, -30}),
 			"a"
 
-			/** CLASS: qjg ===============================================================*/
+			/** CLASS: mex ===============================================================*/
 			// CODE CHUNK ================================================================
 			/**
-			 * public final xig a = new xig();
+			 * public final saf a = new sah();
 			 */
-	); // TODO: DONE
+	);
 
 	// ===========================================================================
 
@@ -368,134 +362,30 @@ public class HookVariableDef extends ConstantDefiner<HookVariable> {
 			/*STORY_UPDATE_METADATA_ID*/ decryptMsg(new byte[]{-31, -4, -54, 91, -106, 121, -14, -11, -102, -18, 48, 107, 13, -33, 2, -47, 34, 86, -39, -107, 121, -94, -38, -12, -50, -97, 63, 13, 28, 55, -114, -95}),
 			"a"
 
-			/** CLASS: xig ===============================================================*/
+			/** CLASS: sah ===============================================================*/
 			// CODE CHUNK ================================================================
 			/**
 			 * @SerializedName("id")
 			 * protected String a;
 			 */
-	); // TODO: DONE
+	);
 
 	// ===========================================================================
 
-//	public static final HookVariable SNAPCHAT_FRAGMENT_CONTENT_VIEW = new HookVariable(
-//			/*SNAPCHAT_FRAGMENT_CONTENT_VIEW*/ decryptMsg(new byte[]{-87, 117, 119, -29, -76, 52, 120, -51, 117, 22, -12, 11, 74, 120, -21, -122, -7, 11, 111, -74, -25, 26, 80, 87, 75, -34, 88, 8, 12, -89, 31, 54}),
-//			"al"
-//
-//			/** CLASS: SnapchatFragment ==================================================*/
-//			// CODE CHUNK ================================================================
-//			/**
-//			 * public View e_(int i) {
-//			 *      return this.al.findViewById(i);
-//			 * }
-//			 */
-//	);
+	public static final HookVariable SNAPCHAT_FRAGMENT_CONTENT_VIEW = new HookVariable(
+			/*SNAPCHAT_FRAGMENT_CONTENT_VIEW*/ decryptMsg(new byte[]{-87, 117, 119, -29, -76, 52, 120, -51, 117, 22, -12, 11, 74, 120, -21, -122, -7, 11, 111, -74, -25, 26, 80, 87, 75, -34, 88, 8, 12, -89, 31, 54}),
+			"ah"
 
-	// ===========================================================================
-
-	public static final HookVariable CHAT_TOP_PANEL_VIEW = new HookVariable(
-			/*CHAT_TOP_PANEL_VIEW*/ decryptMsg(new byte[]{109, -69, -73, -67, 4, -53, 12, 111, -90, -100, 120, 93, -102, -110, 111, 44, -15, -54, -9, -31, 119, -2, -31, 47, -79, -103, -16, 50, -38, -32, 80, -120}),
-			"o"
-
-			/** CLASS: {@link HookClassDef.CHAT_V10_BUILDER}==============================*/
+			/** CLASS: SnapchatFragment ==================================================*/
 			// CODE CHUNK ================================================================
 			/**
-			 * this.o = ((ViewStub) this.b.e_(R.id.top_panel_stub)).inflate();
+			 * public View d_(int i) {
+			 *      return this.ah.findViewById(i);
+			 * }
 			 */
-	); // TODO: DONE
+	);
 
 	// ===========================================================================
-
-	public static final HookVariable UI_MODE_NAME = new HookVariable(
-			/*UI_MODE_NAME*/ decryptMsg(new byte[]{-58, 89, -102, 121, 51, 53, 85, -57, 15, 121, 46, 0, -18, -14, 25, -40}),
-			"d"
-
-			/** CLASS: {@link HookClassDef.CHEETAH_ALLOCATOR}=============================*/
-			// CODE CHUNK ================================================================
-			/**
-			 * private volatile String d = null;
-			 */
-	); // TODO: DONE
-
-	// ===========================================================================
-
-	public static final HookVariable UI_MODE_ENUM = new HookVariable(
-			/*UI_MODE_ENUM*/ decryptMsg(new byte[]{-73, -48, 56, -3, -22, 125, 124, 63, 35, 38, 0, 66, -14, 6, 6, -116}),
-			"b"
-
-			/** CLASS: {@link HookClassDef.CHEETAH_ALLOCATOR}=============================*/
-			// CODE CHUNK ================================================================
-			/**
-			 * private volatile dzk$a$a b = dzk$a$a.OLD_DESIGN;
-			 */
-	); // TODO: DONE
-
-	// ===========================================================================
-
-	public static final HookVariable STORY_COLLECTION_MAP = new HookVariable(
-			/*STORY_COLLECTION_MAP*/ decryptMsg(new byte[]{27, 63, -109, 92, -87, 40, -97, -32, 57, 54, -46, -45, 79, 16, 23, -48, -92, -111, 86, -41, 15, 13, 73, 41, 7, -128, -31, -90, -71, -7, 96, -67}),
-			"d"
-
-			/** CLASS: {@link HookClassDef.STORY_MANAGER}=================================*/
-			// CODE CHUNK ================================================================
-			/**
-			 * protected final Map<String, qsj> d = new ConcurrentHashMap();
-			 * qsj -> Search for "StoryCollection"
-			 */
-	); // TODO: DONE
-
-	// ===========================================================================
-
-	public static final HookVariable FILTER_METADATA_CACHE = new HookVariable(
-			/*FILTER_METADATA_CACHE*/ decryptMsg(new byte[]{54, -48, 117, 63, -48, 81, -62, -2, -78, 1, -30, -50, -119, 94, 43, -44, -88, 23, 33, 83, 88, -112, -66, -31, -33, -76, 10, 59, -79, 17, -6, -10}),
-			"a"
-
-			/** CLASS: {@link HookClassDef.FILTER_METADATA_CREATOR}=======================*/
-			// CODE CHUNK ================================================================
-			/**
-			 * private /* synthetic / qvs a;
-			 */
-	); // TODO: DONE
-
-	// ===========================================================================
-
-	public static final HookVariable FILTER_SERIALIZABLE_METADATA = new HookVariable(
-			/*FILTER_SERIALIZABLE_METADATA*/ decryptMsg(new byte[]{16, 90, 19, 121, -78, -74, 3, 63, -82, 34, -63, 27, 11, -91, -96, 105, -73, -54, -12, 58, 97, -99, -128, 27, 31, -119, -107, -1, 26, -116, 37, 107}),
-			"a"
-
-			/** CLASS: qvs ===============================================================*/
-			// CODE CHUNK ================================================================
-			/**
-			 * qvs -> Search for "EncryptedGeoLoggingData is null: server returned empty response for"
-			 *
-			 * public final wsa a;
-			 * wsa -> {@link HookClassDef.SERIALIZABLE_FILTER_METADATA}
-			 */
-	); // TODO: DONE
-
-	// ===========================================================================
-
-
-	/**
-	 * ===========================================================================
-	 * UNDEFINED HOOK METHODS
-	 * ===========================================================================
-	 * These "variables" are just names of hooks for classes that we do not care
-	 * about the name of
-	 * ===========================================================================
-	 */
-	public static final HookVariable STORY_DATA_IS_SUBSCRIBED = new HookVariable(
-			/*STORY_DATA_IS_SUBSCRIBED*/ decryptMsg(new byte[]{27, -39, 115, 36, 18, -82, -77, 32, 105, -53, 63, -38, 121, -122, 62, -2, -19, -20, 87, -60, 70, -25, 53, -64, 121, 75, 90, 86, 95, 41, -65, 73}),
-			"s"
-
-			/** CLASS: {@link HookClassDef.STORY_MANAGER}=================================*/
-			// CODE CHUNK ================================================================
-			/**
-			 * Find function that returns variable: ", isSubscribed=" + this.s
-			 */
-	); // TODO: DONE
-	// ===========================================================================
-
 
 	public static class HookVariable extends Constant {
 		private final String varName;

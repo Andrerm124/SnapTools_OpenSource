@@ -540,7 +540,7 @@ class LensViewProvider(
                             gravity = Gravity.CENTER
                         }
 
-                        textView("Loading") {
+                        textView(ResourceUtils.getString(activity, "placeholder")) {
                             id = ResourceUtils.getIdFromString("txt_active_lenses")
                             textSize = 18f
                             setTypeface(null, Typeface.BOLD)
@@ -558,7 +558,7 @@ class LensViewProvider(
                             gravity = Gravity.CENTER
                         }
 
-                        textView("Loading") {
+                        textView(ResourceUtils.getString(activity, "placeholder")) {
                             id = "txt_total_lenses".toId()
                             textSize = 18f
                             setTypeface(null, Typeface.BOLD)

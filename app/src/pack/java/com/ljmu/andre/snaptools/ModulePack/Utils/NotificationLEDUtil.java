@@ -2,6 +2,8 @@ package com.ljmu.andre.snaptools.ModulePack.Utils;
 
 import android.os.Build;
 
+//import com.crashlytics.android.answers.Answers;
+//import com.crashlytics.android.answers.CustomEvent;
 import com.ljmu.andre.snaptools.Utils.ShellUtils;
 
 import java.io.BufferedReader;
@@ -10,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+//import io.fabric.sdk.android.Fabric;
 import timber.log.Timber;
 
 import static com.ljmu.andre.GsonPreferences.Preferences.getPref;

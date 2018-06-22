@@ -18,7 +18,7 @@ import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.DATABASES_P
  */
 
 public class ChatDatabase {
-	public static final String DB_NAME = "ChatMessages.db";
+	private static final String DB_NAME = "ChatMessages.db";
 	private static final int VERSION = 1;
 	private static CBIDatabaseCore databaseCore;
 

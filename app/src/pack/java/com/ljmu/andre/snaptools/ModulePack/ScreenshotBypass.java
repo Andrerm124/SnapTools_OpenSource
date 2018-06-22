@@ -3,10 +3,14 @@ package com.ljmu.andre.snaptools.ModulePack;
 import android.app.Activity;
 
 import com.ljmu.andre.snaptools.Fragments.FragmentHelper;
+import com.ljmu.andre.snaptools.Utils.XposedUtils.ST_MethodHook;
 
 import de.robv.android.xposed.XC_MethodReplacement;
 
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookDef.SCREENSHOT_BYPASS;
+import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookDef.SET_SCREENSHOT_COUNT;
+import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookDef.SET_VIDEO_SCREENSHOT_COUNT;
+import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookDef.SET_SCREENSHOT_COUNT3;
 
 /**
  * This class was created by Andre R M (SID: 701439)
@@ -31,7 +35,7 @@ public class ScreenshotBypass extends ModuleHelper {
 				SCREENSHOT_BYPASS,
 				XC_MethodReplacement.DO_NOTHING);
 
-		/*hookMethod(
+		hookMethod(
 				SET_SCREENSHOT_COUNT,
 				new ST_MethodHook() {
 					@Override protected void before(MethodHookParam param) {
@@ -51,6 +55,6 @@ public class ScreenshotBypass extends ModuleHelper {
 					@Override protected void before(MethodHookParam param) {
 						param.args[0] = 0L;
 					}
-				});*/
+				});
 	}
 }

@@ -66,16 +66,6 @@ class StoryBlockerViewProvider {
                         }
                     }
 
-                    themedSwitchCompat(ResourceUtils.getStyle(activity, "DefaultSwitch")) {
-                        text = "Show Block Stories button in Snapchat"
-                        isChecked = getPref(STORY_BLOCKER_SHOW_BUTTON)
-
-                        verticalPadding = dip(10)
-                        setOnCheckedChangeListener { _, isChecked ->
-                            putAndKill(STORY_BLOCKER_SHOW_BUTTON, isChecked, activity)
-                        }
-                    }
-
                     textView("Blocked User Stories") {
                         setTextAppearance(activity, ResourceUtils.getStyle(activity, "HeaderText"))
                         textColor = ContextCompat.getColor(activity, getColor(activity, "error"))

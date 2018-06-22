@@ -73,8 +73,6 @@ import static com.ljmu.andre.snaptools.Utils.StringEncryptor.decryptMsg;
  */
 
 public class ChatMessagesFragment extends FragmentHelper {
-	private final Object MESSAGE_LOCK = new Object();
-
 	private SwipeRefreshLayout swipeRefreshLayout;
 	private ConversationObject conversationObject;
 	private CBITable<ChatObject> chatTable;
@@ -132,9 +130,7 @@ public class ChatMessagesFragment extends FragmentHelper {
 
 	@Override public void onPause() {
 		super.onPause();
-		synchronized (MESSAGE_LOCK) {
-			messages.clear();
-		}
+		messages.clear();
 	}
 
 	private void initHeader(LinearLayout layoutContainer, LayoutInflater inflater) {
@@ -218,12 +214,9 @@ public class ChatMessagesFragment extends FragmentHelper {
 		LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
 		layoutManager.setReverseLayout(true);
 		recyclerView.setLayoutManager(layoutManager);
-
-		synchronized (MESSAGE_LOCK) {
-			adapter = new MessageQuickAdapter(messages);
-			adapter.bindToRecyclerView(recyclerView);
-			adapter.setEmptyView(R.layout.layout_empty_chats);
-		}
+		adapter = new MessageQuickAdapter(messages);
+		adapter.bindToRecyclerView(recyclerView);
+		adapter.setEmptyView(R.layout.layout_empty_chats);
 
 		layoutContainer.addView(swipeRefreshLayout);
 	}
@@ -253,17 +246,15 @@ public class ChatMessagesFragment extends FragmentHelper {
 
 	private int getIndexForMessage(String messageRegex) {
 		int index = -1;
-		synchronized (MESSAGE_LOCK) {
-			for (MessageItem conversationItem : messages) {
-				index++;
-				if (!(conversationItem instanceof ChatMessageItem))
-					continue;
+		for (MessageItem conversationItem : messages) {
+			index++;
+			if (!(conversationItem instanceof ChatMessageItem))
+				continue;
 
-				ChatMessageItem messageItem = (ChatMessageItem) conversationItem;
+			ChatMessageItem messageItem = (ChatMessageItem) conversationItem;
 
-				if (messageItem.chatObject.text.toLowerCase().contains(messageRegex.toLowerCase()))
-					return index;
-			}
+			if (messageItem.chatObject.text.toLowerCase().contains(messageRegex.toLowerCase()))
+				return index;
 		}
 
 		return -1;
@@ -371,11 +362,9 @@ public class ChatMessagesFragment extends FragmentHelper {
 			}
 		});
 
-		synchronized (MESSAGE_LOCK) {
-			messages.clear();
-			messages.addAll(chatObjects);
-			//Collections.sort(chatMessages);
-		}
+		messages.clear();
+		messages.addAll(chatObjects);
+		//Collections.sort(chatMessages);
 
 		if (adapter != null)
 			adapter.notifyDataSetChanged();

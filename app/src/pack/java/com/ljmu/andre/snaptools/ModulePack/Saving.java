@@ -5,7 +5,13 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.net.Uri;
 import android.support.annotation.Nullable;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
+import android.widget.RelativeLayout.LayoutParams;
 import android.widget.Toast;
 
 import com.google.common.io.ByteStreams;
@@ -73,10 +79,7 @@ import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookDef.STORY_
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookDef.STORY_METADATA_INSERT_OBJECT;
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookDef.STREAM_TYPE_CHECK_BYPASS;
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookVariableDef.CHAT_METADATA_MEDIA;
-import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookVariableDef.SENT_BATCHED_VIDEO_MEDIAHOLDER;
-import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookVariableDef.SENT_MEDIA_BATCH_DATA;
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookVariableDef.SENT_MEDIA_BITMAP;
-import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookVariableDef.SENT_MEDIA_TIMESTAMP;
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookVariableDef.SENT_MEDIA_VIDEO_URI;
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookVariableDef.SNAP_IS_ZIPPED;
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookVariableDef.STORY_ADVANCER_DISPLAY_STATE;
@@ -84,8 +87,9 @@ import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookVariableDe
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookVariableDef.STREAM_TYPE_CHECK_BOOLEAN;
 import static com.ljmu.andre.snaptools.ModulePack.Utils.ModulePreferenceDef.SAVE_SENT_SNAPS;
 import static com.ljmu.andre.snaptools.Utils.FrameworkPreferencesDef.TEMP_PATH;
+import static com.ljmu.andre.snaptools.Utils.ResourceUtils.getId;
 import static com.ljmu.andre.snaptools.Utils.StringEncryptor.decryptMsg;
-import static com.ljmu.andre.snaptools.Utils.XposedUtils.logEntireClass;
+import static com.ljmu.andre.snaptools.Utils.XposedUtils.logStackTrace;
 import static de.robv.android.xposed.XposedHelpers.getAdditionalInstanceField;
 import static de.robv.android.xposed.XposedHelpers.setAdditionalInstanceField;
 
@@ -96,8 +100,8 @@ import static de.robv.android.xposed.XposedHelpers.setAdditionalInstanceField;
 
 @SuppressWarnings("WeakerAccess") public class Saving extends ModuleHelper {
 	private static final String KEY_HEADER = /*SNAP_KEY*/ decryptMsg(new byte[]{30, -38, 54, -113, 37, -102, 34, -32, -128, -66, 41, 58, -102, -46, 115, -25});
-	public static boolean hasLoadedHooks;
 	private static String yourUsername = "";
+	public static boolean hasLoadedHooks;
 
 	public Saving(String name, boolean canBeDisabled) {
 		super(name, canBeDisabled);
@@ -123,6 +127,29 @@ import static de.robv.android.xposed.XposedHelpers.setAdditionalInstanceField;
 			moduleLoadState.fail();
 		}
 
+		/*findAndHookMethod(
+				"inw", snapClassLoader,
+				"L",
+				new ST_MethodHook() {
+					@Override protected void after(MethodHookParam param) throws Throwable {
+						Timber.d("SnapEventCacheKey: " + param.getResult());
+					}
+				}
+		);
+
+		findAndHookConstructor(
+				"itu", snapClassLoader,
+				findClass("kfj", snapClassLoader),
+				String.class,
+				findClass("com.snapchat.android.framework.crypto.EncryptionAlgorithm", snapClassLoader),
+				boolean.class,
+				new ST_MethodHook() {
+					@Override protected void after(MethodHookParam param) throws Throwable {
+						Timber.d("MediaEventCacheKey: " + param.args[1]);
+					}
+				}
+		);*/
+
 		/**
 		 * ===========================================================================
 		 * Hook to inject the manual saving layout
@@ -133,6 +160,7 @@ import static de.robv.android.xposed.XposedHelpers.setAdditionalInstanceField;
 				new ST_MethodHook() {
 					@Override protected void after(MethodHookParam param) throws Throwable {
 						try {
+							checkIsChatLayout(snapActivity, (ViewGroup) param.thisObject);
 							FrameLayout operaLayout = (FrameLayout) param.thisObject;
 							SavingLayout savingLayout = SavingViewPool.requestLayout(snapActivity);
 
@@ -171,7 +199,7 @@ import static de.robv.android.xposed.XposedHelpers.setAdditionalInstanceField;
 						@Override protected void before(MethodHookParam param) throws Throwable {
 							Timber.i("Splitting process");
 
-							Object mediaHolder = getObjectField(SENT_BATCHED_VIDEO_MEDIAHOLDER, param.thisObject);
+							Object mediaHolder = XposedHelpers.getObjectField(param.thisObject, "c");
 
 							Observable.fromCallable(new Callable<Object>() {
 								@Override public Object call() throws Exception {
@@ -180,14 +208,10 @@ import static de.robv.android.xposed.XposedHelpers.setAdditionalInstanceField;
 									String videoPath = videoUri.getPath().replaceFirst("file:", "");
 									File sourceMedia = new File(videoPath);
 
-									if (!sourceMedia.exists() && !sourceMedia.createNewFile())
-										Timber.w("Source tracked video doesn't exist and couldn't be created");
-
 									File tempDir = getCreateDir(TEMP_PATH);
 									File targetMedia = new File(tempDir, "Batched_Sent_Snap.mp4");
 
 									Files.copy(sourceMedia, targetMedia);
-									Timber.d("Copied batch file successfully");
 									return new Object();
 								}
 							}).subscribeOn(Schedulers.computation())
@@ -281,6 +305,17 @@ import static de.robv.android.xposed.XposedHelpers.setAdditionalInstanceField;
 					}
 				}
 		);
+
+		/*XposedBridge.hookAllConstructors(
+				findClass("com.snapchat.android.framework.crypto.CbcEncryptionAlgorithm", snapClassLoader),
+				new ST_MethodHook() {
+					@Override protected void before(MethodHookParam param) throws Throwable {
+						Timber.d("### ENCRYPTION CREATED ###");
+						logStackTrace();
+						Timber.d("### !ENCRYPTION CREATED! ###\n\n");
+					}
+				}
+		);*/
 
 		/**
 		 * ===========================================================================
@@ -467,9 +502,8 @@ import static de.robv.android.xposed.XposedHelpers.setAdditionalInstanceField;
 					@Override protected void after(MethodHookParam param) throws Throwable {
 						String key = (String) getAdditionalInstanceField(param.thisObject, KEY_HEADER);
 
-						if (key == null) {
+						if (key == null)
 							return;
-						}
 
 						Snap snap = Snap.getSnapFromCache(key);
 
@@ -707,6 +741,16 @@ import static de.robv.android.xposed.XposedHelpers.setAdditionalInstanceField;
 
 	// ===========================================================================
 
+	private void checkIsChatLayout(Activity activity, ViewGroup operaView) {
+		int chatFragmentId = getId(activity, "chat_fragment_layout");
+
+		View fragment = activity.findViewById(chatFragmentId);
+
+		Timber.d("Fragment: " + fragment);
+		Timber.d("IsAttached: " + fragment.isAttachedToWindow());
+		Timber.d("IsVisible: " + fragment.getVisibility());
+	}
+
 	/**
 	 * ===========================================================================
 	 * Attempt to extract and save the appropriate media from the holder
@@ -724,7 +768,7 @@ import static de.robv.android.xposed.XposedHelpers.setAdditionalInstanceField;
 			return null;
 		}
 
-		long timestamp = getObjectField(SENT_MEDIA_TIMESTAMP, mediaHolder);
+		long timestamp = System.currentTimeMillis();
 
 		// Create Snap to get OutputFile =============================================
 		SentSnap snap = new SentSnap()
@@ -764,12 +808,8 @@ import static de.robv.android.xposed.XposedHelpers.setAdditionalInstanceField;
 
 			} else {
 
-				Timber.d("MediaHolder: " + mediaHolder.getClass());
 				// Copy the video file into our output stream ================================
-				Object batchHolder = getObjectField(SENT_MEDIA_BATCH_DATA, mediaHolder);
-
-				Timber.d("BatchHolder: " + batchHolder);
-				logEntireClass(batchHolder, 2);
+				Object batchHolder = XposedHelpers.getObjectField(mediaHolder, "bz");
 
 				File videoFile;
 				if (batchHolder != null) {
@@ -791,6 +831,13 @@ import static de.robv.android.xposed.XposedHelpers.setAdditionalInstanceField;
 						videoFile,
 						outputFile
 				);
+
+				/*FileInputStream videoInStream = closer.register(new FileInputStream(videoPath));
+				FileOutputStream videoOutStream = closer.register(new FileOutputStream(outputFile));
+
+				ByteStreams.copy(videoInStream, videoOutStream);
+
+				videoOutStream.flush();*/
 			}
 
 			snap.runMediaScanner(outputFile.getAbsolutePath());
@@ -827,7 +874,7 @@ import static de.robv.android.xposed.XposedHelpers.setAdditionalInstanceField;
 		if (key == null) {
 			key = UUID.randomUUID().toString();
 			setAdditionalInstanceField(obj, KEY_HEADER, key);
-			Timber.d("Applying [Key: %s] to [Obj: %s]", key, obj.toString());
+			Timber.i("Applying [Key: %s] to [Obj: %s]", key, obj.toString());
 		}
 
 		return key;

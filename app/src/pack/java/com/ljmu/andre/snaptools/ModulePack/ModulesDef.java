@@ -125,30 +125,10 @@ class ModulesDef extends ConstantDefiner<Modules> {
 
 	public static final Modules STEALTH_VIEWING = new Modules(
 			12,
-			/*Stealth Viewing*/ decryptMsg(new byte[]{-73, 104, 62, 98, 101, -113, 64, -58, -79, 38, 5, 15, 98, -110, -128, 65}),
+			"Stealth Viewing",
 			StealthViewing.class,
-			/*Allows you to view chats and snaps without marking them as viewed*/ decryptMsg(new byte[]{83, 2, -102, 119, -105, -66, -15, -35, -36, -22, 82, -10, -119, -31, 50, 90, 94, 72, 111, 104, -25, 94, -12, 122, -61, 51, -55, -121, -11, -121, 24, 57, -117, 59, 52, 87, 75, -18, 48, -35, 43, 103, -62, 50, -60, 24, 78, -71, -19, -49, 61, -1, 74, 92, 63, 60, 16, 11, 75, -74, -23, 0, 42, 97, -105, 124, 6, -98, 51, -78, -54, -47, -29, -81, 28, 106, -101, 96, -35, 32})
+			"TODO: Write some shit"
 	);
-
-	// ===========================================================================
-
-	public static final Modules ACCOUNT_MANAGER = new Modules(
-			13,
-			/*Account Manager*/ decryptMsg(new byte[]{19, -123, -112, -17, 87, 121, -35, -65, 38, 116, -55, 108, 3, 49, -22, -52}),
-			AccountManager.class,
-			/*Allows for safely and securely swapping between Snapchat accounts, along with other account management features*/ decryptMsg(new byte[]{-115, -52, 0, -71, -32, -113, 85, 18, -1, 43, -46, -74, 17, -44, 97, -1, -16, -78, -70, 24, -88, 62, -88, 102, 27, 29, -34, -42, -125, -35, -47, 69, 36, -29, 111, -8, -50, 9, 55, 69, -83, -24, -21, -36, -105, -10, 102, -38, 111, 3, 53, 73, -41, -23, -1, 69, -14, -61, -46, -45, 56, -74, 0, 9, 112, 21, 26, -10, 103, -92, -84, 89, 94, -69, 96, 67, 102, 72, -104, 40, -77, -57, -118, -96, -46, 33, 86, -26, -49, 111, 71, 9, 11, -111, 41, 58, -21, -19, 63, -51, -95, 43, 30, 32, -8, 21, -86, 65, 20, 54, 121, -96})
-	);
-
-	// ===========================================================================
-
-	public static final Modules FORCED_HOOKS = new Modules(
-			14,
-			/*Forced Hooks*/ decryptMsg(new byte[]{93, 70, 77, -18, -74, -24, -4, 114, -25, 87, -95, 26, 45, -125, -25, -2}),
-			ForcedHooks.class,
-			false
-	);
-
-	// ===========================================================================
 
 	public static class Modules extends Constant {
 		private final Class<? extends Module> moduleClass;
