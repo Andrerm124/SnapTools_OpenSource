@@ -10,8 +10,6 @@ import com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookClassDef;
 import com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookClassDef.HookClass;
 import com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookDef;
 import com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookDef.Hook;
-import com.ljmu.andre.snaptools.Utils.Constants;
-import com.ljmu.andre.snaptools.Utils.StringUtils;
 
 import java.lang.reflect.Member;
 import java.util.ArrayList;
@@ -85,14 +83,8 @@ public class HookResolver extends ModuleHelper {
 
 				hookClassMap.put(hookClass.getName(), resolvedClass);
 			} catch (Throwable t) {
-				if (Constants.getApkVersionCode() >= 73 && Constants.isApkDebug()) {
-					Timber.e(/*Error building class [Class:%s][Reason:%s]*/ decryptMsg(new byte[]{-80, 122, 62, -44, 113, -84, 126, -48, 126, 43, -21, -70, -67, -82, 69, -23, 79, -126, 31, -56, -99, 43, 68, -104, -43, 69, -2, 127, 12, 51, 7, 48, -85, -10, 77, -26, 12, -25, 64, -74, -99, -127, -36, 67, 24, 67, -97, 4}),
-							hookClass, t.getMessage());
-				} else {
-					Timber.e(/*Error building class: */ decryptMsg(new byte[]{-80, 122, 62, -44, 113, -84, 126, -48, 126, 43, -21, -70, -67, -82, 69, -23, -45, 57, 121, -75, 64, 45, -73, 64, -75, -118, 37, -51, 19, 46, -14, 88})
-							+ StringUtils.obfus(hookClass.getStrClass()));
-				}
-
+				Timber.e(/*Error building class [Class:%s][Reason:%s]*/ decryptMsg(new byte[]{-80, 122, 62, -44, 113, -84, 126, -48, 126, 43, -21, -70, -67, -82, 69, -23, 79, -126, 31, -56, -99, 43, 68, -104, -43, 69, -2, 127, 12, 51, 7, 48, -85, -10, 77, -26, 12, -25, 64, -74, -99, -127, -36, 67, 24, 67, -97, 4}),
+						hookClass, t.getMessage());
 				failedClasses++;
 			}
 		}
@@ -119,14 +111,6 @@ public class HookResolver extends ModuleHelper {
 			} catch (Throwable t) {
 				Timber.e(/*Error building hook [Hook:%s][Reason:%s]*/ decryptMsg(new byte[]{-75, -126, 1, -48, -91, -4, 26, 98, -5, 95, -116, 24, 18, -81, 113, -3, 16, -67, 21, 30, -118, 52, 64, -59, 41, -8, 117, 21, 16, -77, 10, 0, 53, -6, 66, 19, -40, 16, -120, -77, -83, 47, -89, 25, 70, 56, 76, 97}),
 						hook, t.getMessage());
-
-				if (Constants.getApkVersionCode() >= 73 && Constants.isApkDebug()) {
-					Timber.e(/*Error building hook [Hook:%s][Reason:%s]*/ decryptMsg(new byte[]{-75, -126, 1, -48, -91, -4, 26, 98, -5, 95, -116, 24, 18, -81, 113, -3, 16, -67, 21, 30, -118, 52, 64, -59, 41, -8, 117, 21, 16, -77, 10, 0, 53, -6, 66, 19, -40, 16, -120, -77, -83, 47, -89, 25, 70, 56, 76, 97}),
-							hook, t.getMessage());
-				} else {
-					Timber.e(/*Error building hook: */ decryptMsg(new byte[]{-75, -126, 1, -48, -91, -4, 26, 98, -5, 95, -116, 24, 18, -81, 113, -3, -34, -23, -74, -110, 88, 50, 111, 96, 123, 47, 113, 61, -27, -90, -47, 45})
-							+ StringUtils.obfus(hook.getHookMethod()));
-				}
 				failedHooks++;
 			}
 		}

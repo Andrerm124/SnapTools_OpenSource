@@ -13,7 +13,6 @@ import com.ljmu.andre.snaptools.Exceptions.HookNotFoundException;
 import com.ljmu.andre.snaptools.Fragments.FragmentHelper;
 import com.ljmu.andre.snaptools.ModulePack.Fragments.KotlinViews.StealthViewProvider;
 import com.ljmu.andre.snaptools.ModulePack.Fragments.StealthViewingFragment;
-import com.ljmu.andre.snaptools.ModulePack.Utils.ViewFactory;
 import com.ljmu.andre.snaptools.Utils.XposedUtils.ST_MethodHook;
 
 import java.util.ArrayList;
@@ -27,19 +26,16 @@ import java.util.Set;
 import timber.log.Timber;
 
 import static com.ljmu.andre.GsonPreferences.Preferences.getPref;
-import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookClassDef.CHAT_V10_BUILDER;
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookClassDef.SNAP_STATUS;
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookClassDef.STORY_SNAP;
+import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookDef.CHAT_V3_FRAGMENT_CREATED;
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookDef.CONSTRUCTOR_OPERA_PAGE_VIEW;
-import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookDef.CREATE_CHEETAH_PROFILE_SETTINGS_VIEW;
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookDef.CREATE_PROFILE_SETTINGS_VIEW;
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookDef.DISPATCH_CHAT_UPDATE;
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookDef.GET_RECEIVED_SNAP_PAYLOAD;
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookDef.GET_SNAP_ID;
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookDef.GET_STORY_SNAP_PAYLOAD;
-import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookDef.MARK_DIRECT_CHAT_VIEWED_PRESENT;
-import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookDef.MARK_DIRECT_CHAT_VIEWED_UNPRESENT;
-import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookDef.MARK_GROUP_CHAT_VIEWED;
+import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookDef.MARK_CHAT_VIEWED;
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookDef.MARK_STORY_VIEWED;
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookDef.NETWORK_EXECUTE_SYNC;
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookDef.OPENED_SNAP;
@@ -48,9 +44,9 @@ import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookDef.STORY_
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookDef.STORY_METADATA_BUILDER;
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookDef.STORY_METADATA_GET_OBJECT;
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookDef.STORY_METADATA_INSERT_OBJECT;
-import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookVariableDef.CHAT_TOP_PANEL_VIEW;
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookVariableDef.RECEIVED_SNAP_PAYLOAD_HOLDER;
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookVariableDef.RECEIVED_SNAP_PAYLOAD_MAP;
+import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookVariableDef.SNAPCHAT_FRAGMENT_CONTENT_VIEW;
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookVariableDef.STORY_ADVANCER_DISPLAY_STATE;
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookVariableDef.STORY_ADVANCER_METADATA;
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookVariableDef.STORY_UPDATE_METADATA;
@@ -58,10 +54,6 @@ import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookVariableDe
 import static com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookVariableDef.STORY_UPDATE_METADATA_LIST;
 import static com.ljmu.andre.snaptools.ModulePack.Utils.ModulePreferenceDef.DEFAULT_CHAT_STEALTH;
 import static com.ljmu.andre.snaptools.ModulePack.Utils.ModulePreferenceDef.DEFAULT_SNAP_STEALTH;
-import static com.ljmu.andre.snaptools.ModulePack.Utils.ModulePreferenceDef.SHOW_CHAT_STEALTH_BUTTON;
-import static com.ljmu.andre.snaptools.ModulePack.Utils.ModulePreferenceDef.SHOW_SNAP_STEALTH_BUTTON;
-import static com.ljmu.andre.snaptools.ModulePack.Utils.ModulePreferenceDef.STEALTH_MARK_STORY_VIEWED;
-import static com.ljmu.andre.snaptools.ModulePack.Utils.ViewFactory.detach;
 import static com.ljmu.andre.snaptools.Utils.ContextHelper.getModuleContext;
 import static com.ljmu.andre.snaptools.Utils.ResourceUtils.getId;
 import static com.ljmu.andre.snaptools.Utils.ResourceUtils.getIdFromString;
@@ -103,80 +95,78 @@ public class StealthViewing extends ModuleHelper {
 	@Override public void loadHooks(ClassLoader snapClassLoader, Activity snapActivity) {
 		bypassNextStealthView = !(boolean) getPref(DEFAULT_SNAP_STEALTH);
 
-		if (getPref(SHOW_SNAP_STEALTH_BUTTON)) {
-			hookConstructor(
-					CONSTRUCTOR_OPERA_PAGE_VIEW,
-					new ST_MethodHook() {
-						@Override protected void after(MethodHookParam param) throws Throwable {
-							Timber.d("Opera view created.... Assigning active view");
-							activeLayouts.add((FrameLayout) param.thisObject);
-						}
+		hookConstructor(
+				CONSTRUCTOR_OPERA_PAGE_VIEW,
+				new ST_MethodHook() {
+					@Override protected void after(MethodHookParam param) throws Throwable {
+						Timber.d("Opera view created.... Assigning active view");
+						activeLayouts.add((FrameLayout) param.thisObject);
 					}
-			);
+				}
+		);
 
-			hookMethod(
-					OPENED_SNAP,
-					new ST_MethodHook() {
-						@Override protected void after(MethodHookParam param) throws Throwable {
-							Timber.d("Direct snap displayed... Binding stealth to active layout");
+		hookMethod(
+				OPENED_SNAP,
+				new ST_MethodHook() {
+					@Override protected void after(MethodHookParam param) throws Throwable {
+						Timber.d("Direct snap displayed... Binding stealth to active layout");
 
-							if (Looper.myLooper() != Looper.getMainLooper()) {
-								new Handler(Looper.getMainLooper()).post(() -> assignStealthToActiveLayout(snapActivity));
-							} else
-								assignStealthToActiveLayout(snapActivity);
-						}
+						if (Looper.myLooper() != Looper.getMainLooper()) {
+							new Handler(Looper.getMainLooper()).post(() -> assignStealthToActiveLayout(snapActivity));
+						} else
+							assignStealthToActiveLayout(snapActivity);
 					}
-			);
+				}
+		);
 
-			if (!Saving.hasLoadedHooks) {
-				/**
-				 * ===========================================================================
-				 * Force Stories to contain their matched MetaData
-				 * ===========================================================================
-				 */
-				hookMethod(
-						STORY_METADATA_BUILDER,
-						new ST_MethodHook() {
-							@Override protected void after(MethodHookParam param) throws Throwable {
-								Object storyMetadata = param.getResult();
-								callHook(STORY_METADATA_INSERT_OBJECT, storyMetadata, "STORY_REPLY_SNAP", param.args[0]);
-							}
-						}
-				);
-			}
-
+		if (!Saving.hasLoadedHooks) {
 			/**
 			 * ===========================================================================
-			 * Story displayed hook
+			 * Force Stories to contain their matched MetaData
 			 * ===========================================================================
 			 */
 			hookMethod(
-					STORY_DISPLAYED,
+					STORY_METADATA_BUILDER,
 					new ST_MethodHook() {
 						@Override protected void after(MethodHookParam param) throws Throwable {
-							Object displayState = getObjectField(STORY_ADVANCER_DISPLAY_STATE, param.thisObject);
-							if (displayState == null || !displayState.toString().equals("FULLY_DISPLAYED"))
-								return;
-
-							Object snapMetaData = getObjectField(STORY_ADVANCER_METADATA, param.thisObject);
-
-							Object storySnap = callHook(STORY_METADATA_GET_OBJECT, snapMetaData, "STORY_REPLY_SNAP");
-
-							if (storySnap == null) {
-								Timber.d("StorySnap null: Probably not a normal story");
-								return;
-							}
-
-							Timber.d("Story snap displayed... Binding stealth to active layout");
-
-							if (Looper.myLooper() != Looper.getMainLooper()) {
-								new Handler(Looper.getMainLooper()).post(() -> assignStealthToActiveLayout(snapActivity));
-							} else
-								assignStealthToActiveLayout(snapActivity);
+							Object storyMetadata = param.getResult();
+							callHook(STORY_METADATA_INSERT_OBJECT, storyMetadata, "STORY_REPLY_SNAP", param.args[0]);
 						}
 					}
 			);
 		}
+
+		/**
+		 * ===========================================================================
+		 * Story displayed hook
+		 * ===========================================================================
+		 */
+		hookMethod(
+				STORY_DISPLAYED,
+				new ST_MethodHook() {
+					@Override protected void after(MethodHookParam param) throws Throwable {
+						Object displayState = getObjectField(STORY_ADVANCER_DISPLAY_STATE, param.thisObject);
+						if (displayState == null || !displayState.toString().equals("FULLY_DISPLAYED"))
+							return;
+
+						Object snapMetaData = getObjectField(STORY_ADVANCER_METADATA, param.thisObject);
+
+						Object storySnap = callHook(STORY_METADATA_GET_OBJECT, snapMetaData, "STORY_REPLY_SNAP");
+
+						if (storySnap == null) {
+							Timber.d("StorySnap null: Probably not a normal story");
+							return;
+						}
+
+						Timber.d("Story snap displayed... Binding stealth to active layout");
+
+						if (Looper.myLooper() != Looper.getMainLooper()) {
+							new Handler(Looper.getMainLooper()).post(() -> assignStealthToActiveLayout(snapActivity));
+						} else
+							assignStealthToActiveLayout(snapActivity);
+					}
+				}
+		);
 
 		/**
 		 * ===========================================================================
@@ -187,31 +177,29 @@ public class StealthViewing extends ModuleHelper {
 			Class statusEnumClass = HookResolver.resolveHookClass(SNAP_STATUS);
 			Class storySnapClass = HookResolver.resolveHookClass(STORY_SNAP);
 
-			Object unviewedEnum = Enum.valueOf(statusEnumClass, "UNVIEWED_AND_LOADED");
-			Object receievedEnum = Enum.valueOf(statusEnumClass, "RECEIVED_AND_VIEWED");
-			Object viewedEnum = Enum.valueOf(statusEnumClass, "VIEWED_AND_REPLAY_AVAILABLE");
-
 			hookMethod(
 					SET_SNAP_STATUS,
 					new ST_MethodHook() {
 						@Override protected void before(MethodHookParam param) throws Throwable {
-							if (param.thisObject.getClass().equals(storySnapClass)) {
-								return;
-							}
-
 							String snapId = callHook(GET_SNAP_ID, param.thisObject);
 
 							Enum<?> statusEnum = (Enum<?>) param.args[0];
+							Timber.d("Tried to update status [%s] of [Snap: %s]", statusEnum, param.thisObject);
 
-							if (statusEnum.equals(receievedEnum) || statusEnum.equals(viewedEnum)) {
-								if (handleStealthCheck(snapId)) {
-									param.args[0] = unviewedEnum;
+							if (statusEnum.name().equals("RECEIVED_AND_VIEWED") || statusEnum.name().equals("VIEWED_AND_REPLAY_AVAILABLE")) {
+								Timber.d("ClassType: " + param.thisObject.getClass().getSimpleName());
+
+								if (param.thisObject.getClass().equals(storySnapClass)) {
+									return;
 								}
+
+								if (handleStealthCheck(snapId))
+									param.args[0] = Enum.valueOf(statusEnumClass, "UNVIEWED_AND_LOADED");
 							}
 						}
 					}
 			);
-		} catch (HookNotFoundException | IllegalArgumentException e) {
+		} catch (HookNotFoundException e) {
 			Timber.e(e);
 			moduleLoadState.fail();
 		}
@@ -225,9 +213,9 @@ public class StealthViewing extends ModuleHelper {
 				MARK_STORY_VIEWED,
 				new ST_MethodHook() {
 					@Override protected void before(MethodHookParam param) throws Throwable {
-						String snapId = callHook(GET_SNAP_ID, param.args[1]);
+						String snapId = callHook(GET_SNAP_ID, param.args[0]);
 
-						if (handleStealthCheck(snapId) && !(boolean) getPref(STEALTH_MARK_STORY_VIEWED))
+						if (handleStealthCheck(snapId))
 							param.setResult(null);
 					}
 				}
@@ -294,15 +282,17 @@ public class StealthViewing extends ModuleHelper {
 				NETWORK_EXECUTE_SYNC,
 				new ST_MethodHook() {
 					@Override protected void before(MethodHookParam param) throws Throwable {
-						String url = (String) callMethod(param.thisObject, "getUrl");
-						Timber.d("ExecAsyncUrl: " + url);
-
 						if (!(boolean) getPref(DEFAULT_CHAT_STEALTH))
 							return;
 
+						String url = (String) callMethod(param.thisObject, "getUrl");
+
 						if (url.endsWith("chat_typing")) {
 							param.setResult(null);
+							return;
 						}
+
+						Timber.d("ExecAsyncUrl: " + url);
 					}
 				}
 		);
@@ -316,12 +306,11 @@ public class StealthViewing extends ModuleHelper {
 				DISPATCH_CHAT_UPDATE,
 				new ST_MethodHook() {
 					@Override protected void before(MethodHookParam param) throws Throwable {
-						Timber.d("Chat event");
-						Timber.d("Param1: " + param.args[0]);
-						Timber.d("Param2: " + param.args[1]);
-
 						if (getPref(DEFAULT_CHAT_STEALTH)) {
-							Timber.d("Bypassed");
+							Timber.d("Bypassed chat connection");
+							Timber.d("Param1: " + param.args[0]);
+							Timber.d("Param2: " + param.args[1]);
+
 							param.setResult(null);
 						}
 					}
@@ -334,35 +323,9 @@ public class StealthViewing extends ModuleHelper {
 		 * ===========================================================================
 		 */
 		hookMethod(
-				MARK_DIRECT_CHAT_VIEWED_PRESENT,
+				MARK_CHAT_VIEWED,
 				new ST_MethodHook() {
 					@Override protected void before(MethodHookParam param) throws Throwable {
-						Timber.d("Marking as read (Present while received): " + param.args[0]);
-
-						if (getPref(DEFAULT_CHAT_STEALTH))
-							param.setResult(false);
-					}
-				}
-		);
-
-		hookMethod(
-				MARK_DIRECT_CHAT_VIEWED_UNPRESENT,
-				new ST_MethodHook() {
-					@Override protected void before(MethodHookParam param) throws Throwable {
-						Timber.d("Marking as read (Not present while received): " + param.args[1]);
-
-						if (getPref(DEFAULT_CHAT_STEALTH))
-							param.setResult(null);
-					}
-				}
-		);
-
-		hookMethod(
-				MARK_GROUP_CHAT_VIEWED,
-				new ST_MethodHook() {
-					@Override protected void before(MethodHookParam param) throws Throwable {
-						Timber.d("KAL Dun got called: " + param.args[0]);
-
 						if (getPref(DEFAULT_CHAT_STEALTH))
 							param.setResult(null);
 					}
@@ -374,41 +337,15 @@ public class StealthViewing extends ModuleHelper {
 		 * Chat Header Button hook
 		 * ===========================================================================
 		 */
-		int cheetahHeaderId = getId(snapActivity, "chat_name_and_story_container");
-		int oldHeaderId = getId(snapActivity, "chat_friends_name");
-
-		if (getPref(SHOW_CHAT_STEALTH_BUTTON)) {
-			hookAllConstructors(
-					CHAT_V10_BUILDER,
-					new ST_MethodHook() {
-						@Override protected void after(MethodHookParam param) throws Throwable {
-							View topPanel = getObjectField(CHAT_TOP_PANEL_VIEW, param.thisObject);
-							RelativeLayout headerTitle = getView(topPanel, getId(snapActivity, "chat_header_title"));
-
-							boolean isCheetah = getView(headerTitle, cheetahHeaderId) != null;
-
-							int headerId = isCheetah ?
-									cheetahHeaderId : oldHeaderId;
-
-							headerTitle.addView(viewProvider.getStealthChatButton(snapActivity, headerId, getModuleContext(snapActivity), isCheetah));
-						}
-					}
-			);
-		}
-
-		ViewGroup cheetahStealthContainer = viewProvider.getProfileContainer(snapActivity, getModuleContext(snapActivity));
-		ViewGroup stealthContainer = viewProvider.getProfileContainer(snapActivity, getModuleContext(snapActivity));
-
-		hookConstructor(
-				CREATE_CHEETAH_PROFILE_SETTINGS_VIEW,
+		hookMethod(
+				CHAT_V3_FRAGMENT_CREATED,
 				new ST_MethodHook() {
-					@Override protected void before(MethodHookParam param) throws Throwable {
-						LinearLayout snapcodeContainer = (LinearLayout) param.args[0];
-
-						snapcodeContainer.addView(detach(cheetahStealthContainer));
+					@Override protected void after(MethodHookParam param) throws Throwable {
+						View contentView = getObjectField(SNAPCHAT_FRAGMENT_CONTENT_VIEW, param.thisObject);
+						RelativeLayout headerTitle = getView(contentView, getId(snapActivity, "chat_header_title"));
+						headerTitle.addView(viewProvider.getStealthChatButton(snapActivity, getModuleContext(snapActivity)));
 					}
-				}
-		);
+				});
 
 		/**
 		 * ===========================================================================
@@ -421,8 +358,7 @@ public class StealthViewing extends ModuleHelper {
 					@Override protected void after(MethodHookParam param) throws Throwable {
 						ViewGroup contentView = (ViewGroup) param.getResult();
 						LinearLayout buttonsLayout = getView(contentView, getId(snapActivity, "profile_navigation_buttons"));
-
-						buttonsLayout.addView(detach(stealthContainer));
+						buttonsLayout.addView(viewProvider.getProfileContainer(snapActivity, getModuleContext(snapActivity)));
 					}
 				});
 	}
@@ -445,7 +381,7 @@ public class StealthViewing extends ModuleHelper {
 					continue;
 				}
 
-				activeLayout.addView(viewProvider.getStealthSnapLayout(snapActivity, getModuleContext(snapActivity)));
+				activeLayout.addView(viewProvider.getStealthSnapLayout(getModuleContext(snapActivity)));
 			}
 		}
 	}

@@ -1,20 +1,16 @@
 package com.ljmu.andre.snaptools.ModulePack;
 
-import android.support.annotation.Nullable;
-
 import com.ljmu.andre.snaptools.Exceptions.HookNotFoundException;
 import com.ljmu.andre.snaptools.Framework.Module;
 import com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookClassDef.HookClass;
 import com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookDef.Hook;
-import com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookVariableDef.HookVariable;
 import com.ljmu.andre.snaptools.ModulePack.HookResolver.HookReference;
-import com.ljmu.andre.snaptools.Utils.XposedUtils.ST_MethodHook;
+import com.ljmu.andre.snaptools.ModulePack.HookDefinitions.HookVariableDef.HookVariable;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import de.robv.android.xposed.XC_MethodHook;
-import de.robv.android.xposed.XC_MethodHook.MethodHookParam;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import timber.log.Timber;
@@ -118,6 +114,7 @@ public abstract class ModuleHelper extends Module {
 	}
 
 
+
 	/**
 	 * ===========================================================================
 	 * Utility method to set an object field with a hook variable
@@ -153,42 +150,6 @@ public abstract class ModuleHelper extends Module {
 				throw (HookNotFoundException) e;
 
 			throw new HookNotFoundException(e);
-		}
-	}
-
-	public interface HookBefore {
-		void before(MethodHookParam param) throws Throwable;
-	}
-
-	public interface HookAfter {
-		void after(MethodHookParam param) throws Throwable;
-	}
-
-	public static class HookWrapper extends ST_MethodHook {
-		private HookBefore hookBefore;
-		private HookAfter hookAfter;
-
-		public HookWrapper(@Nullable HookBefore hookBefore, @Nullable HookAfter hookAfter) {
-			this.hookBefore = hookBefore;
-			this.hookAfter = hookAfter;
-		}
-
-		public HookWrapper(HookBefore hookBefore) {
-			this.hookBefore = hookBefore;
-		}
-
-		public HookWrapper(HookAfter hookAfter) {
-			this.hookAfter = hookAfter;
-		}
-
-		@Override protected void before(MethodHookParam param) throws Throwable {
-			if(hookBefore != null)
-				hookBefore.before(param);
-		}
-
-		@Override protected void after(MethodHookParam param) throws Throwable {
-			if(hookAfter != null)
-				hookAfter.after(param);
 		}
 	}
 }

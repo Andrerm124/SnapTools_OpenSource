@@ -13,6 +13,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 //import io.fabric.sdk.android.Fabric;
+import kotlin.jvm.Synchronized;
 import timber.log.Timber;
 
 import static com.ljmu.andre.GsonPreferences.Preferences.getPref;

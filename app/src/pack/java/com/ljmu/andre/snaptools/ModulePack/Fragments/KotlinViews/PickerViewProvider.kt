@@ -6,8 +6,8 @@ import android.view.Gravity
 import android.view.ViewGroup
 import com.ljmu.andre.snaptools.ModulePack.Utils.KotlinUtils.Companion.toDp
 import com.ljmu.andre.snaptools.ModulePack.Utils.KotlinUtils.Companion.toId
-import com.ljmu.andre.snaptools.Utils.ContextHelper.getModuleContext
-import com.ljmu.andre.snaptools.Utils.ResourceUtils
+import com.ljmu.andre.snaptools.Utils.ResourceUtils.getDrawable
+import com.ljmu.andre.snaptools.Utils.ResourceUtils.getStyle
 import org.jetbrains.anko.*
 
 /**
@@ -19,9 +19,7 @@ class PickerViewProvider() {
     @SuppressLint("ResourceType")
             // Use Module Context
     fun <T : ViewGroup> getMainContainer(context: Context): T =
-            getModuleContext(context).UI {
-                val modContext = getModuleContext(context)
-
+            context.UI {
                 verticalLayout {
                     lparams(matchParent)
 
@@ -32,15 +30,16 @@ class PickerViewProvider() {
                     }
 
                     linearLayout {
-
-                        themedButton(ResourceUtils.getStyle(modContext, "NeutralButton")) {
+                        themedButton(getStyle(context, "NeutralButton")) {
+                            padding = 5.toDp()
                             text = "Cancel"
                             id = "button_cancel".toId()
                         }.lparams(width = matchParent, height = wrapContent) {
                             weight = 1f
                         }
 
-                        themedButton(ResourceUtils.getStyle(modContext, "NeutralButton")) {
+                        themedButton(getStyle(context, "NeutralButton")) {
+                            padding = 5.toDp()
                             text = "Okay"
                             id = "button_okay".toId()
                         }.lparams(width = matchParent, height = wrapContent) {

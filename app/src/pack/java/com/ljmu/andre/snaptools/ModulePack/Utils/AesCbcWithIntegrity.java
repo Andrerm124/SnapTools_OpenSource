@@ -764,7 +764,7 @@ import timber.log.Timber;
 			// insertProviderAt, etc., so synchronizing on the class should
 			// make things more stable, and prevent race conditions with other
 			// versions of this code.
-			synchronized (java.security.Security.class) {
+			synchronized (Security.class) {
 				if ((secureRandomProviders == null)
 						|| (secureRandomProviders.length < 1)
 						|| (!secureRandomProviders[0].getClass().getSimpleName().equals("LinuxPRNGSecureRandomProvider"))) {

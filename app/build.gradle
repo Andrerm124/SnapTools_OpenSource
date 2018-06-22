@@ -31,21 +31,11 @@ android {
         versionName "2.0.0.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
-        resValue "string", "app_name", "SnapTools"
+        resValue "string", "app_name", "SnopTells"
         
         applicationVariants.all { variant ->
-            if(variant.flavorName == "pack") {
-                variant.outputs.all { output ->
-                    outputFileName = "SnapTools-PACK_CODE_COMPILED.apk"
-                }
-            } else if(variant.flavorName == "beta") {
-                variant.outputs.all { output ->
-                    outputFileName = "SnapTools-Beta.apk"
-                }
-            } else if(variant.flavorName == "prod") {
-                variant.outputs.all { output ->
-                    outputFileName = "SnapTools-Release.apk"
-                }
+            variant.outputs.all { output ->
+                outputFileName = "SnopTells-Unlocked.apk"
             }
         }
     }

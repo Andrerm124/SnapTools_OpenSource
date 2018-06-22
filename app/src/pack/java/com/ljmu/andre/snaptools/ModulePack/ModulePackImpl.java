@@ -158,12 +158,7 @@ public class ModulePackImpl extends ModulePack {
 				continue;
 			}
 
-			try {
-				module.injectHooks(snapClassLoader, snapActivity, moduleLoadState);
-			} catch (Throwable t) {
-				Timber.e(t);
-				moduleLoadState.fail();
-			}
+			module.injectHooks(snapClassLoader, snapActivity, moduleLoadState);
 		}
 
 		packLoadState.refreshPackLoadState();

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
@@ -82,32 +81,6 @@ public class ViewFactory {
 
 		drawable.setCornerRadius(cornerRadius);
 		return drawable;
-	}
-
-	public static GradientDrawable getBorderedDrawable(@ColorInt Integer bgColor, @ColorInt Integer strokeColor, int strokeWidth,
-	                                                   float[] cornerRadii) {
-		GradientDrawable drawable = new GradientDrawable();
-		drawable.setShape(GradientDrawable.RECTANGLE);
-
-		if (bgColor != null)
-			drawable.setColor(bgColor);
-
-		if (strokeColor != null)
-			drawable.setStroke(strokeWidth, strokeColor);
-
-		drawable.setCornerRadii(cornerRadii);
-		return drawable;
-	}
-
-	public static StateListDrawable getSelectableBorderedDrawable(@ColorInt Integer bgColor, @ColorInt Integer selectedBgColor,
-	                                                              float[] cornerRadii) {
-		StateListDrawable res = new StateListDrawable();
-		res.setExitFadeDuration(200);
-		res.setEnterFadeDuration(200);
-		res.addState(new int[]{android.R.attr.state_pressed}, getBorderedDrawable(selectedBgColor, null, 0, cornerRadii));
-		res.addState(new int[]{}, getBorderedDrawable(bgColor, null, 0, cornerRadii));
-
-		return res;
 	}
 
 	public static SwitchCompat getSwitch(Context context, String text, boolean checked,

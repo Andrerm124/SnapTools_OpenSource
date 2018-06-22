@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 
@@ -12,7 +11,6 @@ import com.ljmu.andre.snaptools.Fragments.FragmentHelper;
 import com.ljmu.andre.snaptools.ModulePack.Fragments.KotlinViews.StealthLocationOverlay;
 import com.ljmu.andre.snaptools.ModulePack.Fragments.KotlinViews.StealthViewProvider;
 import com.ljmu.andre.snaptools.ModulePack.Fragments.Tutorials.StealthTutorial;
-import com.ljmu.andre.snaptools.Utils.ResourceUtils;
 
 import static com.ljmu.andre.snaptools.Utils.ResourceUtils.getDSLView;
 import static com.ljmu.andre.snaptools.Utils.ResourceUtils.getIdFromString;
